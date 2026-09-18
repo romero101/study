@@ -27,11 +27,21 @@ SITES = {
                  ('alt="Буровая установка ТопДриллРус у загородного дома"', 'alt="Загородный дом, зелёный газон и вода из крана на участке"'),
                  ("<span>Фото компании · ИИ-ретушь</span>", "<span></span>")],
         "mobile_hero_pos": "72% center",
+        "trust": [("1 829", "домов получили воду<br>в 2022 году"), ("до 5 лет", "гарантия<br>на скважину"), ("Pedrollo", "официальный дилер<br>насосов")],
+        "cards": [("Бурение скважины", "Инженер бесплатно определяет место на участке. В цену метра входят трубы, бурение и прокачка. Четыре конструкции — от пластика до 50 м до бесшовной стали до 200 м. Гарантия 2–5 лет и паспорт скважины."),
+                  ("Насос и автоматика", "ТопДриллРус — официальный дилер итальянских насосов Pedrollo. Подбор, поставка и монтаж — одна компания, без посредников. Расчёт оборудования под вашу скважину бесплатный."),
+                  ("Подводка и очистка", "Водонапорная труба от скважины в дом, подключение системы. Фильтрацию подбирают по анализу воды. Через несколько дней после бурения инженер приезжает проверить, как работает скважина.")],
+
         "hero": "hero-result.jpg", "city": "Санкт-Петербург", "contact": "info@topdrill.ru",
     },
     "skvazhina-ekb": {
         "brand": "Скважина-вода", "demo": True, "email": "",
         "hero": "hero.jpg", "city": "Екатеринбург", "contact": "skvagina-voda@mail.ru",
+        "trust": [("1 день", "на скважину<br>70–90 метров"), ("до 120 м", "малогабаритной<br>установкой"), ("0 ₽", "разберём и соберём<br>ваш забор")],
+        "cards": [("Бурение скважины", "От 1 700 ₽ за метр малогабаритной установкой, глубина до 120 м. Скважину 70–90 м бурят за один день, работы начинаются сразу после заезда. Забор для заезда разберут и соберут бесплатно."),
+                  ("Обустройство скважины", "От 20 000 ₽: монтаж кессона и насоса, обвязка и автоматика. Водоподъёмная труба с усиленной стенкой, обвязка внутри кессона — полипропиленом."),
+                  ("Вода в доме и канализация", "Трубопровод от скважины в дом. Там же можно заказать автономную канализацию: септики Eurolos с монтажом и обслуживанием.")],
+
     },
 }
 SMALL, LARGE = 640, 1280
@@ -137,6 +147,27 @@ def patch_html(html, cfg, variants):
     return html
 
 
+def rewrite_blocks(html, cfg):
+    """Замечание заказчика 18.09: после первого экрана трижды подряд шла одна и та же тройка
+    «бурение — насос — вода в дом» (полоса, подпись к схеме, карточки). Теперь полоса — это факты
+    о компании с её сайта, схема показана один раз, а карточки раскрывают суть: что входит и почём."""
+    html = re.sub(r'(<div class="trust-strip">.*?</a>)', lambda m: m.group(1).replace("<br>", " <br>"), html, count=1, flags=re.S)
+    facts = cfg.get("trust")
+    if facts:
+        items = "".join(f"<div><strong>{b}</strong><span>{t.replace('<br>', ' <br>')}</span></div>" for b, t in facts)
+        html, n = re.subn(r'(<div class="trust-strip"><a .*?</a>)(?:<div><strong>0\d</strong>.*?</div>){3}', lambda m: m.group(1) + items, html, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit("не нашёл полосу доверия")
+    for i, (title, text) in enumerate(cfg.get("cards", []), 1):
+        html, n = re.subn(r'(<span class="index">0%d / [^<]*</span>)<h3>.*?</h3><p>.*?</p>' % i,
+                          lambda m: f"{m.group(1)}<h3>{title}</h3><p>{text}</p>", html, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit(f"не нашёл карточку решения {i}")
+    if cfg.get("cards"):
+        html = must_sub(html, "<span>ВОДА ПРОХОДИТ ПОНЯТНЫЙ ПУТЬ</span>", "<span>КАК ЭТО УСТРОЕНО</span>")
+    return html
+
+
 def patch_js(js, cfg):
     js = must_sub(js, "$('final-summary').textContent=text;$('copy-status').textContent='';$('lead-dialog').showModal();});",
                   "sendLead(event.target,text);});")
@@ -168,7 +199,7 @@ def build(slug, cfg):
     html = (src / "index.html").read_text(encoding="utf-8")
     for old, new in cfg.get("swap", []):
         html = must_sub(html, old, new)
-    html = patch_html(html, cfg, variants)
+    html = patch_html(rewrite_blocks(html, cfg), cfg, variants)
     (out / "index.html").write_text(html, encoding="utf-8")
     # <img> теперь внутри <picture>, поэтому правила вида «.hero-photo>img» переводим на потомка
     css = (src / "style.css").read_text(encoding="utf-8").replace(">img", " img") + (TOOLS / "enhance.css").read_text(encoding="utf-8")

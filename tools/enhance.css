@@ -46,8 +46,11 @@ summary:after{top:50%;transform:translateY(-50%);font-size:22px}
   .hero-new .actions .button,.hero-editorial .actions .button{width:100%}
   .hero h1{overflow-wrap:anywhere}
   .calc-result>.button,.process .button{width:100%}
-  .section-head h2 br,.lead-section h2 br{display:none}
   .system-visual img{min-height:0;height:auto}
+  /* полоса фактов: цифра сверху, подпись снизу — длинные значения не рвутся посреди числа */
+  .trust-strip>a,.trust-strip>div{flex-direction:column;align-items:flex-start;gap:4px!important}
+  .trust-strip strong{white-space:nowrap;font-size:25px!important}
+  .trust-strip span br{display:none}
   .review-cards{gap:14px}
   dialog{max-height:88vh;overflow:auto}
   #photo-dialog{padding:12px;width:calc(100% - 16px)}
