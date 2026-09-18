@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /
 
 # ЗАПУСК: заменить строку выше на "Allow: /" и убрать noindex из index.html
-Sitemap: https://russtroy.formasaita.ru/sitemap.xml
+Sitemap: https://formasaita.ru/demo/russtroy/sitemap.xml

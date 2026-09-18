@@ -223,7 +223,7 @@ tail = re.sub(r'app\.js\?v=\d+', "app.js?v=2", tail)
 
 
 def fill(t):
-    return t.replace("__BRAND__", "Заборы, Новосибирск").replace("__DISALLOW__", "Disallow: /").replace("__CANONICAL__", "https://zaborpro.formasaita.ru/")
+    return t.replace("__BRAND__", "Заборы, Новосибирск").replace("__DISALLOW__", "Disallow: /").replace("__CANONICAL__", "https://formasaita.ru/demo/zaborpro/")
 
 
 (OUT / "send.php").write_text(fill((ROOT / "tools/shared/send.php").read_text(encoding="utf-8")).replace("__EMAIL__", ""), encoding="utf-8")
