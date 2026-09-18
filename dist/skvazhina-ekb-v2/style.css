@@ -41,9 +41,9 @@ picture>source{display:none}
 .album-nav button{pointer-events:auto;width:48px;height:48px;border-radius:50%;border:0;background:#ffffffe6;color:#102c40;font:600 26px/1 Arial,sans-serif;box-shadow:0 2px 12px #0005;padding:0 0 4px}
 .album-nav #album-pos{position:absolute;left:4px;top:-32px;color:#fff;font-size:14px;font-weight:600}
 /* просмотр фото: только снимок в тонкой белой рамке на затемнённом фоне, без плашки вокруг */
-#photo-dialog{background:transparent!important;box-shadow:none!important;padding:0!important;border:0;width:auto!important;max-width:94vw!important;max-height:none;overflow:visible!important;color:#fff}
+#photo-dialog{background:transparent!important;box-shadow:none!important;padding:0!important;border:0;width:fit-content!important;margin:auto;max-width:94vw!important;max-height:none;overflow:visible!important;color:#fff}
 #photo-dialog::backdrop{background:#0a1620d9}
-#photo-large{display:block;width:auto!important;height:auto!important;max-width:94vw;max-height:82vh;border:5px solid #fff;border-radius:4px;background:#fff;box-shadow:0 20px 70px #000a}
+#photo-large{display:block;margin:0 auto;width:auto!important;height:auto!important;max-width:94vw;max-height:82vh;border:5px solid #fff;border-radius:4px;background:#fff;box-shadow:0 20px 70px #000a}
 #photo-caption{color:#fff!important;text-align:center;font-size:14px;margin:12px 0 0!important}
 #photo-dialog .close{right:-6px;top:-44px;width:40px;height:40px;border-radius:50%;background:#ffffffe6;color:#102c40;font-size:24px;line-height:1}
 .review-quote{font-size:16px;line-height:1.6;margin:18px 0 16px}
