@@ -21,7 +21,13 @@ TOOLS = ROOT / "tools"
 SITES = {
     "topdrillrus": {
         "brand": "ТопДриллРус", "demo": True, "email": "",
-        "hero": "drilling-enhanced.jpg", "city": "Санкт-Петербург", "contact": "info@topdrill.ru",
+        # Первый экран показывает результат (дом, газон, вода), а не грязь на стройплощадке:
+        # замечание заказчика 18.09. Картинка сгенерирована, на странице подписана как иллюстрация.
+        "swap": [("drilling-enhanced.jpg", "hero-result.jpg"),
+                 ('alt="Буровая установка ТопДриллРус у загородного дома"', 'alt="Загородный дом, зелёный газон и вода из крана на участке"'),
+                 ("<span>Фото компании · ИИ-ретушь</span>", "<span>Иллюстрация</span>")],
+        "mobile_hero_pos": "72% center",
+        "hero": "hero-result.jpg", "city": "Санкт-Петербург", "contact": "info@topdrill.ru",
     },
     "skvazhina-ekb": {
         "brand": "Скважина-вода", "demo": True, "email": "",
@@ -155,11 +161,19 @@ def build(slug, cfg):
         if f.suffix not in (".jpg", ".css", ".js") and f.name != "index.html":
             shutil.copy2(f, out / f.name)
     variants = make_images(src, out)
+    over = TOOLS / "overrides" / slug
+    if over.exists():
+        variants.update(make_images(over, out))
 
-    html = patch_html((src / "index.html").read_text(encoding="utf-8"), cfg, variants)
+    html = (src / "index.html").read_text(encoding="utf-8")
+    for old, new in cfg.get("swap", []):
+        html = must_sub(html, old, new)
+    html = patch_html(html, cfg, variants)
     (out / "index.html").write_text(html, encoding="utf-8")
     # <img> теперь внутри <picture>, поэтому правила вида «.hero-photo>img» переводим на потомка
     css = (src / "style.css").read_text(encoding="utf-8").replace(">img", " img") + (TOOLS / "enhance.css").read_text(encoding="utf-8")
+    if cfg.get("mobile_hero_pos"):
+        css += "@media(max-width:760px){.hero-bg{object-position:%s!important}}\n" % cfg["mobile_hero_pos"]
     (out / "style.css").write_text(css, encoding="utf-8")
     (out / "app.js").write_text(patch_js((src / "app.js").read_text(encoding="utf-8"), cfg), encoding="utf-8")
 
@@ -168,7 +182,7 @@ def build(slug, cfg):
         (out / name).write_text(fill((ROOT / "builder/shared" / name).read_text(encoding="utf-8"), cfg, slug), encoding="utf-8")
 
     size = lambda d: sum(f.stat().st_size for f in d.iterdir() if f.is_file())
-    first = lambda d, names: sum((d / n).stat().st_size for n in names)
+    first = lambda d, names: sum((d / n).stat().st_size for n in names if (d / n).exists())
     print(f"{slug}: папка {size(src) // 1024} КБ -> {size(out) // 1024} КБ; "
           f"первый экран (html+css+js+фото) {first(src, ['index.html', 'style.css', 'app.js', cfg['hero']]) // 1024} КБ -> "
           f"{first(out, ['index.html', 'style.css', 'app.js', variants[cfg['hero']][0][0]]) // 1024} КБ на телефоне")

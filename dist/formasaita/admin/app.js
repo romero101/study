@@ -102,6 +102,10 @@ function drawScript(l) {
   var C = SCRIPTS.common, S = SCRIPTS.leads[l.id] || (l.source === "site" ? C.inbound : null);
   var hasDemo = /formasaita\.ru/.test(l.now_url || ""), html = '<div class="sc">';
   document.getElementById("d-script-goal").textContent = S ? S.goal : "Индивидуального скрипта нет — общие правила и возражения";
+  var K = C.core;
+  html += '<h4 style="margin-top:4px">' + esc(K.title) + "</h4>" + '<div class="say">' + esc(K.pitch) + "</div>" +
+    '<details><summary>Арифметика: сколько заявок теряется</summary><div class="say">' + esc(K.math) + "</div></details>" +
+    scList("Проверить до звонка", K.check) + scList("Спросить про рекламу", K.ask);
   if (S) {
     if (S.caution) html += '<p class="warn2"><b>Осторожно:</b> ' + esc(S.caution) + "</p>";
     html += scSay("Начало разговора", S.opener) + scList("Факты о сайте — перепроверить перед звонком", S.hook) +

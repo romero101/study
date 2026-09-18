@@ -64,3 +64,4 @@ summary:after{top:50%;transform:translateY(-50%);font-size:22px}
   #photo-large{width:100%;height:auto;max-height:76vh;object-fit:contain}
 }
 @media(max-width:380px){.hero-new h1{font-size:40px}.hero-editorial h1{font-size:44px}.brand small{display:none}}
+@media(max-width:760px){.hero-bg{object-position:72% center!important}}

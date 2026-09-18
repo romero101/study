@@ -6,3 +6,5 @@ dist/formasaita/admin/data/leads.json
 leads.log.php
 __pycache__/
 .DS_Store
+dist/strana-zaborov-source/raw/
+dist/topdrill-source/*.png
