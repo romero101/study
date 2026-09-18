@@ -43,7 +43,7 @@ function visible() {
   return LEADS.filter(function (l) {
     if (filter && l.stage !== filter) return false;
     if (!q) return true;
-    var hay = [l.company, l.city, l.contacts, l.was_url, l.now_url,
+    var hay = [l.company, l.city, l.contacts, l.lpr, l.was_url, l.now_url,
       l.was_problems, l.now_done, l.left_todo]
       .concat((l.comments || []).map(function (c) { return c.text; })).join(" ").toLowerCase();
     return hay.indexOf(q) > -1;
@@ -60,6 +60,7 @@ function drawRows() {
     return '<tr data-id="' + l.id + '">' +
       '<td class="num">' + esc(l.n) + "</td>" +
       '<td class="co">' + esc(l.company) + (l.source === "site" ? '<span class="src">с сайта</span>' : "") +
+        (l.lpr ? '<s style="color:#8a5a00">' + esc(l.lpr.split("\n")[0].slice(0, 60)) + "</s>" : "") +
         "<s>" + esc(l.city) + "</s></td>" +
       "<td><span class=\"pill\" style=\"background:" + stageColor(l.stage) + "22;color:" +
         stageColor(l.stage) + '">' + esc(l.stage) + "</span></td>" +

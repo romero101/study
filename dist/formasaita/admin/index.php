@@ -71,6 +71,8 @@ font-size:13px;cursor:pointer;color:#41586e}
 .warn--ok{background:#e9f6ee;border-color:#b5dcc3;color:#174d2c}
 .src{display:inline-block;margin-left:6px;background:#fff0d6;color:#8a5a00;border-radius:99px;padding:1px 8px;font-size:11.5px;font-weight:700}
 
+.ed--lpr{background:#fff8e6;border-color:#f0d79b;font-weight:600}
+
 /* ---------- скорость: было / стало ---------- */
 .speed{margin:18px 0 0;border:2px solid #d9ead9;border-radius:14px;background:#f5fbf5;padding:14px 18px}
 .speed h3{font-size:15px;margin:0 0 10px}
@@ -291,7 +293,8 @@ cursor:pointer;min-height:34px}
       </div>
       <div class="col">
         <h3>Контакты</h3>
-        <div class="row"><textarea class="ed" data-f="contacts" rows="3"></textarea></div>
+        <div class="row"><em>Кто решает (ЛПР) и как обращаться</em><textarea class="ed ed--lpr" data-f="lpr" rows="4"></textarea></div>
+        <div class="row"><em>Телефоны, почта, мессенджеры</em><textarea class="ed" data-f="contacts" rows="3"></textarea></div>
         <div class="row"><em>Город</em><textarea class="ed" data-f="city" rows="1"></textarea></div>
       </div>
       <div class="col">

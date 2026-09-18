@@ -216,6 +216,11 @@ def build(slug):
     (out / "policy.html").write_text(fill((ROOT / "builder/shared/policy.html").read_text(encoding="utf-8"), c["email"]), encoding="utf-8")
     for n in ("robots.txt", ".htaccess"):
         (out / n).write_text(fill((ROOT / "builder/shared" / n).read_text(encoding="utf-8"), ""), encoding="utf-8")
+    import hashlib  # версии файлов по содержимому: css/js на хостинге кэшируются на 45 дней
+    page = (out / "index.html").read_text(encoding="utf-8")
+    for name in ("style.css", "app.js", "config.js"):
+        page = page.replace(f"{name}?v={V}", f"{name}?v={hashlib.md5((out / name).read_bytes()).hexdigest()[:8]}")
+    (out / "index.html").write_text(page, encoding="utf-8")
     size = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) // 1024
     print(f"dist/{slug}: {size} КБ, html {len(html) // 1024} КБ, картинок {len(img)}")
 

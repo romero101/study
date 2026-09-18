@@ -15,7 +15,7 @@ document.addEventListener('focusout',()=>document.body.classList.remove('kbd'));
 /* альбомы работ: листание внутри страницы, без ухода на старый сайт */
 (function(){const dialog=document.querySelector('#photo-dialog');if(!dialog||!document.querySelector('[data-album]'))return;
 let list=[],at=0,title='';const img=document.querySelector('#photo-large'),cap=document.querySelector('#photo-caption');
-const nav=document.createElement('div');nav.className='album-nav';nav.innerHTML='<button type="button" data-step="-1" aria-label="Предыдущее фото">←</button><span id="album-pos"></span><button type="button" data-step="1" aria-label="Следующее фото">→</button>';dialog.append(nav);
+const nav=document.createElement('div');nav.className='album-nav';nav.innerHTML='<button type="button" data-step="-1" aria-label="Предыдущее фото">‹</button><span id="album-pos"></span><button type="button" data-step="1" aria-label="Следующее фото">›</button>';dialog.append(nav);
 function show(i){at=(i+list.length)%list.length;img.src=list[at];img.alt=title+', фото '+(at+1);cap.textContent=title;document.querySelector('#album-pos').textContent=(at+1)+' / '+list.length;const next=new Image();next.src=list[(at+1)%list.length];}
 document.querySelectorAll('[data-album]').forEach(b=>b.addEventListener('click',e=>{e.stopImmediatePropagation();list=b.dataset.album.split(',');title=b.dataset.caption;nav.hidden=false;show(0);dialog.showModal();},true));
 nav.addEventListener('click',e=>{const s=e.target.closest('[data-step]');if(s)show(at+Number(s.dataset.step));});

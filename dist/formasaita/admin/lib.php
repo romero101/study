@@ -74,7 +74,7 @@ function h($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 /* Поля, которые менеджер правит руками в карточке. */
 function crm_editable() {
     return ['company', 'city', 'was_url', 'now_url', 'was_problems',
-            'now_done', 'left_todo', 'contacts', 'offer', 'measure_src'];
+            'now_done', 'left_todo', 'contacts', 'lpr', 'offer', 'measure_src'];
 }
 
 /* Новая сделка: и из админки, и из формы на сайте студии. */
@@ -84,7 +84,7 @@ function crm_add_lead(&$data, $fields, $who, $firstNote) {
     $lead = array_merge([
         'id' => 'l' . str_pad((string)($max + 1), 2, '0', STR_PAD_LEFT), 'n' => $max + 1,
         'company' => '', 'city' => '', 'was_url' => '', 'now_url' => '', 'was_problems' => '',
-        'now_done' => '', 'left_todo' => '', 'contacts' => '', 'pagespeed' => null, 'offer' => 0,
+        'now_done' => '', 'left_todo' => '', 'contacts' => '', 'lpr' => '', 'pagespeed' => null, 'offer' => 0,
         'stage' => $data['stages'][0] ?? 'Не связывались', 'measure_src' => '', 'source' => 'manual',
     ], $fields);
     $lead['comments'] = [['at' => crm_now(), 'who' => $who, 'kind' => 'stage', 'text' => $firstNote]];

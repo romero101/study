@@ -9,3 +9,7 @@ __pycache__/
 dist/strana-zaborov-source/raw/
 dist/topdrill-source/*.png
 dist/well-*/
+dist/rs-source/raw/
+dist/arh-source/raw/
+dist/strana-zaborov-source/raw2/
+dist/_sheet/
