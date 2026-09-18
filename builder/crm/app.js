@@ -94,6 +94,17 @@ function drawSpeed(l) {
   var box = document.getElementById("d-speed"), sp = l.speed;
   box.hidden = !sp;
   if (!sp) return;
+  if (!sp.now) {  // демо ещё нет — показываем только замер их сайта
+    var kb = sp.was.kb >= 1024 ? String(Math.round(sp.was.kb / 102.4) / 10).replace(".", ",") + " МБ" : sp.was.kb + " КБ";
+    box.innerHTML = "<h3>Скорость их сайта на телефоне</h3><table>" +
+      '<tr><td>Главный экран появился</td><td class="bad">' + String(sp.was.lcp).replace(".", ",") + " с</td></tr>" +
+      '<tr><td>Страницей можно пользоваться</td><td class="bad">' + String(sp.was.tti).replace(".", ",") + " с</td></tr>" +
+      '<tr><td>Вес страницы</td><td class="bad">' + kb + "</td></tr>" +
+      '<tr><td>Запросов к серверу</td><td class="bad">' + sp.was.req + "</td></tr>" +
+      '<tr><td>Оценка Lighthouse, из 100</td><td class="bad">' + sp.was.score + "</td></tr></table>" +
+      "<p>Замер " + esc(sp.at) + ": Lighthouse, эмуляция телефона на медленном 4G. Наши демо в этих условиях открываются за 1–2 с.</p>";
+    return;
+  }
   function sec(v) { return String(v).replace(".", ",") + " с"; }
   function row(name, was, now, fmt, times) {
     return "<tr><td>" + name + '</td><td class="bad">' + fmt(was) + '</td><td class="ok">' + fmt(now) + '</td><td class="x">' +
