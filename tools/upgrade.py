@@ -27,6 +27,9 @@ SITES = {
                  ('alt="Буровая установка ТопДриллРус у загородного дома"', 'alt="Загородный дом, зелёный газон и вода из крана на участке"'),
                  ("<span>Фото компании · ИИ-ретушь</span>", "<span></span>")],
         "mobile_hero_pos": "72% center",
+        "albums": [{"key": "r", "title": "Рощино", "sub": "Скважина и кессон для посёлка", "order": [4, 3, 2, 1, 5, 6, 7, 8]},
+                   {"key": "t", "title": "Новое Токсово", "sub": "Скважина у загородного дома", "order": [5, 6, 2, 1, 3, 4, 7, 8]},
+                   {"key": "p", "title": "Большие Пороги", "sub": "Скважина с пластиковым кессоном", "order": [5, 3, 4, 8, 1, 2, 6, 7]}],
         "reviews": [("Анонимный отзыв", "3 июня 2016", "Ребята Топ Дрилл - вы специалисты высшего класса! Не было лишних нервов, когда я задавал вопросы. По полочкам все разложили и обрисовали что по чем, и сколько примерно займут земляные работы. Спасибо"),
                     ("Анонимный отзыв", "3 июня 2016", "Большущее спасибо спецам Топ Дрилл. Выручили так выручили. Надо было скважину пробурить, к кому идти непонятно. Сосед подсказал. Бригада во главе со старшим Василичем приехала почти в договоренное время. Опоздали правда на часа пол. Обрисовали план работ, смету по работам. Я так прикинул, прозвонил еще пару бригад, но Топ Дрилл оказался более выгодным по цене. Пришлось снова вызывать ребят. Работой доволен."),
                     ("Анонимный отзыв", "27 мая 2016", "Спасибо сотрудникам компании за профессиональную работу и грамотную консультацию, особое преимущество - постоплата! Всем рекомендую ТопДрилл!")],
@@ -202,6 +205,29 @@ def quote_reviews(html, cfg):
     return html
 
 
+def build_albums(html, cfg, variants):
+    """Замечание заказчика 18.09: «фото работ ссылаются на старый сайт». Теперь альбомы живут на самом
+    лендинге: карточка объекта открывает просмотр с листанием, наружу никто не уходит."""
+    albums = cfg.get("albums")
+    if not albums:
+        return html
+    cards = ""
+    for a in albums:
+        files = [variants[f"alb-{a['key']}-{n:02d}.jpg"] for n in a["order"]]
+        small, big = files[0][0][0], files[0][-1][0]
+        photos = ",".join(v[-1][0] for v in files)
+        cards += (f'<article class="work-card"><button class="work-image" data-album="{photos}" data-caption="{a["title"]} — {a["sub"]}" '
+                  f'aria-label="Открыть альбом: {a["title"]}, {len(files)} фото">'
+                  f'<picture><source type="image/webp" srcset="{small} 640w, {big} 1280w" sizes="(max-width:760px) 80vw, 34vw">'
+                  f'<img src="{small}" alt="{a["title"]}: {a["sub"]}" loading="lazy" decoding="async" width="640" height="480"></picture>'
+                  f'<span class="album-count">{len(files)} фото</span></button>'
+                  f'<div><h3>{a["title"]}</h3><p>{a["sub"]}</p></div></article>')
+    html, n = re.subn(r'(<div class="work-grid">).*?(</div></section>)', lambda m: m.group(1) + cards + m.group(2), html, count=1, flags=re.S)
+    if n != 1:
+        raise SystemExit("не нашёл сетку работ")
+    return html
+
+
 def patch_js(js, cfg):
     js = must_sub(js, "$('final-summary').textContent=text;$('copy-status').textContent='';$('lead-dialog').showModal();});",
                   "sendLead(event.target,text);});")
@@ -233,7 +259,9 @@ def build(slug, cfg):
     html = (src / "index.html").read_text(encoding="utf-8")
     for old, new in cfg.get("swap", []):
         html = must_sub(html, old, new)
-    html = patch_html(quote_reviews(rewrite_blocks(html, cfg), cfg), cfg, variants)
+    html = build_albums(patch_html(quote_reviews(rewrite_blocks(html, cfg), cfg), cfg, variants), cfg, variants)
+    for f in out.glob('alb-*.jpg'):
+        f.unlink()  # альбомы отдаём только в WebP, тяжёлые исходники на сервер не нужны
     (out / "index.html").write_text(html, encoding="utf-8")
     # <img> теперь внутри <picture>, поэтому правила вида «.hero-photo>img» переводим на потомка
     css = (src / "style.css").read_text(encoding="utf-8").replace(">img", " img") + (TOOLS / "enhance.css").read_text(encoding="utf-8")

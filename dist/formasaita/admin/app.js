@@ -88,6 +88,26 @@ function drawLog(l) {
   }).join("") : '<div class="mini" style="padding:10px 0">Пока пусто. Первый комментарий — после звонка.</div>';
 }
 
+/* ------------------------------------------------- скорость: было / стало */
+function drawSpeed(l) {
+  var box = document.getElementById("d-speed"), sp = l.speed;
+  box.hidden = !sp;
+  if (!sp) return;
+  function sec(v) { return String(v).replace(".", ",") + " с"; }
+  function row(name, was, now, fmt, times) {
+    return "<tr><td>" + name + '</td><td class="bad">' + fmt(was) + '</td><td class="ok">' + fmt(now) + '</td><td class="x">' +
+      (times && now ? "×" + (was / now >= 10 ? Math.round(was / now) : String(Math.round(was / now * 10) / 10).replace(".", ",")) : "") + "</td></tr>";
+  }
+  box.innerHTML = "<h3>Скорость на телефоне: их сайт → наше демо</h3><table><tr><th></th><th>Было</th><th>Стало</th><th></th></tr>" +
+    row("Главный экран появился", sp.was.lcp, sp.now.lcp, sec, true) +
+    row("Страницей можно пользоваться", sp.was.tti, sp.now.tti, sec, true) +
+    row("Вес страницы", sp.was.kb, sp.now.kb, function (v) { return v >= 1024 ? String(Math.round(v / 102.4) / 10).replace(".", ",") + " МБ" : v + " КБ"; }, true) +
+    row("Запросов к серверу", sp.was.req, sp.now.req, String, false) +
+    row("Оценка Lighthouse, из 100", sp.was.score, sp.now.score, String, false) +
+    "</table><p>Замер " + esc(sp.at) + ": Lighthouse, эмуляция телефона Moto G на медленном 4G — те же условия, что в Google PageSpeed. " +
+    "Для звонка: «у вас главный экран — " + sec(sp.was.lcp) + ", у нас — " + sec(sp.now.lcp) + "».</p>";
+}
+
 /* ---------------------------------------------------------- скрипт звонка */
 function scList(title, items) {
   return items && items.length ? "<h4>" + title + "</h4><ul>" + items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "";
@@ -137,6 +157,7 @@ function open(id) {
   document.getElementById("d-quick").innerHTML = QUICK.map(function (q) {
     return "<button type=\"button\">" + esc(q) + "</button>";
   }).join("");
+  drawSpeed(l);
   drawScript(l);
   drawLog(l);
   document.getElementById("d-note").value = "";

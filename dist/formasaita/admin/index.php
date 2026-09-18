@@ -71,6 +71,17 @@ font-size:13px;cursor:pointer;color:#41586e}
 .warn--ok{background:#e9f6ee;border-color:#b5dcc3;color:#174d2c}
 .src{display:inline-block;margin-left:6px;background:#fff0d6;color:#8a5a00;border-radius:99px;padding:1px 8px;font-size:11.5px;font-weight:700}
 
+/* ---------- скорость: было / стало ---------- */
+.speed{margin:18px 0 0;border:2px solid #d9ead9;border-radius:14px;background:#f5fbf5;padding:14px 18px}
+.speed h3{font-size:15px;margin:0 0 10px}
+.speed table{min-width:0;width:100%;border-collapse:collapse}
+.speed th,.speed td{padding:7px 8px;font-size:14px;border-bottom:1px solid #e3efe3;background:none;position:static;text-transform:none;letter-spacing:0}
+.speed th{color:#6a7686;font-size:12.5px;font-weight:600}
+.speed td:nth-child(n+2),.speed th:nth-child(n+2){text-align:right;white-space:nowrap}
+.speed .bad{color:#b3261e;font-weight:700}.speed .ok{color:#1d7a3a;font-weight:700}
+.speed .x{color:#1d7a3a;font-weight:800}
+.speed p{font-size:12.5px;color:#6a7686;margin:10px 0 0}
+
 /* ---------- скрипт звонка ---------- */
 .script{margin:18px 0;border:2px solid #d6e3f3;border-radius:14px;background:#f6faff}
 .script>summary{cursor:pointer;padding:14px 18px;list-style:none;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;min-height:48px}
@@ -289,6 +300,7 @@ cursor:pointer;min-height:34px}
         <div class="row"><em>Компания</em><textarea class="ed" data-f="company" rows="1"></textarea></div>
       </div>
     </div>
+    <div class="speed" id="d-speed" hidden></div>
     <details class="script" id="d-script-box">
       <summary><b>Скрипт звонка</b><span id="d-script-goal"></span></summary>
       <div id="d-script"></div>

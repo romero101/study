@@ -1,21 +1,10 @@
 'use strict';
-/* Страна Заборов: калькулятор, подбор забора, цвет, галерея, заявки. Без библиотек. */
-const DEMO = true, WA = '79524477974', opened = Date.now();
+/* Лендинг заборов: калькулятор, подбор забора, цвет, галерея, заявки. Без библиотек. */
+/* Всё, что отличает одного клиента от другого, лежит в window.SITE (config.js рядом со страницей). */
+const SITE = window.SITE, DEMO = SITE.demo, MAX = SITE.max || '', opened = Date.now();
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat('ru-RU').format(n);
-
-/* Цены «от» за погонный метр — с прайса на сайте компании. null = считают по смете. */
-const TYPES = {
-  prof: {name: 'Профнастил', rate: 1900},
-  evro: {name: 'Евроштакетник', rate: 2100},
-  rab: {name: 'Сетка-рабица', rate: 1150},
-  pvh: {name: 'Сетка ПВХ', rate: 1350},
-  d3: {name: '3D-панели', rate: null},
-};
-const GIFTS = [[150, 'распашные ворота и мангал'], [100, 'калитка с врезным замком'], [50, 'калитка']];
-const COLORS = [['8017', 'шоколад', '#45322e'], ['6005', 'зелёный мох', '#2f4538'], ['7024', 'графит', '#474a51'], ['5005', 'синий', '#1e4d8c'],
-  ['5024', 'пастельно-синий', '#5d8aa8'], ['9003', 'белый', '#f1f1ee'], ['9006', 'серебристый', '#a5a8a6'], ['7004', 'серый', '#969992'],
-  ['6002', 'зелёный лист', '#2d572c'], ['5021', 'морская волна', '#256d7b'], ['5002', 'ультрамарин', '#20214f'], ['6020', 'хвойный', '#2e3a23']]
+const TYPES = SITE.types, GIFTS = SITE.gifts || [], COLORS = SITE.colors, QUESTIONS = SITE.questions, SHOTS = SITE.shots;
 let color = COLORS[0], mode = 'calc';
 
 /* ---------------------------------------------------------------- калькулятор */
@@ -23,12 +12,12 @@ const val = name => document.querySelector(`input[name=${name}]:checked`).value;
 function state() {
   const type = val('type'), len = Math.round(Number($('len').value));
   return {type, t: TYPES[type], len, valid: len >= 5 && len <= 400, height: val('height'),
-    extras: [['x-gate', 'Калитка'], ['x-doors', 'Ворота'], ['x-demo', 'Демонтаж старого забора']].filter(x => $(x[0]).checked).map(x => x[1])};
+    extras: [...document.querySelectorAll('.checks input:checked')].map(i => i.nextElementSibling.textContent.split(' — ')[0])};
 }
 function giftFor(len) { return GIFTS.find(g => len >= g[0]); }
 
-function drawFence(type) {
-  const c = color[2], dark = 'rgba(0,0,0,.22)', svg = $('fence-svg');
+function drawFence(typeKey) {
+  const type = TYPES[typeKey].draw, c = color[2], dark = 'rgba(0,0,0,.22)', svg = $('fence-svg');
   let s = '';
   for (let x = 0; x <= 320; x += 80) s += `<rect x="${x - 3}" y="14" width="6" height="66" fill="#3a3f3c"/>`;
   if (type === 'prof') {
@@ -38,7 +27,7 @@ function drawFence(type) {
     s += `<rect x="0" y="30" width="320" height="4" fill="#3a3f3c"/><rect x="0" y="62" width="320" height="4" fill="#3a3f3c"/>`;
     for (let x = 2; x < 320; x += 13) s += `<path d="M${x} 78V22l4.5-5 4.5 5v56z" fill="${c}"/>`;
   } else {
-    const step = type === 'd3' ? 12 : 9;
+    const step = type === 'd3' ? 12 : 9; // всё, что не prof/evro: d3 — сварная сетка, иначе плетёная
     s += `<g stroke="${c}" stroke-width="${type === 'd3' ? 1.6 : 1.1}" fill="none">`;
     if (type === 'd3') { for (let x = 0; x <= 320; x += step) s += `<path d="M${x} 18v58"/>`; for (let y = 18; y <= 76; y += 14.5) s += `<path d="M0 ${y}h320"/>`; }
     else for (let x = -80; x <= 320; x += step) s += `<path d="M${x} 76l58-58M${x + 58} 76l-58-58"/>`;
@@ -63,19 +52,32 @@ function update() {
   $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? 'ПОДБОР ЗАБОРА' : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
   if (!s.valid) { $('out-price').textContent = 'Укажите длину'; $('out-formula').textContent = 'От 5 до 400 метров. Больше — позвоните, посчитаем отдельно.'; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
   $('out-price').textContent = s.t.rate ? `от ${money(s.len * s.t.rate)} ₽` : 'По смете';
-  $('out-formula').textContent = s.t.rate ? `${s.len} м × от ${money(s.t.rate)} ₽ за метр с монтажом` : '3D-панели считаем по толщине прутка и высоте — смета после замера, бесплатно.';
+  $('out-formula').textContent = s.t.rate ? `${s.len} м × от ${money(s.t.rate)} ₽ за метр` : 'Этот тип считаем по смете после бесплатного замера.';
   const g = giftFor(s.len), next = [...GIFTS].reverse().find(x => x[0] > s.len), gift = $('gift');
   gift.className = 'gift' + (g ? ' on' : '');
   gift.textContent = (g ? `🎁 В подарок: ${g[1]}. ` : '') + (next && next[0] - s.len <= 25 ? `Ещё ${next[0] - s.len} м — и в подарок ${next[1]}.` : '');
-  const rows = [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`], ['Замер и смета', 'бесплатно'], ['Предоплата', 'не нужна']].concat(s.extras.map(e => [e, 'в смете']));
+  const rows = [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]].concat(SITE.rows).concat(s.extras.map(e => [e, 'в смете']));
   $('out-list').replaceChildren(...rows.map(r => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = r[0]; b.textContent = r[1]; li.append(b); return li; }));
-  const text = 'Здравствуйте! Посчитал забор на сайте:\n' + summary();
-  $('wa-link').href = $('bar-wa').href = `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
 }
 
 $('len').addEventListener('input', update);
 $('len-range').addEventListener('input', () => { $('len').value = $('len-range').value; update(); });
 document.querySelectorAll('#panel-calc input[type=radio],#panel-calc input[type=checkbox]').forEach(i => i.addEventListener('change', update));
+
+/* Расчёт в мессенджер. По решению заказчика (18.09) — только MAX, без WhatsApp. В MAX нельзя передать текст
+   ссылкой, поэтому расчёт копируется в буфер, а чат открывается рядом: остаётся вставить. */
+const share = $('share-calc'), bar = $('bar-chat');
+share.textContent = MAX ? 'Отправить расчёт в MAX' : 'Скопировать расчёт';
+if (MAX) { bar.href = MAX; bar.target = '_blank'; bar.rel = 'noopener'; bar.textContent = 'MAX'; bar.dataset.goal = 'max'; }
+share.addEventListener('click', async () => {
+  const text = 'Здравствуйте! Посчитал забор на сайте:\n' + summary(), note = $('share-note');
+  let copied = true;
+  try { await navigator.clipboard.writeText(text); } catch { copied = false; }
+  note.textContent = copied ? (MAX ? 'Расчёт скопирован. В открывшемся чате MAX нажмите «Вставить».' : 'Расчёт скопирован — вставьте его в любой мессенджер или в заявку ниже.')
+                            : 'Не получилось скопировать автоматически. Нажмите «Получить точную смету» — расчёт подставится в заявку.';
+  goal(MAX ? 'max' : 'copy');
+  if (MAX && copied) window.open(MAX, '_blank', 'noopener');
+});
 
 /* длина по соткам: периметр квадратного участка */
 function plot() { const a = Math.min(100, Math.max(1, Number($('sotki').value) || 0)), p = Math.round(4 * Math.sqrt(a * 100)); $('len').value = p; $('plot-hint').textContent = `Квадратный участок ${a} сот. — около ${p} м по периметру. Если часть уже огорожена соседями, уменьшите длину.`; update(); }
@@ -90,13 +92,7 @@ function pick(type) { document.querySelector(`input[name=type][value=${type}]`).
 document.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => pick(b.dataset.pick)));
 
 /* ---------------------------------------------------------------- подбор забора */
-const answers = {}, quiz = {step: 0, done: false, keys: ['goal', 'place', 'size', 'entry']};
-const QUESTIONS = [
-  {key: 'goal', title: 'Что важнее всего?', options: [['Закрыться от улицы и соседей', 'глухой забор', 'prof'], ['Красиво и чтобы продувалось', 'как деревянный, но металл', 'evro'], ['Обозначить границу недорого', 'дача, огород', 'rab'], ['Современно и чтобы участок просматривался', 'дом, территория, парковка', 'd3']]},
-  {key: 'place', title: 'Где будет забор?', options: [['Дача или СНТ'], ['Частный дом'], ['Организация, склад, площадка']]},
-  {key: 'size', title: 'Какой примерно периметр?', options: [['До 50 м', '', 30], ['50–100 м', 'от 50 м — калитка в подарок', 70], ['100–150 м', 'калитка с замком в подарок', 120], ['Больше 150 м', 'ворота и мангал в подарок', 170], ['Не знаю — нужен замер', '', 60]]},
-  {key: 'entry', title: 'Въезд и вход нужны?', options: [['Калитка и ворота', '', 'gd'], ['Только калитка', '', 'g'], ['Уже есть / не нужны', '', '']]},
-];
+const answers = {}, quiz = {step: 0, done: false, keys: SITE.questions.map(q => q.key)};
 function renderQuiz() {
   const q = QUESTIONS[quiz.step], body = $('quiz-body');
   $('quiz-step').textContent = `Вопрос ${quiz.step + 1} из ${QUESTIONS.length}`;
@@ -128,11 +124,9 @@ function setMode(next) { mode = next; for (const t of ['calc', 'quiz']) { $(`tab
 document.querySelectorAll('[data-start-quiz]').forEach(b => b.addEventListener('click', () => { quiz.step = 0; setMode('quiz'); $('calc').scrollIntoView({behavior: 'smooth'}); }));
 
 /* ---------------------------------------------------------------- галерея */
-const SHOTS = [['prof-09', 'prof'], ['evro-13', 'evro'], ['d3-07', 'd3'], ['prof-18', 'prof'], ['evro-16', 'evro'], ['prof-05', 'prof'], ['evro-04', 'evro'], ['d3-06', 'd3'],
-  ['prof-01', 'prof'], ['evro-09', 'evro'], ['rab-07', 'rab'], ['prof-14', 'prof'], ['evro-19', 'evro'], ['d3-02', 'd3'], ['prof-19', 'prof'], ['rab-01', 'rab']];
 $('gallery').replaceChildren(...SHOTS.map(([file, type]) => { const b = document.createElement('button'), img = document.createElement('img'), tag = document.createElement('span');
   b.className = 'shot'; b.type = 'button'; b.dataset.type = type; b.setAttribute('aria-label', `Увеличить фото: ${TYPES[type].name}`);
-  img.loading = 'lazy'; img.decoding = 'async'; img.alt = `${TYPES[type].name} — работа «Страны Заборов»`; img.width = 640; img.height = 480;
+  img.loading = 'lazy'; img.decoding = 'async'; img.alt = `${TYPES[type].name} — работа компании`; img.width = 640; img.height = 480;
   img.srcset = `img/${file}-640.webp 640w, img/${file}-1280.webp 1280w`; img.sizes = '(max-width:760px) 50vw, 25vw'; img.src = `img/${file}-640.webp`;
   tag.textContent = TYPES[type].name; b.append(img, tag);
   b.addEventListener('click', () => { $('photo-large').src = `img/${file}-1280.webp`; $('photo-large').alt = img.alt; $('photo-caption').textContent = `${TYPES[type].name} · фото компании`; $('photo-dialog').showModal(); }); return b; }));
@@ -149,7 +143,7 @@ $('to-lead').addEventListener('click', () => { if (mode === 'quiz' && !quiz.done
 function showResult(sent, text) {
   $('lead-state').textContent = sent ? 'ЗАЯВКА ОТПРАВЛЕНА' : 'НЕ УДАЛОСЬ ОТПРАВИТЬ';
   $('lead-title').textContent = sent ? 'Спасибо! Перезвоним.' : 'Связь подвела. Позвоните нам.';
-  $('lead-note').textContent = sent ? (DEMO ? 'Это демонстрация: заявку получила студия «Форма сайта», а не компания.' : 'Перезвоним в рабочее время и договоримся о замере.') : 'Заявка не ушла. Проверьте интернет и нажмите ещё раз — данные в форме сохранились. Или позвоните: +7 (952) 447-79-74.';
+  $('lead-note').textContent = sent ? (DEMO ? 'Это демонстрация: заявку получила студия «Форма сайта», а не компания.' : 'Перезвоним в рабочее время и договоримся о замере.') : 'Заявка не ушла. Проверьте интернет и нажмите ещё раз — данные в форме сохранились. Или позвоните: ' + SITE.phone + '.';
   $('lead-text').textContent = text; $('lead-dialog').showModal();
 }
 $('lead-form').addEventListener('submit', async e => {
