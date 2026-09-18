@@ -219,6 +219,7 @@ window.SITE = {
    "Ванная под ключ"
   ]
  ],
+ "extraRates": {},
  "calc": {
   "unit": "м²",
   "noun": "Работы",

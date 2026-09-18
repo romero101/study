@@ -227,6 +227,7 @@ window.SITE = {
    "Утепление"
   ]
  ],
+ "extraRates": {},
  "calc": {
   "unit": "м²",
   "noun": "Кровля",

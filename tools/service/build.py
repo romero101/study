@@ -192,7 +192,7 @@ def build(slug):
     site = {"demo": demo, "max": c.get("max", ""), "phone": phone,
             "types": {k: {"name": t["name"], "rate": t["rate"], "draw": t.get("draw", "prof")} for k, t in calc["types"].items()},
             "gifts": calc.get("gifts", []), "rows": calc["rows"], "colors": calc.get("colors", []), "questions": c["quiz"],
-            "shots": c["works"]["shots"],
+            "shots": c["works"]["shots"], "extraRates": {x["id"]: x["rate"] for x in calc["extras"] if x.get("rate")},
             "calc": {"unit": calc["unit"], "noun": calc["noun"], "min": calc["min"], "max": calc["max"], "posts": bool(calc.get("posts")),
                      "per": calc["per"], "hello": calc["hello"], "askLen": calc.get("ask_len", "Укажите размер"), "heightLabel": calc.get("height_label", "высота")}}
     (out / "config.js").write_text("/* Собрано tools/service/build.py из clients/%s.json — руками не править. */\nwindow.SITE = %s;\n"

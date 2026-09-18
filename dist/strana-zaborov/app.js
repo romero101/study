@@ -14,7 +14,9 @@ const val = name => (document.querySelector(`input[name=${name}]:checked`) || {}
 function state() {
   const type = val('type'), len = Math.round(Number($('len').value));
   return {type, t: TYPES[type], len, valid: len >= CALC.min && len <= CALC.max, height: val('height'),
-    extras: [...document.querySelectorAll('.checks input:checked')].map(i => i.nextElementSibling.textContent.split(' — ')[0])};
+    extras: [...document.querySelectorAll('.checks input:checked')].map(i => i.nextElementSibling.textContent.split(' — ')[0]),
+    extraRate: [...document.querySelectorAll('.checks input:checked')].reduce((a, i) => a + ((SITE.extraRates || {})[i.id] || 0), 0),
+    extraIds: [...document.querySelectorAll('.checks input:checked')].map(i => i.id)};
 }
 function giftFor(len) { return GIFTS.find(g => len >= g[0]); }
 
@@ -43,7 +45,7 @@ function summary() {
   const s = state(), lines = [`${CALC.noun}: ${s.t.name}, ${s.len} ${CALC.unit}` + (s.height ? `, ${CALC.heightLabel || 'высота'} ${s.height}` : '')];
   if (color) lines.push(`Цвет: RAL ${color[0]} (${color[1]})`);
   if (s.extras.length) lines.push('Дополнительно: ' + s.extras.join(', '));
-  lines.push(s.t.rate ? `Предварительно: от ${money(s.len * s.t.rate)} ₽ (по прайсу «от ${money(s.t.rate)} ₽ ${CALC.per}»)` : 'Цена: по смете после замера');
+  lines.push(s.t.rate ? `Предварительно: от ${money(s.len * (s.t.rate + s.extraRate))} ₽ (по прайсу «от ${money(s.t.rate)} ₽ ${CALC.per}»)` : 'Цена: по смете после замера');
   const g = giftFor(s.len); if (g) lines.push('Подарок за метраж: ' + g[1]);
   if (quiz.done) lines.push('', 'Из подбора: ' + quiz.keys.map(k => answers[k]).filter(Boolean).join('; '));
   return lines.join('\n');
@@ -55,12 +57,12 @@ function update() {
   drawFence(s.type);
   $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? 'ПОДБОР ЗАБОРА' : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
   if (!s.valid) { $('out-price').textContent = CALC.askLen || 'Укажите длину'; $('out-formula').textContent = `От ${CALC.min} до ${CALC.max} ${CALC.unit}. Больше — позвоните, посчитаем отдельно.`; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
-  $('out-price').textContent = s.t.rate ? `от ${money(s.len * s.t.rate)} ₽` : 'По смете';
-  $('out-formula').textContent = s.t.rate ? `${s.len} ${CALC.unit} × от ${money(s.t.rate)} ₽ ${CALC.per}` : 'Этот тип считаем по смете после бесплатного замера.';
+  $('out-price').textContent = s.t.rate ? `от ${money(s.len * (s.t.rate + s.extraRate))} ₽` : 'По смете';
+  $('out-formula').textContent = s.t.rate ? `${s.len} ${CALC.unit} × от ${money(s.t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : '') : 'Этот тип считаем по смете после бесплатного замера.';
   const g = giftFor(s.len), next = [...GIFTS].reverse().find(x => x[0] > s.len), gift = $('gift');
   gift.className = 'gift' + (g ? ' on' : '');
   gift.textContent = (g ? `🎁 В подарок: ${g[1]}. ` : '') + (next && next[0] - s.len <= 25 ? `Ещё ${next[0] - s.len} м — и в подарок ${next[1]}.` : '');
-  const rows = (CALC.posts ? [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]] : []).concat(SITE.rows).concat(s.extras.map(e => [e, 'в смете']));
+  const rows = (CALC.posts ? [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]] : []).concat(SITE.rows).concat(s.extras.map((e, n) => [e, (SITE.extraRates || {})[s.extraIds[n]] ? `+${money(SITE.extraRates[s.extraIds[n]])} ₽ ${CALC.per}` : 'в смете']));
   $('out-list').replaceChildren(...rows.map(r => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = r[0]; b.textContent = r[1]; li.append(b); return li; }));
 }
 
