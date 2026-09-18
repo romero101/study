@@ -67,15 +67,6 @@ th{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#566277;fo
 td:last-child,th:last-child{text-align:right;white-space:nowrap;font-weight:700}
 td small{display:block;color:#566277;font-size:14.5px;font-weight:400;margin-top:3px}
 .note{font-size:14.5px;color:#566277;margin:22px 0 0;max-width:760px}
-.works{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.work{background:#fff;border:1px solid #e3e7ef;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
-.work:hover{transform:translateY(-3px);box-shadow:0 14px 40px #17233314}
-.work img{display:block;width:100%;height:260px;object-fit:cover;background:#e8edf3}
-.work div{padding:24px 26px 28px}
-.work p{margin:0 0 14px;color:#566277;font-size:16px}
-.work b{color:#4558ed;font-weight:650}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
-.chips span{font-size:13px;background:#eef1fd;color:#3547d4;padding:4px 11px;border-radius:99px;font-weight:600}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;counter-reset:s}
 .steps div{border-top:2px solid #172333;padding-top:20px}
 .steps div:before{counter-increment:s;content:"0" counter(s);font-size:13px;color:#4558ed;font-weight:700;letter-spacing:.06em}
@@ -122,10 +113,9 @@ footer nav{gap:22px;font-size:14px;flex-wrap:wrap}
   h1{letter-spacing:-.035em}.intro{font-size:18px}
   .hero-actions .button{width:100%}
   .facts{margin-top:40px;gap:20px 16px}.facts b{font-size:25px}
-  .grid,.works,.steps{grid-template-columns:1fr}
+  .grid,.steps{grid-template-columns:1fr}
   .head{margin-bottom:26px}.card{padding:24px}
-  .work img{height:200px}
-  /* таблица цен на телефоне — строки-карточки, без прокрутки вбок */
+    /* таблица цен на телефоне — строки-карточки, без прокрутки вбок */
   thead{display:none}table,tbody,tr,td{display:block}
   tr{padding:16px 0;border-bottom:1px solid #e3e7ef}
   td{border:0;padding:0}td:last-child{text-align:left;margin-top:8px;font-size:19px}
@@ -140,7 +130,7 @@ footer nav{gap:22px;font-size:14px;flex-wrap:wrap}
 <header><div class="wrap">
   <a class="logo" href="#top">форма<span>сайта.</span></a>
   <nav aria-label="Разделы">
-    <a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#works">Работы</a><a href="#process">Как работаем</a><a href="#faq">Вопросы</a>
+    <a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#process">Как работаем</a><a href="#faq">Вопросы</a>
   </nav>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
 </div></header>
@@ -209,26 +199,7 @@ footer nav{gap:22px;font-size:14px;flex-wrap:wrap}
   <p class="note">Оплата: 50% после согласования демо, 50% после запуска. Работаем по договору, закрывающие документы предоставляем. Домен и хостинг оформляются на вас — сайт остаётся вашим.</p>
 </div></section>
 
-<section id="works" class="alt"><div class="wrap">
-  <div class="head"><div><div class="tag">Работы</div><h2>Откройте на телефоне —<br>так их увидит ваш клиент.</h2></div>
-    <p>Концепции для буровых компаний. Фото и отзывы — из открытых источников самих компаний, со ссылками.</p></div>
-  <div class="works">
-    <a class="work" href="https://topdrillrus.formasaita.ru/" target="_blank" rel="noopener">
-      <img src="img/topdrillrus.webp" alt="Лендинг ТопДриллРус: буровая установка на участке" width="640" height="360" loading="lazy" decoding="async">
-      <div><h3>ТопДриллРус · Санкт-Петербург</h3>
-      <div class="chips"><span>Бурение скважин</span><span>Калькулятор</span><span>Квиз</span></div>
-      <p>Расчёт стоимости до телефона, подбор решения за четыре вопроса, отзывы с Яндекс Карт.</p><b>Открыть концепцию ↗</b></div>
-    </a>
-    <a class="work" href="https://skvazhina-ekb.formasaita.ru/" target="_blank" rel="noopener">
-      <img src="img/skvazhina-ekb.webp" alt="Лендинг Скважина-вода: буровая вышка на фоне неба" width="640" height="480" loading="lazy" decoding="async">
-      <div><h3>Скважина-вода · Екатеринбург</h3>
-      <div class="chips"><span>Бурение и водоснабжение</span><span>Калькулятор</span><span>Схемы</span></div>
-      <p>Цена «от» на первом экране, схемы водоснабжения, фото техники и команды компании.</p><b>Открыть концепцию ↗</b></div>
-    </a>
-  </div>
-</div></section>
-
-<section id="process"><div class="wrap">
+<section id="process" class="alt"><div class="wrap">
   <div class="head"><div><div class="tag">Как работаем</div><h2>Сначала разбираемся.<br>Затем собираем.</h2></div></div>
   <div class="steps">
     <div><h3>Демо</h3><p>Изучаем вашу услугу и текущий сайт, собираем рабочую концепцию. Бесплатно и без обязательств.</p></div>
@@ -238,7 +209,7 @@ footer nav{gap:22px;font-size:14px;flex-wrap:wrap}
   </div>
 </div></section>
 
-<section id="faq" class="alt"><div class="wrap faq">
+<section id="faq"><div class="wrap faq">
   <div><div class="tag">Вопросы</div><h2>Что обычно спрашивают.</h2></div>
   <div>
     <details><summary>Почему демо бесплатно? В чём подвох?</summary><p>Подвоха нет: нам проще показать готовое, чем объяснять на словах. Демо собирается на нашем шаблоне за день-два. Не понравится — просто скажите, ничего не должны.</p></details>
