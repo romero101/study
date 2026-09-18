@@ -4,19 +4,22 @@
 const SITE = window.SITE, DEMO = SITE.demo, MAX = SITE.max || '', opened = Date.now();
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat('ru-RU').format(n);
-const TYPES = SITE.types, GIFTS = SITE.gifts || [], COLORS = SITE.colors, QUESTIONS = SITE.questions, SHOTS = SITE.shots;
-let color = COLORS[0], mode = 'calc';
+const TYPES = SITE.types, GIFTS = SITE.gifts || [], COLORS = SITE.colors || [], QUESTIONS = SITE.questions, SHOTS = SITE.shots;
+/* Движок общий: заборы (метры, столбы, цвет, рисунок забора), кровля и отделка (м², без рисунка). Отличия — в SITE.calc. */
+const CALC = Object.assign({unit: 'м', noun: 'Забор', min: 5, max: 400, posts: true, per: 'за метр'}, SITE.calc || {});
+let color = COLORS[0] || null, mode = 'calc';
 
 /* ---------------------------------------------------------------- калькулятор */
-const val = name => document.querySelector(`input[name=${name}]:checked`).value;
+const val = name => (document.querySelector(`input[name=${name}]:checked`) || {}).value || '';
 function state() {
   const type = val('type'), len = Math.round(Number($('len').value));
-  return {type, t: TYPES[type], len, valid: len >= 5 && len <= 400, height: val('height'),
+  return {type, t: TYPES[type], len, valid: len >= CALC.min && len <= CALC.max, height: val('height'),
     extras: [...document.querySelectorAll('.checks input:checked')].map(i => i.nextElementSibling.textContent.split(' — ')[0])};
 }
 function giftFor(len) { return GIFTS.find(g => len >= g[0]); }
 
 function drawFence(typeKey) {
+  if (!$('fence-svg') || !color) return;
   const type = TYPES[typeKey].draw, c = color[2], dark = 'rgba(0,0,0,.22)', svg = $('fence-svg');
   let s = '';
   for (let x = 0; x <= 320; x += 80) s += `<rect x="${x - 3}" y="14" width="6" height="66" fill="#3a3f3c"/>`;
@@ -37,9 +40,10 @@ function drawFence(typeKey) {
 }
 
 function summary() {
-  const s = state(), lines = [`Забор: ${s.t.name}, ${s.len} м, высота ${s.height}`, `Цвет: RAL ${color[0]} (${color[1]})`];
+  const s = state(), lines = [`${CALC.noun}: ${s.t.name}, ${s.len} ${CALC.unit}` + (s.height ? `, ${CALC.heightLabel || 'высота'} ${s.height}` : '')];
+  if (color) lines.push(`Цвет: RAL ${color[0]} (${color[1]})`);
   if (s.extras.length) lines.push('Дополнительно: ' + s.extras.join(', '));
-  lines.push(s.t.rate ? `Предварительно: от ${money(s.len * s.t.rate)} ₽ (по прайсу «от ${money(s.t.rate)} ₽/п.м.»)` : 'Цена: по смете после замера');
+  lines.push(s.t.rate ? `Предварительно: от ${money(s.len * s.t.rate)} ₽ (по прайсу «от ${money(s.t.rate)} ₽ ${CALC.per}»)` : 'Цена: по смете после замера');
   const g = giftFor(s.len); if (g) lines.push('Подарок за метраж: ' + g[1]);
   if (quiz.done) lines.push('', 'Из подбора: ' + quiz.keys.map(k => answers[k]).filter(Boolean).join('; '));
   return lines.join('\n');
@@ -47,16 +51,16 @@ function summary() {
 
 function update() {
   const s = state();
-  $('len-range').value = Math.min(400, Math.max(5, s.len || 5));
+  $('len-range').value = Math.min(CALC.max, Math.max(CALC.min, s.len || CALC.min));
   drawFence(s.type);
   $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? 'ПОДБОР ЗАБОРА' : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
-  if (!s.valid) { $('out-price').textContent = 'Укажите длину'; $('out-formula').textContent = 'От 5 до 400 метров. Больше — позвоните, посчитаем отдельно.'; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
+  if (!s.valid) { $('out-price').textContent = CALC.askLen || 'Укажите длину'; $('out-formula').textContent = `От ${CALC.min} до ${CALC.max} ${CALC.unit}. Больше — позвоните, посчитаем отдельно.`; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
   $('out-price').textContent = s.t.rate ? `от ${money(s.len * s.t.rate)} ₽` : 'По смете';
-  $('out-formula').textContent = s.t.rate ? `${s.len} м × от ${money(s.t.rate)} ₽ за метр` : 'Этот тип считаем по смете после бесплатного замера.';
+  $('out-formula').textContent = s.t.rate ? `${s.len} ${CALC.unit} × от ${money(s.t.rate)} ₽ ${CALC.per}` : 'Этот тип считаем по смете после бесплатного замера.';
   const g = giftFor(s.len), next = [...GIFTS].reverse().find(x => x[0] > s.len), gift = $('gift');
   gift.className = 'gift' + (g ? ' on' : '');
   gift.textContent = (g ? `🎁 В подарок: ${g[1]}. ` : '') + (next && next[0] - s.len <= 25 ? `Ещё ${next[0] - s.len} м — и в подарок ${next[1]}.` : '');
-  const rows = [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]].concat(SITE.rows).concat(s.extras.map(e => [e, 'в смете']));
+  const rows = (CALC.posts ? [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]] : []).concat(SITE.rows).concat(s.extras.map(e => [e, 'в смете']));
   $('out-list').replaceChildren(...rows.map(r => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = r[0]; b.textContent = r[1]; li.append(b); return li; }));
 }
 
@@ -70,7 +74,7 @@ const share = $('share-calc'), bar = $('bar-chat');
 share.textContent = MAX ? 'Отправить расчёт в MAX' : 'Скопировать расчёт';
 if (MAX) { bar.href = MAX; bar.target = '_blank'; bar.rel = 'noopener'; bar.textContent = 'MAX'; bar.dataset.goal = 'max'; }
 share.addEventListener('click', async () => {
-  const text = 'Здравствуйте! Посчитал забор на сайте:\n' + summary(), note = $('share-note');
+  const text = (CALC.hello || 'Здравствуйте! Посчитал забор на сайте:') + '\n' + summary(), note = $('share-note');
   let copied = true;
   try { await navigator.clipboard.writeText(text); } catch { copied = false; }
   note.textContent = copied ? (MAX ? 'Расчёт скопирован. В открывшемся чате MAX нажмите «Вставить».' : 'Расчёт скопирован — вставьте его в любой мессенджер или в заявку ниже.')
@@ -81,11 +85,11 @@ share.addEventListener('click', async () => {
 
 /* длина по соткам: периметр квадратного участка */
 function plot() { const a = Math.min(100, Math.max(1, Number($('sotki').value) || 0)), p = Math.round(4 * Math.sqrt(a * 100)); $('len').value = p; $('plot-hint').textContent = `Квадратный участок ${a} сот. — около ${p} м по периметру. Если часть уже огорожена соседями, уменьшите длину.`; update(); }
-$('plot-help').addEventListener('click', () => { $('plot-box').hidden = !$('plot-box').hidden; if (!$('plot-box').hidden) { plot(); $('sotki').focus(); } });
-$('sotki').addEventListener('input', plot);
+if ($('plot-help')) $('plot-help').addEventListener('click', () => { $('plot-box').hidden = !$('plot-box').hidden; if (!$('plot-box').hidden) { plot(); $('sotki').focus(); } });
+if ($('sotki')) $('sotki').addEventListener('input', plot);
 
 /* цвет */
-$('swatches').replaceChildren(...COLORS.map(c => { const b = document.createElement('button'); b.type = 'button'; b.style.background = c[2]; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', `RAL ${c[0]}, ${c[1]}`); b.setAttribute('aria-checked', String(c === color));
+if ($('swatches')) $('swatches').replaceChildren(...COLORS.map(c => { const b = document.createElement('button'); b.type = 'button'; b.style.background = c[2]; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', `RAL ${c[0]}, ${c[1]}`); b.setAttribute('aria-checked', String(c === color));
   b.addEventListener('click', () => { color = c; document.querySelectorAll('#swatches button').forEach(x => x.setAttribute('aria-checked', String(x === b))); $('color-name').textContent = `RAL ${c[0]} · ${c[1]}`; update(); }); return b; }));
 
 function pick(type) { document.querySelector(`input[name=type][value=${type}]`).checked = true; setMode('calc'); update(); $('calc').scrollIntoView({behavior: 'smooth'}); }
@@ -114,7 +118,8 @@ $('quiz-form').addEventListener('submit', e => {
   const opt = (k, v) => QUESTIONS.find(x => x.key === k).options.find(o => o[0] === v);
   document.querySelector(`input[name=type][value=${opt('goal', answers.goal)[2]}]`).checked = true;
   $('len').value = opt('size', answers.size)[2];
-  const entry = opt('entry', answers.entry)[2]; $('x-gate').checked = entry.includes('g'); $('x-doors').checked = entry.includes('d');
+  const entry = answers.entry ? (opt('entry', answers.entry)[2] || '') : ''; if ($('x-gate')) $('x-gate').checked = entry.includes('g'); if ($('x-doors')) $('x-doors').checked = entry.includes('d');
+  QUESTIONS.forEach(q => { const o = answers[q.key] && opt(q.key, answers[q.key]); ((o && o[3]) || []).forEach(id => { if ($(id)) $(id).checked = true; }); });
   quiz.done = true; goal('quiz'); setMode('calc'); update();
   $('calc').scrollIntoView({behavior: 'smooth'});
 });
@@ -124,12 +129,12 @@ function setMode(next) { mode = next; for (const t of ['calc', 'quiz']) { $(`tab
 document.querySelectorAll('[data-start-quiz]').forEach(b => b.addEventListener('click', () => { quiz.step = 0; setMode('quiz'); $('calc').scrollIntoView({behavior: 'smooth'}); }));
 
 /* ---------------------------------------------------------------- галерея */
-$('gallery').replaceChildren(...SHOTS.map(([file, type]) => { const b = document.createElement('button'), img = document.createElement('img'), tag = document.createElement('span');
+$('gallery').replaceChildren(...SHOTS.map(([file, type, caption]) => { const b = document.createElement('button'), img = document.createElement('img'), tag = document.createElement('span');
   b.className = 'shot'; b.type = 'button'; b.dataset.type = type; b.setAttribute('aria-label', `Увеличить фото: ${TYPES[type].name}`);
   img.loading = 'lazy'; img.decoding = 'async'; img.alt = `${TYPES[type].name} — работа компании`; img.width = 640; img.height = 480;
   img.srcset = `img/${file}-640.webp 640w, img/${file}-1280.webp 1280w`; img.sizes = '(max-width:760px) 50vw, 25vw'; img.src = `img/${file}-640.webp`;
-  tag.textContent = TYPES[type].name; b.append(img, tag);
-  b.addEventListener('click', () => { $('photo-large').src = `img/${file}-1280.webp`; $('photo-large').alt = img.alt; $('photo-caption').textContent = `${TYPES[type].name} · фото компании`; $('photo-dialog').showModal(); }); return b; }));
+  tag.textContent = caption || TYPES[type].name; b.append(img, tag);
+  b.addEventListener('click', () => { $('photo-large').src = `img/${file}-1280.webp`; $('photo-large').alt = img.alt; $('photo-caption').textContent = `${caption || TYPES[type].name} · фото компании`; $('photo-dialog').showModal(); }); return b; }));
 document.querySelectorAll('[data-filter]').forEach(f => f.addEventListener('click', () => { document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-selected', String(x === f)));
   document.querySelectorAll('.shot').forEach(s => { s.hidden = f.dataset.filter !== 'all' && s.dataset.type !== f.dataset.filter; }); }));
 

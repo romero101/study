@@ -29,7 +29,13 @@ SITES = {
         "mobile_hero_pos": "72% center",
         "albums": [{"key": "r", "title": "Рощино", "sub": "Скважина и кессон для посёлка", "order": [4, 3, 2, 1, 5, 6, 7, 8]},
                    {"key": "t", "title": "Новое Токсово", "sub": "Скважина у загородного дома", "order": [5, 6, 2, 1, 3, 4, 7, 8]},
-                   {"key": "p", "title": "Большие Пороги", "sub": "Скважина с пластиковым кессоном", "order": [5, 3, 4, 8, 1, 2, 6, 7]}],
+                   {"key": "p", "title": "Большие Пороги", "sub": "Скважина с пластиковым кессоном", "order": [5, 3, 4, 8, 1, 2, 6, 7]},
+                   {"key": "l", "title": "Лисий Нос", "sub": "Бурение и обустройство у дома", "order": [4, 1, 5, 2, 3, 6]},
+                   {"key": "k", "title": "КП «Кокосы»", "sub": "Бурение в коттеджном посёлке", "order": [1, 3, 2, 4, 5, 6]},
+                   {"key": "v", "title": "Вырица", "sub": "Бурение и обустройство с кессоном", "order": [4, 2, 1, 3, 5, 6]},
+                   {"key": "s", "title": "Солнечное", "sub": "Скважина в Курортном районе", "order": [5, 3, 4, 6, 1, 2]},
+                   {"key": "o", "title": "Ольгино", "sub": "Бурение, насос и автоматика", "order": [4, 1, 2, 3, 5, 6]},
+                   {"key": "f", "title": "Рыбная ферма", "sub": "Промышленное бурение", "order": [1, 3, 2]}],
         "reviews": [("Анонимный отзыв", "3 июня 2016", "Ребята Топ Дрилл - вы специалисты высшего класса! Не было лишних нервов, когда я задавал вопросы. По полочкам все разложили и обрисовали что по чем, и сколько примерно займут земляные работы. Спасибо"),
                     ("Анонимный отзыв", "3 июня 2016", "Большущее спасибо спецам Топ Дрилл. Выручили так выручили. Надо было скважину пробурить, к кому идти непонятно. Сосед подсказал. Бригада во главе со старшим Василичем приехала почти в договоренное время. Опоздали правда на часа пол. Обрисовали план работ, смету по работам. Я так прикинул, прозвонил еще пару бригад, но Топ Дрилл оказался более выгодным по цене. Пришлось снова вызывать ребят. Работой доволен."),
                     ("Анонимный отзыв", "27 мая 2016", "Спасибо сотрудникам компании за профессиональную работу и грамотную консультацию, особое преимущество - постоплата! Всем рекомендую ТопДрилл!")],
@@ -262,13 +268,20 @@ def build(slug, cfg):
     html = build_albums(patch_html(quote_reviews(rewrite_blocks(html, cfg), cfg), cfg, variants), cfg, variants)
     for f in out.glob('alb-*.jpg'):
         f.unlink()  # альбомы отдаём только в WebP, тяжёлые исходники на сервер не нужны
-    (out / "index.html").write_text(html, encoding="utf-8")
+    (out / "__html__").write_text(html, encoding="utf-8")
     # <img> теперь внутри <picture>, поэтому правила вида «.hero-photo>img» переводим на потомка
     css = (src / "style.css").read_text(encoding="utf-8").replace(">img", " img") + (TOOLS / "enhance.css").read_text(encoding="utf-8")
     if cfg.get("mobile_hero_pos"):
         css += "@media(max-width:760px){.hero-bg{object-position:%s!important}}\n" % cfg["mobile_hero_pos"]
     (out / "style.css").write_text(css, encoding="utf-8")
     (out / "app.js").write_text(patch_js((src / "app.js").read_text(encoding="utf-8"), cfg), encoding="utf-8")
+    import hashlib
+    html = (out / "__html__").read_text(encoding="utf-8")
+    (out / "__html__").unlink()
+    for name in ("style.css", "app.js"):
+        ver = hashlib.md5((out / name).read_bytes()).hexdigest()[:8]
+        html = re.sub(re.escape(name) + r"\?v=\w+", f"{name}?v={ver}", html)
+    (out / "index.html").write_text(html, encoding="utf-8")
 
     (out / "send.php").write_text(fill((TOOLS / "shared/send.php").read_text(encoding="utf-8"), cfg, slug), encoding="utf-8")
     for name in ("policy.html", "robots.txt", ".htaccess"):
