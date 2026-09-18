@@ -71,6 +71,24 @@ font-size:13px;cursor:pointer;color:#41586e}
 .warn--ok{background:#e9f6ee;border-color:#b5dcc3;color:#174d2c}
 .src{display:inline-block;margin-left:6px;background:#fff0d6;color:#8a5a00;border-radius:99px;padding:1px 8px;font-size:11.5px;font-weight:700}
 
+/* ---------- скрипт звонка ---------- */
+.script{margin:18px 0;border:2px solid #d6e3f3;border-radius:14px;background:#f6faff}
+.script>summary{cursor:pointer;padding:14px 18px;list-style:none;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;min-height:48px}
+.script>summary::-webkit-details-marker{display:none}
+.script>summary:before{content:"▸";color:#2f6fb5}
+.script[open]>summary:before{content:"▾"}
+.script>summary span{font-size:13.5px;color:#41586e;flex:1;min-width:220px}
+#d-script{padding:0 18px 18px}
+.sc h4{margin:20px 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:#2f6fb5}
+.sc p,.sc li{font-size:14.5px;line-height:1.55;margin:0 0 6px}
+.sc ul{margin:0;padding-left:20px}
+.sc .say{white-space:pre-wrap;background:#fff;border:1px solid #dde6ee;border-left:4px solid #2f6fb5;border-radius:8px;padding:12px 14px;font-size:14.5px;line-height:1.6}
+.sc .warn2{background:#fff6e0;border:1px solid #f0d79b;color:#6b4c07;border-radius:8px;padding:10px 13px;font-size:14px}
+.sc details{background:#fff;border:1px solid #dde6ee;border-radius:8px;margin-bottom:6px}
+.sc details summary{cursor:pointer;padding:11px 14px;font-weight:700;font-size:14.5px;min-height:44px}
+.sc details .say{border:0;border-top:1px solid #eef2f6;border-radius:0 0 8px 8px;border-left:0}
+.sc details.own summary{color:#7a4a00}
+
 /* ---------- каркас ---------- */
 .top{background:#16202b;color:#fff;padding:12px 0}
 .top .in{max-width:1500px;margin:0 auto;padding:0 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -160,6 +178,14 @@ cursor:pointer;min-height:34px}
 @media (max-width:640px){
   table{min-width:700px}
   .dlg__h,.dlg__b,.dlg__f{padding-inline:15px}
+  /* на телефоне карточка листается целиком: закреплённый низ с комментарием съедал весь экран */
+  dialog{width:100vw;max-width:100vw;max-height:100dvh;height:100dvh;border-radius:0;margin:0}
+  .dlg{max-height:none;height:100dvh;overflow:auto;display:block}
+  .dlg__h{position:sticky;top:0;background:#fff;z-index:2}
+  .dlg__b{overflow:visible}
+  .quick{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .quick button{white-space:nowrap;flex:0 0 auto;min-height:40px}
+  .script>summary span{min-width:0;flex-basis:100%}
 }
 </style>
 </head>
@@ -263,6 +289,10 @@ cursor:pointer;min-height:34px}
         <div class="row"><em>Компания</em><textarea class="ed" data-f="company" rows="1"></textarea></div>
       </div>
     </div>
+    <details class="script" id="d-script-box">
+      <summary><b>Скрипт звонка</b><span id="d-script-goal"></span></summary>
+      <div id="d-script"></div>
+    </details>
     <div class="log">
       <h3>История</h3>
       <div id="d-log"></div>
@@ -278,6 +308,7 @@ cursor:pointer;min-height:34px}
 <script>
 const DATA = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
 const CSRF = <?= json_encode(crm_csrf()) ?>;
+const SCRIPTS = <?= json_encode(require __DIR__ . '/scripts.php', JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="app.js" defer></script>
 <?php endif; ?>

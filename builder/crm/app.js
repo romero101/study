@@ -88,6 +88,36 @@ function drawLog(l) {
   }).join("") : '<div class="mini" style="padding:10px 0">Пока пусто. Первый комментарий — после звонка.</div>';
 }
 
+/* ---------------------------------------------------------- скрипт звонка */
+function scList(title, items) {
+  return items && items.length ? "<h4>" + title + "</h4><ul>" + items.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "";
+}
+function scSay(title, text) { return text ? "<h4>" + title + '</h4><div class="say">' + esc(text) + "</div>" : ""; }
+function scObj(list, own) {
+  return list.map(function (o) {
+    return "<details" + (own ? ' class="own"' : "") + "><summary>" + esc(o.q) + '</summary><div class="say">' + esc(o.a) + "</div></details>";
+  }).join("");
+}
+function drawScript(l) {
+  var C = SCRIPTS.common, S = SCRIPTS.leads[l.id] || (l.source === "site" ? C.inbound : null);
+  var hasDemo = /formasaita\.ru/.test(l.now_url || ""), html = '<div class="sc">';
+  document.getElementById("d-script-goal").textContent = S ? S.goal : "Индивидуального скрипта нет — общие правила и возражения";
+  if (S) {
+    if (S.caution) html += '<p class="warn2"><b>Осторожно:</b> ' + esc(S.caution) + "</p>";
+    html += scSay("Начало разговора", S.opener) + scList("Факты о сайте — перепроверить перед звонком", S.hook) +
+      (S.show ? "<h4>Что показываем и обещаем</h4><p>" + esc(S.show) + "</p>" : "") +
+      scList("Вопросы клиенту", S.questions);
+  }
+  html += scSay(C.gatekeeper.title, C.gatekeeper.text) + "<h4>Цена</h4><p>" + esc(C.price) + "</p>";
+  var own = (S && S.objections ? S.objections : []).concat(hasDemo ? [C.demo_objection] : []);
+  if (own.length) html += "<h4>Возражения именно этого клиента</h4>" + scObj(own, true);
+  html += "<h4>Частые возражения</h4>" + scObj(C.objections, false);
+  if (S && S.next) html += "<h4>Чем закончить звонок</h4><p>" + esc(S.next) + "</p>";
+  html += scList("Правила", C.rules) + "</div>";
+  document.getElementById("d-script").innerHTML = html;
+  document.getElementById("d-script-box").open = false;
+}
+
 function open(id) {
   var l = LEADS.filter(function (x) { return x.id === id; })[0];
   if (!l) return;
@@ -103,6 +133,7 @@ function open(id) {
   document.getElementById("d-quick").innerHTML = QUICK.map(function (q) {
     return "<button type=\"button\">" + esc(q) + "</button>";
   }).join("");
+  drawScript(l);
   drawLog(l);
   document.getElementById("d-note").value = "";
   dlg.showModal();
