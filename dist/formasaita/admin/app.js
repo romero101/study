@@ -59,7 +59,8 @@ function drawRows() {
     var c = last(l);
     return '<tr data-id="' + l.id + '">' +
       '<td class="num">' + esc(l.n) + "</td>" +
-      '<td class="co">' + esc(l.company) + "<s>" + esc(l.city) + "</s></td>" +
+      '<td class="co">' + esc(l.company) + (l.source === "site" ? '<span class="src">с сайта</span>' : "") +
+        "<s>" + esc(l.city) + "</s></td>" +
       "<td><span class=\"pill\" style=\"background:" + stageColor(l.stage) + "22;color:" +
         stageColor(l.stage) + '">' + esc(l.stage) + "</span></td>" +
       '<td class="mini">' + (l.was_url ? '<a href="' + esc(l.was_url) + '" target="_blank" rel="noopener">'

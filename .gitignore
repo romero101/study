@@ -1,0 +1,8 @@
+# живые данные админки и журналы заявок — только на сервере
+dist/formasaita/admin/data/store.php
+dist/formasaita/admin/data/users.php
+dist/formasaita/admin/data/throttle.php
+dist/formasaita/admin/data/leads.json
+leads.log.php
+__pycache__/
+.DS_Store

@@ -1,0 +1,56 @@
+
+/* ==== Доработка 18.09.2026: мобильная вёрстка, конверсия, скорость. Дописывается в конец style.css ==== */
+picture{display:contents}
+.hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
+.consent{font-size:12px;line-height:1.5;color:var(--muted);margin:14px 0 0}
+.consent a{text-decoration:underline;text-underline-offset:3px}
+#form-error:not(:empty){background:#fff1f0;border:1px solid #f0b3ac;color:#9e2114;padding:11px 14px;border-radius:6px;font-size:14px;margin-top:14px}
+.button[disabled]{opacity:.6;cursor:progress;transform:none}
+.callback{display:flex;gap:8px;margin:14px 0 4px}
+.callback input{flex:1;min-width:0;min-height:48px;padding:10px 12px;border:1px solid #c9d3ce;border-radius:4px;font-size:16px}
+.callback button{min-height:48px;padding:0 16px;border:0;border-radius:4px;background:var(--ink);color:#fff;font-weight:650;font-size:14px;white-space:nowrap}
+#callback-status{font-size:13px;margin:6px 0 0;min-height:18px}
+#callback-status.ok{color:#1d6b3a}#callback-status.bad{color:#9e2114}
+.lead-ok{background:#e9f6ee;border:1px solid #b5dcc3;color:#174d2c;padding:12px 14px;border-radius:6px;font-size:14px}
+summary{min-height:44px;display:flex;align-items:center}
+summary:after{top:50%;transform:translateY(-50%);font-size:22px}
+
+@media(max-width:760px){
+  /* палец, а не курсор: всё кликабельное не ниже 44px */
+  .text-button,.solution-grid a,.solution-grid button,.work-card a,.review-card a,.rating-panel a,.source-link,.contact-mail,.hero-bottom a,.hero-price a,footer>a:last-child{display:inline-flex;align-items:center;min-height:44px}
+  .header-phone{min-height:44px;display:flex;flex-direction:column;justify-content:center;text-align:right}
+  .number input{min-height:44px;width:84px;font-size:16px}
+  input[type=range]{min-height:44px}
+  .check{min-height:44px;margin:4px 0}.check input{width:22px;height:22px}
+  .tabs button{min-height:48px;padding-top:12px}
+  .quiz-choice{min-height:52px}
+  .field input,.field select,.field textarea{font-size:16px}
+
+  /* работы: лента с прокруткой вбок вместо шести экранов подряд */
+  .work-grid{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin:0 -20px;padding:0 20px 14px;scroll-padding-left:20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .work-grid::-webkit-scrollbar{display:none}
+  .work-card{flex:0 0 78%;scroll-snap-align:start;min-width:0}
+  .work-image{height:300px!important}
+  .works .section-head>p:after{content:" Листайте →";white-space:nowrap;color:var(--ink);font-weight:600}
+
+  /* нижняя панель — главный путь к заявке; плавающая кнопка с ней спорила */
+  .chat-toggle{display:none}
+  #contact-panel{left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom));width:auto;max-width:none}
+  .mobile-bar{box-shadow:0 -6px 24px #10202c14}
+  .mobile-bar{gap:8px;padding-left:12px;padding-right:12px}
+  .mobile-bar a{min-height:48px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;padding:0 6px;white-space:nowrap}
+  .mobile-bar a:first-child{background:var(--ink);color:#fff}
+  body.kbd .mobile-bar{display:none}
+
+  /* первый экран: заголовок не режется, кнопка во всю ширину */
+  .hero-new .actions .button,.hero-editorial .actions .button{width:100%}
+  .hero h1{overflow-wrap:anywhere}
+  .calc-result>.button,.process .button{width:100%}
+  .section-head h2 br,.lead-section h2 br{display:none}
+  .system-visual img{min-height:0;height:auto}
+  .review-cards{gap:14px}
+  dialog{max-height:88vh;overflow:auto}
+  #photo-dialog{padding:12px;width:calc(100% - 16px)}
+  #photo-large{width:100%;height:auto;max-height:76vh;object-fit:contain}
+}
+@media(max-width:380px){.hero-new h1{font-size:40px}.hero-editorial h1{font-size:44px}.brand small{display:none}}

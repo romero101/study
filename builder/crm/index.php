@@ -2,14 +2,24 @@
 require __DIR__ . '/lib.php';
 crm_boot();
 
-$err = '';
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['login'])) {
-    if (crm_login($_POST['u'] ?? '', $_POST['p'] ?? '')) {
-        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?')); exit;
-    }
-    $err = 'Неверный логин или пароль';
+$err = ''; $ok = '';
+$post = ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST';
+if ($post && isset($_POST['login'])) {
+    $err = crm_login($_POST['u'] ?? '', $_POST['p'] ?? '');
+    if ($err === '') { header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?')); exit; }
 }
-if (isset($_GET['logout'])) { $_SESSION = []; session_destroy(); header('Location: index.php'); exit; }
+if ($post && isset($_POST['logout']) && crm_csrf_ok($_POST['csrf'] ?? '')) {
+    $_SESSION = []; session_destroy(); header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?')); exit;
+}
+if ($post && isset($_POST['newpass']) && crm_logged_in()) {
+    $err = crm_csrf_ok($_POST['csrf'] ?? '')
+        ? crm_change_password($_POST['cur'] ?? '', $_POST['p1'] ?? '', $_POST['p2'] ?? '')
+        : 'Сессия устарела, обновите страницу';
+    if ($err === '') { header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '?changed=1'); exit; }
+}
+$passScreen = crm_logged_in() && (crm_must_change() || isset($_GET['password']) || ($post && isset($_POST['newpass'])));
+if (isset($_GET['changed'])) $ok = 'Пароль изменён';
+$locked = crm_logged_in() ? 0 : crm_locked_for();
 
 $data = crm_read();
 ?><!doctype html>
@@ -50,6 +60,16 @@ text-decoration:none}
 .btn--sm{min-height:38px;padding:8px 14px;font-size:14px}
 .err{background:#fff1f0;border:1px solid #f0b3ac;color:#9e2114;padding:11px 14px;border-radius:10px;
 margin-bottom:16px;font-weight:600;font-size:14px}
+
+.login h1+p{line-height:1.45}
+.f label small{font-weight:400;color:#6a7686}
+.pw{position:relative}.pw input{padding-right:92px}
+.eye{position:absolute;right:6px;top:6px;bottom:6px;border:0;background:#eef3f8;border-radius:7px;padding:0 10px;
+font-size:13px;cursor:pointer;color:#41586e}
+.back{text-align:center;margin:18px 0 0!important;font-size:14px}
+.out{display:inline}.out button{background:none;border:0;color:#cdd8e3;cursor:pointer;text-decoration:underline;padding:0;min-height:32px}
+.warn--ok{background:#e9f6ee;border-color:#b5dcc3;color:#174d2c}
+.src{display:inline-block;margin-left:6px;background:#fff0d6;color:#8a5a00;border-radius:99px;padding:1px 8px;font-size:11.5px;font-weight:700}
 
 /* ---------- каркас ---------- */
 .top{background:#16202b;color:#fff;padding:12px 0}
@@ -146,15 +166,36 @@ cursor:pointer;min-height:34px}
 <body>
 <?php if (!crm_logged_in()): ?>
 <div class="login">
-  <form method="post">
+  <form method="post" autocomplete="on">
     <h1>Форма сайта</h1>
-    <p>Воронка продаж. Доступ для менеджера.</p>
-    <?php if ($err): ?><div class="err"><?= h($err) ?></div><?php endif; ?>
+    <p>Воронка продаж. Вход для сотрудников студии.</p>
+    <?php if ($err): ?><div class="err" role="alert"><?= h($err) ?></div><?php endif; ?>
+    <?php if ($locked && !$err): ?><div class="err" role="alert">Слишком много попыток. Вход закрыт ещё на <?= $locked ?> мин.</div><?php endif; ?>
     <div class="f"><label for="u">Логин</label>
-      <input id="u" name="u" autocomplete="username" autofocus required></div>
+      <input id="u" name="u" autocomplete="username" autocapitalize="none" autofocus required></div>
     <div class="f"><label for="p">Пароль</label>
-      <input id="p" name="p" type="password" autocomplete="current-password" required></div>
+      <div class="pw"><input id="p" name="p" type="password" autocomplete="current-password" required>
+      <button type="button" class="eye" data-eye="p" aria-label="Показать пароль">показать</button></div></div>
     <button class="btn btn--w" type="submit" name="login" value="1">Войти</button>
+    <p class="back"><a href="../">← На сайт студии</a></p>
+  </form>
+</div>
+<?php elseif ($passScreen): ?>
+<div class="login">
+  <form method="post">
+    <h1><?= crm_must_change() ? 'Задайте свой пароль' : 'Смена пароля' ?></h1>
+    <p><?= crm_must_change() ? 'Вы вошли со стартовым паролем. Пока он не сменён, воронка закрыта: в ней контакты клиентов.' : 'После смены вход на других устройствах останется активным до выхода.' ?></p>
+    <?php if ($err): ?><div class="err" role="alert"><?= h($err) ?></div><?php endif; ?>
+    <input type="hidden" name="csrf" value="<?= h(crm_csrf()) ?>">
+    <div class="f"><label for="cur">Текущий пароль</label>
+      <input id="cur" name="cur" type="password" autocomplete="current-password" required autofocus></div>
+    <div class="f"><label for="p1">Новый пароль <small>не короче <?= CRM_MIN_PASS ?> символов</small></label>
+      <div class="pw"><input id="p1" name="p1" type="password" autocomplete="new-password" minlength="<?= CRM_MIN_PASS ?>" required>
+      <button type="button" class="eye" data-eye="p1" aria-label="Показать пароль">показать</button></div></div>
+    <div class="f"><label for="p2">Новый пароль ещё раз</label>
+      <input id="p2" name="p2" type="password" autocomplete="new-password" minlength="<?= CRM_MIN_PASS ?>" required></div>
+    <button class="btn btn--w" type="submit" name="newpass" value="1">Сохранить пароль</button>
+    <?php if (!crm_must_change()): ?><p class="back"><a href="./">← Назад в воронку</a></p><?php endif; ?>
   </form>
 </div>
 <?php else: ?>
@@ -162,14 +203,13 @@ cursor:pointer;min-height:34px}
 <div class="top"><div class="in">
   <b><?= h(CRM_TITLE) ?></b>
   <span class="sp">
-    <span><?= h($_SESSION['crm_user'] ?? '') ?></span>
-    <a href="?logout=1">Выйти</a>
+    <span><?= h($_SESSION['crm_name'] ?? '') ?></span>
+    <a href="?password=1">Сменить пароль</a>
+    <form method="post" class="out"><input type="hidden" name="csrf" value="<?= h(crm_csrf()) ?>">
+      <button type="submit" name="logout" value="1">Выйти</button></form>
   </span>
 </div></div>
-<?php if (CRM_PASS === 'admin'): ?>
-<div class="warn">Пароль по умолчанию. Пока он не сменён в <code>admin/lib.php</code>,
-данные клиентов может открыть любой, кто знает адрес папки.</div>
-<?php endif; ?>
+<?php if ($ok): ?><div class="warn warn--ok"><?= h($ok) ?></div><?php endif; ?>
 
 <div class="wrap">
   <div class="funnel" id="funnel"></div>
@@ -241,5 +281,13 @@ const CSRF = <?= json_encode(crm_csrf()) ?>;
 </script>
 <script src="app.js" defer></script>
 <?php endif; ?>
+<script>
+document.querySelectorAll('[data-eye]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var i = document.getElementById(b.dataset.eye), show = i.type === 'password';
+    i.type = show ? 'text' : 'password'; b.textContent = show ? 'скрыть' : 'показать';
+  });
+});
+</script>
 </body>
 </html>

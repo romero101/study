@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Перенос таблицы продаж из Excel в базу мини-CRM.
-Запускать один раз: дальше данные живут в admin/data/leads.json и правятся в админке.
+Запускать один раз: дальше данные живут в admin/data/store.php (закрытый файл) и правятся в админке.
 Повторный запуск НЕ затирает комментарии и этапы — обновляет только пустые поля."""
 import json, os, sys
 import xlrd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 XLS = os.path.join(ROOT, "builder", "data", "forma-saita-sales.xls")
-OUT = os.path.join(ROOT, "dist", "formasaita", "admin", "data", "leads.json")
+OUT = os.path.join(ROOT, "builder", "crm", "seed", "leads.json")  # на сервер не заливается: там данные живут в data/store.php
 
 # Этапы воронки. Порядок = порядок колонок на доске.
 STAGES = ["Не связывались", "Дозвонился до ЛПР", "Отправил лендинг",

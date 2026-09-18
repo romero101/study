@@ -4,13 +4,13 @@ require __DIR__ . '/lib.php';
 crm_boot();
 header('Content-Type: application/json; charset=utf-8');
 
-if (!crm_logged_in()) { http_response_code(401); exit(json_encode(['error' => 'auth'])); }
+if (!crm_logged_in() || crm_must_change()) { http_response_code(401); exit(json_encode(['error' => 'auth'])); }
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { http_response_code(405); exit('{}'); }
 if (!crm_csrf_ok($_POST['csrf'] ?? '')) { http_response_code(403); exit(json_encode(['error' => 'csrf'])); }
 
 $action = $_POST['action'] ?? '';
 $data   = crm_read();
-$user   = $_SESSION['crm_user'] ?? 'админ';
+$user   = $_SESSION['crm_name'] ?? ($_SESSION['crm_user'] ?? 'админ');
 $out    = ['ok' => true];
 
 if ($action === 'stage') {
@@ -56,24 +56,18 @@ if ($action === 'stage') {
 } elseif ($action === 'create') {
     $company = trim((string)($_POST['company'] ?? ''));
     if ($company === '') { http_response_code(422); exit(json_encode(['error' => 'company'])); }
-    $max = 0;
-    foreach ($data['leads'] as $l) $max = max($max, (int)($l['n'] ?? 0));
-    $lead = ['id' => 'l' . str_pad((string)($max + 1), 2, '0', STR_PAD_LEFT),
-             'n' => $max + 1, 'company' => mb_substr($company, 0, 200),
-             'city' => mb_substr(trim((string)($_POST['city'] ?? '')), 0, 100),
-             'was_url' => mb_substr(trim((string)($_POST['was_url'] ?? '')), 0, 500),
-             'now_url' => '', 'was_problems' => '', 'now_done' => '', 'left_todo' => '',
-             'contacts' => mb_substr(trim((string)($_POST['contacts'] ?? '')), 0, 500),
-             'pagespeed' => null, 'offer' => (int)preg_replace('/\D+/', '', (string)($_POST['offer'] ?? '')),
-             'stage' => $data['stages'][0] ?? 'Не связывались', 'measure_src' => '',
-             'comments' => [['at' => crm_now(), 'who' => $user, 'kind' => 'stage', 'text' => 'Сделка заведена']],
-             'updated' => crm_now()];
-    $data['leads'][] = $lead;
+    $lead = crm_add_lead($data, [
+        'company' => mb_substr($company, 0, 200),
+        'city' => mb_substr(trim((string)($_POST['city'] ?? '')), 0, 100),
+        'was_url' => mb_substr(trim((string)($_POST['was_url'] ?? '')), 0, 500),
+        'contacts' => mb_substr(trim((string)($_POST['contacts'] ?? '')), 0, 500),
+        'offer' => (int)preg_replace('/\D+/', '', (string)($_POST['offer'] ?? '')),
+    ], $user, 'Сделка заведена');
     $out['lead'] = $lead;
 
 } else {
     http_response_code(400); exit(json_encode(['error' => 'action']));
 }
 
-crm_write($data);
+if (!crm_write($data)) { http_response_code(500); exit(json_encode(['error' => 'write'])); }
 echo json_encode($out, JSON_UNESCAPED_UNICODE);
