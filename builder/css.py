@@ -42,7 +42,7 @@ font-family:inherit;transition:transform .12s,box-shadow .12s,background .12s;wh
 @media (max-width:520px){.btn-row{flex-direction:column}.btn{width:100%}}
 
 /* ---------- шапка ---------- */
-.hdr{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
 border-bottom:1px solid __BORDER__}
 .hdr__in{display:flex;align-items:center;gap:18px;min-height:66px}
 .logo{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:800;font-size:19px;color:#16202b;text-decoration:none;letter-spacing:-.03em;white-space:nowrap}

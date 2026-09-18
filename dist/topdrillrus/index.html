@@ -55,7 +55,7 @@ font-family:inherit;transition:transform .12s,box-shadow .12s,background .12s;wh
 @media (max-width:520px){.btn-row{flex-direction:column}.btn{width:100%}}
 
 /* ---------- шапка ---------- */
-.hdr{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
 border-bottom:1px solid #dbe4ee}
 .hdr__in{display:flex;align-items:center;gap:18px;min-height:66px}
 .logo{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:800;font-size:19px;color:#16202b;text-decoration:none;letter-spacing:-.03em;white-space:nowrap}
@@ -714,6 +714,14 @@ document.querySelectorAll('form[data-lead]').forEach(function(form){
     fd.append('_form', form.dataset.lead);
     fd.append('_elapsed', String(Math.round((Date.now()-+form.dataset.t0)/1000)));
     var label=btn?btn.textContent:'';
+    // витрина без backend: показываем, что произойдёт, вместо ложной ошибки
+    if(!CFG.endpoint){
+      form.reset();
+      if(msg){ msg.className='formmsg formmsg--ok';
+        msg.textContent='Демонстрация: на рабочем сайте заявка уходит в Telegram и на почту за секунды.'; }
+      track('form_submit',{form:form.dataset.lead,demo:1});
+      return;
+    }
     if(btn){ btn.disabled=true; btn.textContent='Отправляем…'; }
     fetch(CFG.endpoint,{method:'POST',body:fd})
       .then(function(r){ return r.ok?r.json().catch(function(){return{ok:true}}):Promise.reject(r.status); })

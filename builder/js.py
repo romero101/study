@@ -160,6 +160,14 @@ document.querySelectorAll('form[data-lead]').forEach(function(form){
     fd.append('_form', form.dataset.lead);
     fd.append('_elapsed', String(Math.round((Date.now()-+form.dataset.t0)/1000)));
     var label=btn?btn.textContent:'';
+    // витрина без backend: показываем, что произойдёт, вместо ложной ошибки
+    if(!CFG.endpoint){
+      form.reset();
+      if(msg){ msg.className='formmsg formmsg--ok';
+        msg.textContent='Демонстрация: на рабочем сайте заявка уходит в Telegram и на почту за секунды.'; }
+      track('form_submit',{form:form.dataset.lead,demo:1});
+      return;
+    }
     if(btn){ btn.disabled=true; btn.textContent='Отправляем…'; }
     fetch(CFG.endpoint,{method:'POST',body:fd})
       .then(function(r){ return r.ok?r.json().catch(function(){return{ok:true}}):Promise.reject(r.status); })
