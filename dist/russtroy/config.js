@@ -229,6 +229,7 @@ window.SITE = {
   "per": "за м²",
   "hello": "Здравствуйте! Посчитал работы на сайте:",
   "askLen": "Укажите площадь",
-  "heightLabel": "высота"
+  "heightLabel": "высота",
+  "lenPrefix": ""
  }
 };

@@ -18,6 +18,16 @@ function state() {
     extraRate: [...document.querySelectorAll('.checks input:checked')].reduce((a, i) => a + ((SITE.extraRates || {})[i.id] || 0), 0),
     extraIds: [...document.querySelectorAll('.checks input:checked')].map(i => i.id)};
 }
+function quote(s) {
+  const t = s.t;
+  if (t.steps) {
+    const st = t.steps.find(x => s.len <= x[0]), install = t.install || 0;
+    if (!st) return {total: 0, formula: '', model: ''};  // больше, чем рассчитана старшая модель серии — только по смете
+    return {total: st[1] + install, formula: `${st[2]}: станция от ${money(st[1])} ₽` + (install ? ` + монтаж от ${money(install)} ₽` : ''), model: st[2]};
+  }
+  if (!t.rate) return {total: 0, formula: '', model: ''};
+  return {total: s.len * (t.rate + s.extraRate), formula: `${s.len} ${CALC.unit} × от ${money(t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : ''), model: ''};
+}
 function giftFor(len) { return GIFTS.find(g => len >= g[0]); }
 
 function drawFence(typeKey) {
@@ -42,10 +52,11 @@ function drawFence(typeKey) {
 }
 
 function summary() {
-  const s = state(), lines = [`${CALC.noun}: ${s.t.name}, ${s.len} ${CALC.unit}` + (s.height ? `, ${CALC.heightLabel || 'высота'} ${s.height}` : '')];
+  const s = state(), lines = [`${CALC.noun}: ${s.t.name}, ${CALC.lenPrefix || ''}${s.len} ${CALC.unit}` + (s.height ? `, ${CALC.heightLabel || 'высота'} ${s.height}` : '')];
   if (color) lines.push(`Цвет: RAL ${color[0]} (${color[1]})`);
   if (s.extras.length) lines.push('Дополнительно: ' + s.extras.join(', '));
-  lines.push(s.t.rate ? `Предварительно: от ${money(s.len * (s.t.rate + s.extraRate))} ₽ (по прайсу «от ${money(s.t.rate)} ₽ ${CALC.per}»)` : 'Цена: по смете после замера');
+  const q = quote(s);
+  lines.push(q.total ? `Предварительно: от ${money(q.total)} ₽ (${q.formula})` : 'Цена: по смете после замера');
   const g = giftFor(s.len); if (g) lines.push('Подарок за метраж: ' + g[1]);
   if (quiz.done) lines.push('', 'Из подбора: ' + quiz.keys.map(k => answers[k]).filter(Boolean).join('; '));
   return lines.join('\n');
@@ -57,8 +68,9 @@ function update() {
   drawFence(s.type);
   $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? 'ПОДБОР ЗАБОРА' : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
   if (!s.valid) { $('out-price').textContent = CALC.askLen || 'Укажите длину'; $('out-formula').textContent = `От ${CALC.min} до ${CALC.max} ${CALC.unit}. Больше — позвоните, посчитаем отдельно.`; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
-  $('out-price').textContent = s.t.rate ? `от ${money(s.len * (s.t.rate + s.extraRate))} ₽` : 'По смете';
-  $('out-formula').textContent = s.t.rate ? `${s.len} ${CALC.unit} × от ${money(s.t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : '') : 'Этот тип считаем по смете после бесплатного замера.';
+  const q = quote(s);
+  $('out-price').textContent = q.total ? `от ${money(q.total)} ₽` : 'По смете';
+  $('out-formula').textContent = q.total ? q.formula : 'Этот вариант считаем по смете после бесплатного выезда.';
   const g = giftFor(s.len), next = [...GIFTS].reverse().find(x => x[0] > s.len), gift = $('gift');
   gift.className = 'gift' + (g ? ' on' : '');
   gift.textContent = (g ? `🎁 В подарок: ${g[1]}. ` : '') + (next && next[0] - s.len <= 25 ? `Ещё ${next[0] - s.len} м — и в подарок ${next[1]}.` : '');

@@ -237,6 +237,7 @@ window.SITE = {
   "per": "за м²",
   "hello": "Здравствуйте! Посчитал кровлю на сайте:",
   "askLen": "Укажите площадь",
-  "heightLabel": "высота"
+  "heightLabel": "высота",
+  "lenPrefix": ""
  }
 };
