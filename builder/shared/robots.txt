@@ -1,0 +1,5 @@
+User-agent: *
+__DISALLOW__
+
+# ЗАПУСК: заменить строку выше на "Allow: /" и убрать noindex из index.html
+Sitemap: __CANONICAL__sitemap.xml
