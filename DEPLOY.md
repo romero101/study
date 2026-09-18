@@ -1,17 +1,26 @@
-# Что заливать на REG.RU (состояние на 18.09.2026)
+# Выкладка на REG.RU
 
-Хостинг отдаёт статику через nginx: `.htaccess` для .json/.log **не работает**.
-Поэтому всё закрытое хранится в `.php`-файлах с `<?php exit; ?>` в первой строке.
+**18.09.2026 всё залито на боевой** по SSH (`ssh formasaita` → server280.hosting.reg.ru, u3380158, вход по ключу).
+Резервная копия прежних файлов: `~/backups/formasaita-sites-2026-09-18-before-v2.tgz` на сервере.
 
-## 1. Срочно: админка — `/www/formasaita.ru/admin/`
+Повторная выкладка:
 
-Сейчас `https://formasaita.ru/admin/data/leads.json` открывается всем по прямой ссылке.
+    rsync -az --exclude leads.json --exclude store.php --exclude users.php --exclude throttle.php \
+          --exclude leads.log.php dist/formasaita/ formasaita:www/formasaita.ru/
+    rsync -az --exclude leads.log.php dist/topdrillrus-v2/   formasaita:www/topdrillrus.formasaita.ru/
+    rsync -az --exclude leads.log.php dist/skvazhina-ekb-v2/ formasaita:www/skvazhina-ekb.formasaita.ru/
 
-1. Залить поверх файлы из `dist/formasaita/admin/`: `index.php`, `lib.php`, `api.php`, `app.js`, `data/index.php`.
-   **Папку `data/` на сервере не затирать** — там живые правки менеджера.
-2. Открыть `https://formasaita.ru/admin/` — при первом запросе `leads.json` переедет в `data/store.php` и удалится.
-3. Войти `админ` / `admin` — система сразу потребует задать свой пароль (от 8 символов). До смены воронка закрыта.
-4. Проверить: `https://formasaita.ru/admin/data/leads.json` → 404, `.../data/store.php` → пустая страница.
+Грабли этого хостинга:
+- Apache стоит за nginx: правило «RewriteCond %{HTTPS} !=on» даёт бесконечный 301. Https-редирект — только в панели.
+- На пути /admin/ хостинг ставит проверку от ботов: первый ответ — заглушка 124 байта с cookie RCPC и
+  переходом на `?attempt=1`. Код 200 на любой адрес под /admin/ без cookie ничего не значит.
+  (Из-за этого 18.09 показалось, что leads.json открыт наружу — на деле админки на сервере тогда не было.)
+- Закрытые данные всё равно держим в .php с `<?php exit; ?>`: от настроек сервера не зависит.
+
+## 1. Админка — `/www/formasaita.ru/admin/`
+
+Вход `админ` / `admin` → система сразу требует задать свой пароль (от 8 символов). До смены воронка закрыта.
+**Папку `data/` при выкладке не затирать** — там живые сделки (`store.php`) и пользователи (`users.php`).
 
 Забыли пароль: удалить `admin/data/users.php` — вернётся стартовая пара с обязательной сменой.
 После 5 неверных попыток вход с этого адреса закрыт на 15 минут (`data/throttle.php`).
