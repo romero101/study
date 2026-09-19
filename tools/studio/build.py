@@ -25,8 +25,8 @@ import md  # noqa: E402
 e = html.escape
 MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
           'сентября', 'октября', 'ноября', 'декабря']
-ICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' "
-        "height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E")
+ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%234558ed'/%3E%3Cpath d='M27 18h-5a14 14 0 0 0 0 28h5z' fill='%23fff'/%3E%3Cpath d='M37 18h5a14 14 0 0 1 0 28h-5z' fill='%23fff' opacity='.55'/%3E%3Crect x='29' y='10' width='6' height='44' rx='3' fill='%23fff'/%3E%3C/svg%3E"
+LOGO_MARK = '<svg class="logo-mark" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#4558ed"/><path d="M27 18h-5a14 14 0 0 0 0 28h5z" fill="#fff"/><path d="M37 18h5a14 14 0 0 1 0 28h-5z" fill="#fff" opacity=".55"/><rect x="29" y="10" width="6" height="44" rx="3" fill="#fff"/></svg>'
 
 
 def asset(name, text):
@@ -63,12 +63,14 @@ def shell(*, title, desc, path, css, js, body, ld='', og='website'):
 <meta property="og:url" content="{url}">
 <link rel="canonical" href="{url}">
 <link rel="icon" href="{ICON}">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta property="og:image" content="https://formasaita.ru/img/og.png">
 <link rel="stylesheet" href="{css}">
 {ld}
 </head>
 <body class="sub">
 <header><div class="wrap">
-  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <a class="logo" href="/" aria-label="Форма сайта">{LOGO_MARK}<b>форма<span>сайта</span></b></a>
   <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
   <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a></div></details>
@@ -181,6 +183,23 @@ def art_cards(arts):
         f'<span class="a-mt">{a["minutes"]} мин</span></a>' for a in arts) + '</div>'
 
 
+SHOT_H = {'calc-zabor': 1835, 'calc-septik': 1468, 'calc-skvazhina': 1567, 'calc-krovlya': 1713, 'quiz-zabor-2': 1365,
+          'quiz-septik-1': 1315, 'hero-septik': 540, 'hero-krovlya': 566, 'form-zabor': 1219, 'process-zabor': 1085}
+
+
+def hero_vis(v):
+    if not v:
+        return ''
+    shot = (f'<div class="ph ph--shot"><div class="ph-scr"><img src="/stati/img/{v["shot"]}.webp" alt="{e(v["alt"])}" '
+            f'width="390" height="{SHOT_H[v["shot"]]}"></div></div>')
+    tip = f'<div class="tip"><b>{v["tip"][0]}</b>{v["tip"][1]}</div>' if v.get('tip') else ''
+    if v.get('photo'):
+        n = v['photo']
+        return (f'<div class="hero-vis"><span class="pic"><img src="/img/{n}-1200.webp" srcset="/img/{n}-640.webp 640w, /img/{n}-1200.webp 1200w" '
+                f'sizes="(max-width:980px) 90vw, 480px" alt="{e(v["photo_alt"])}" width="1200" height="800" fetchpriority="high"></span>{shot}{tip}</div>')
+    return f'<div class="hero-vis hero-vis--solo">{shot}{tip}</div>'
+
+
 def render_page(page, css, js, by_slug, arts):
     sections = []
     for i, b in enumerate(page['blocks']):
@@ -193,6 +212,7 @@ def render_page(page, css, js, by_slug, arts):
     rel = ''.join(f'<a href="/{s}/"><b>{by_slug[s]["nav"]}</b><span>{by_slug[s]["short"]}</span></a>' for s in page['related'])
     body = f'''<section class="hero"><div class="wrap">
   <p class="crumbs"><a href="/">Главная</a> · {page["nav"]}</p>
+ <div class="hero-grid"><div>
   <div class="tag">{page["tag"]}</div>
   <h1>{page["h1"]}</h1>
   <p class="intro">{page["intro"]}</p>
@@ -200,6 +220,7 @@ def render_page(page, css, js, by_slug, arts):
     <a class="button" href="#request">{page["cta"]} ↗</a>
     <a class="button button--ghost" href="/#prices">Посмотреть цены</a>
   </div>
+ </div>{hero_vis(page.get("vis"))}</div>
   <div class="facts">{facts}</div>
 </div></section>
 
@@ -222,6 +243,29 @@ SERVICE_OF = {'/' + p['slug'] + '/': p for p in PAGES}
 REQUIRED = ('n', 'title', 'h1', 'desc', 'query', 'leads_to', 'cluster', 'date')
 
 
+FIGS = ARTICLES / 'fig'
+FIG_BAD = re.compile(r'<script|<img(?! src="/stati/img/[a-z0-9-]+\.webp")|<iframe|<link|https?://|\son\w+=|style="(?!--[vw]:[\d.]+%;?")', re.I)
+
+
+def include_factory(fname, problems):
+    def include(name, caption):
+        if name.startswith('widget:'):
+            f = HERE / 'widgets' / (name[7:] + '.html')
+            if not f.exists():
+                problems.append(f'{fname}: нет виджета {name}'); return ''
+            return f.read_text(encoding='utf-8')
+        f = FIGS / (name + '.html')
+        if not f.exists():
+            problems.append(f'{fname}: нет иллюстрации {name}'); return ''
+        body = f.read_text(encoding='utf-8').strip()
+        m = FIG_BAD.search(body)
+        if m:
+            problems.append(f'{fname}: в иллюстрации {name} запрещённое: {m.group(0)[:30]}')
+        cap = f'<figcaption>{caption}</figcaption>' if caption else ''
+        return f'<figure class="fig"><div class="fig-body">{body}</div>{cap}</figure>'
+    return include
+
+
 def load_articles():
     arts, problems = [], []
     for f in sorted(ARTICLES.glob('*.md')):
@@ -232,7 +276,7 @@ def load_articles():
         if miss:
             problems.append(f'{f.name}: нет {", ".join(miss)}')
             continue
-        htm, toc, chars = md.render(body)
+        htm, toc, chars = md.render(body, include_factory(f.name, problems))
         for href in re.findall(r'href="(/[^"#]*)', htm):
             if not (href == '/' or href.startswith('/stati/') or href in SERVICE_OF or href == '/policy.html'):
                 problems.append(f'{f.name}: ссылка на несуществующую страницу {href}')
@@ -328,7 +372,8 @@ def render_index(arts, css, js):
 def main():
     index = (OUT / 'index.html').read_text(encoding='utf-8')
     base = re.search(r'<style>(.*?)</style>', index, re.S).group(1)
-    css = asset('site.css', base + (HERE / 'extra.css').read_text(encoding='utf-8'))
+    css = asset('site.css', base + (HERE / 'extra.css').read_text(encoding='utf-8')
+                + (HERE / 'figures.css').read_text(encoding='utf-8'))
     js = asset('site.js', (HERE / 'site.js').read_text(encoding='utf-8'))
     arts, problems = load_articles()
     for p in problems:
@@ -340,10 +385,15 @@ def main():
         (d / 'index.html').write_text(render_page(p, css, js, by_slug, arts), encoding='utf-8')
     print('услуг:', len(PAGES))
 
+    if (ROOT / 'content' / 'site-img').exists():
+        shutil.copytree(ROOT / 'content' / 'site-img', OUT / 'img', dirs_exist_ok=True)
+
     sdir = OUT / 'stati'
     if sdir.exists():
         shutil.rmtree(sdir)
     sdir.mkdir()
+    if (ARTICLES / 'img').exists():
+        shutil.copytree(ARTICLES / 'img', sdir / 'img')
     (sdir / 'index.html').write_text(render_index(arts, css, js), encoding='utf-8')
     for a in arts:
         (sdir / a['slug']).mkdir()

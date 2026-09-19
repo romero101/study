@@ -11,13 +11,15 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://formasaita.ru/stati/utm-metki-minimalnaya-shema/">
 <link rel="canonical" href="https://formasaita.ru/stati/utm-metki-minimalnaya-shema/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/site.10664175.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%234558ed'/%3E%3Cpath d='M27 18h-5a14 14 0 0 0 0 28h5z' fill='%23fff'/%3E%3Cpath d='M37 18h5a14 14 0 0 1 0 28h-5z' fill='%23fff' opacity='.55'/%3E%3Crect x='29' y='10' width='6' height='44' rx='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta property="og:image" content="https://formasaita.ru/img/og.png">
+<link rel="stylesheet" href="/assets/site.6367238b.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "UTM-метки: минимальная схема, которую не лень поддерживать", "description": "UTM-метки: как настроить для Директа один раз и не трогать — пять параметров, шаблон с динамическими подстановками и ошибки, из-за которых данные бьются.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "inLanguage": "ru", "mainEntityOfPage": "https://formasaita.ru/stati/utm-metki-minimalnaya-shema/", "author": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}, "publisher": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://formasaita.ru/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://formasaita.ru/stati/"}, {"@type": "ListItem", "position": 3, "name": "UTM-метки: минимальная схема, которую не лень поддерживать"}]}</script>
 </head>
 <body class="sub">
 <header><div class="wrap">
-  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <a class="logo" href="/" aria-label="Форма сайта"><svg class="logo-mark" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#4558ed"/><path d="M27 18h-5a14 14 0 0 0 0 28h5z" fill="#fff"/><path d="M37 18h5a14 14 0 0 1 0 28h-5z" fill="#fff" opacity=".55"/><rect x="29" y="10" width="6" height="44" rx="3" fill="#fff"/></svg><b>форма<span>сайта</span></b></a>
   <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
   <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a></div></details>
@@ -27,7 +29,7 @@
 <article class="post"><div class="wrap">
   <p class="crumbs"><a href="/">Главная</a> · <a href="/stati/">Статьи</a> · Яндекс Директ</p>
   <h1>UTM-метки: минимальная схема, которую не лень поддерживать</h1>
-  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 4 мин чтения</p>
+  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 5 мин чтения</p>
   <nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#нужны-ли-метки-если-есть-метрика">Нужны ли метки, если есть Метрика</a></li><li><a href="#пять-параметров-и-что-в-них-писать">Пять параметров и что в них писать</a></li><li><a href="#шаблон">Шаблон</a></li><li><a href="#ошибки-из-за-которых-данные-бьются">Ошибки, из-за которых данные бьются</a></li><li><a href="#как-донести-метку-до-менеджера">Как донести метку до менеджера</a></li><li><a href="#из-нашей-практики">Из нашей практики</a></li><li><a href="#что-сделать-сегодня">Что сделать сегодня</a></li></ol></nav>
   <div class="md"><p>UTM-метки — приписка к ссылке в объявлении, по которой Метрика, CRM или менеджер понимают, откуда пришёл человек. Ниже — как настроить UTM-метки, чтобы их не нужно было трогать руками: пять параметров, один шаблон и ошибки, из-за которых данные не сходятся.</p>
 <h2 id="нужны-ли-метки-если-есть-метрика">Нужны ли метки, если есть Метрика</h2>
@@ -38,6 +40,10 @@
 <p>Справка Директа называет обязательными три параметра, ещё два — по желанию (<a href="https://yandex.ru/support/direct/ru/statistics/url-tags" target="_blank" rel="noopener">Яндекс Справка</a>):</p>
 <div class="tbl"><table><thead><tr><th>Параметр</th><th>Что значит</th><th>Что писать</th></tr></thead><tbody><tr><td data-h="Параметр">utm_source</td><td data-h="Что значит">источник</td><td data-h="Что писать">ya</td></tr><tr><td data-h="Параметр">utm_medium</td><td data-h="Что значит">тип рекламы</td><td data-h="Что писать">cpc</td></tr><tr><td data-h="Параметр">utm_campaign</td><td data-h="Что значит">кампания</td><td data-h="Что писать">{campaign_id}</td></tr><tr><td data-h="Параметр">utm_content</td><td data-h="Что значит">объявление</td><td data-h="Что писать">{ad_id}</td></tr><tr><td data-h="Параметр">utm_term</td><td data-h="Что значит">ключевая фраза</td><td data-h="Что писать">{keyword}</td></tr></tbody></table></div>
 <p>В фигурных скобках — динамические параметры: Директ сам подставит номер кампании, объявления и фразу, по которой был показ.</p>
+<figure class="fig"><div class="fig-body"><p class="tags-h">Ссылка в объявлении: адрес страницы и приписка после знака вопроса</p>
+<div class="tags"><span>site.ru/skvazhiny/</span><span>?</span><span class="ok">utm_source=ya</span><span class="ok">utm_medium=cpc</span><span class="ok">utm_campaign={campaign_id}</span><span class="ok">utm_content={ad_id}</span><span class="ok">utm_term={keyword}</span></div>
+<p class="tags-h">Что окажется в адресной строке после клика</p>
+<div class="tags"><span>site.ru/skvazhiny/</span><span>?</span><span>utm_source=ya</span><span>utm_medium=cpc</span><span class="ok">utm_campaign=номер кампании</span><span class="ok">utm_content=номер объявления</span><span class="ok">utm_term=бурение скважины цена</span></div></div><figcaption>Пример. Сверху — шаблон, который вы вставляете один раз. Снизу — то, что Директ подставит сам при клике: номера и фразу, по которой был показ.</figcaption></figure>
 <h2 id="шаблон">Шаблон</h2>
 <p>Один шаблон на все кампании:</p>
 <p>utm_source=ya&amp;utm_medium=cpc&amp;utm_campaign={campaign_id}&amp;utm_content={ad_id}&amp;utm_term={keyword}</p>
@@ -47,8 +53,33 @@
 <p>Если хочется видеть в метке ещё и место показа — поиск или сети, — в справке есть параметр {source_type}: он передаёт search для поиска и context для сетей. Несколько значений в utm_content можно соединить точкой: utm_content={source_type}.{ad_id} (<a href="https://yandex.ru/support/direct/ru/statistics/url-tags" target="_blank" rel="noopener">Яндекс Справка</a>).</p>
 <h2 id="ошибки-из-за-которых-данные-бьются">Ошибки, из-за которых данные бьются</h2>
 <ul><li><b>Кириллица и заглавные буквы в значениях.</b> Справка советует писать латиницей, строчными, слова разделять подчёркиванием или дефисом (<a href="https://yandex.ru/support/direct/ru/statistics/url-tags" target="_blank" rel="noopener">Яндекс Справка</a>). «Скважины_Весна» и «skvazhiny_vesna» в отчёте окажутся разными кампаниями.</li><li><b>yandex превращается в ya.</b> Иногда при клике utm_source=yandex сокращается до ya, и одна и та же реклама оказывается в отчёте под двумя источниками. Справка советует сразу писать ya или другое своё значение (<a href="https://yandex.ru/support/direct/ru/statistics/url-tags" target="_blank" rel="noopener">Яндекс Справка</a>). Поэтому в шаблоне выше сразу стоит ya — выберите одно значение и пишите только его.</li><li><b>Каждый специалист пишет по-своему.</b> Один подрядчик писал yandex/cpc, следующий — direct/search. Через год данные не сравнить. Шаблон должен лежать у вас, а не у подрядчика.</li><li><b>Метки теряются по дороге.</b> Сайт делает переадресацию и отбрасывает всё после знака вопроса, квиз открывается на другом домене, форма не передаёт метки в заявку. Проверка простая: кликните по своему объявлению и посмотрите, осталась ли приписка в адресной строке.</li></ul>
+<figure class="fig"><div class="fig-body"><p class="fig-title">Одна и та же реклама в отчёте — под разными именами</p>
+<table class="sheet">
+  <thead><tr><th>Что в отчёте</th><th>Почему так вышло</th></tr></thead>
+  <tbody>
+    <tr class="bad"><td>yandex и ya</td><td>yandex при клике иногда сокращается до ya</td></tr>
+    <tr class="bad"><td>Скважины_Весна и skvazhiny_vesna</td><td>кириллица и заглавные буквы</td></tr>
+    <tr class="bad"><td>yandex/cpc и direct/search</td><td>два специалиста, два шаблона</td></tr>
+    <tr class="good"><td>ya / cpc</td><td>один шаблон, лежит у вас</td></tr>
+  </tbody>
+</table></div><figcaption>Три красные строки — три способа получить отчёт, где одна кампания разложена по двум строкам и не сходится сама с собой.</figcaption></figure>
+<figure class="fig"><div class="fig-body"><p class="fig-title">Где метка теряется по дороге к менеджеру</p>
+<ol class="flow">
+  <li><b>Ссылка в объявлении</b><span>шаблон в блоке «Параметры URL»</span></li>
+  <li class="lost"><b>Адресная строка</b><span>переадресация отбросила всё после знака вопроса</span></li>
+  <li class="lost"><b>Квиз или форма</b><span>квиз на другом домене, форма не берёт метки из адреса</span></li>
+  <li class="win"><b>Заявка</b><span>менеджер видит источник, кампанию и фразу</span></li>
+</ol></div><figcaption>Проверка занимает минуту: кликните по своему объявлению и посмотрите на адресную строку, затем отправьте тестовую заявку.</figcaption></figure>
 <h2 id="как-донести-метку-до-менеджера">Как донести метку до менеджера</h2>
 <p>Менеджер видит только имя и телефон. Чтобы в заявке было написано «Директ, кампания по скважинам, фраза такая-то», форма должна брать метки из адреса страницы и отправлять их вместе с заявкой — в письмо, в Telegram или в CRM. Это небольшая доработка сайта. Как считать заявки дальше — в статье <a href="/stati/kak-schitat-konversiyu-saita/">как считать конверсию сайта</a>.</p>
+<figure class="fig"><div class="fig-body"><div class="msg"><div class="msg-h"><b>Заявка с сайта</b><span>12:04</span></div>
+  <dl>
+    <dt>Телефон</dt><dd>+7 (000) 000-00-00</dd>
+    <dt>Источник</dt><dd>ya / cpc — Директ</dd>
+    <dt>Кампания</dt><dd>по скважинам</dd>
+    <dt>Место показа</dt><dd>search — поиск</dd>
+    <dt>Фраза</dt><dd>бурение скважины цена</dd>
+  </dl></div></div><figcaption>Пример заявки с метками. Место показа приходит, если в utm_content добавлен {source_type}.</figcaption></figure>
 <h2 id="из-нашей-практики">Из нашей практики</h2>
 <p>Метки видит только тот, кто дождался загрузки страницы и счётчика. Мы замеряли сайты подрядчиков из рекламного блока Директа: у сайта по заборам из Нижнего Новгорода главный экран на телефоне появлялся через 21,9 секунды, у сайта по кровле из Петербурга — через 10,4. Кто закрыл такую страницу раньше, оплачен в Директе, но может не дойти до Метрики. Поэтому кликов в Директе бывает больше, чем визитов в Метрике, — и дело не в метках.</p>
 <h2 id="что-сделать-сегодня">Что сделать сегодня</h2>
@@ -56,7 +87,7 @@
 <p>Метки мы ставим при настройке Директа — 15 000 ₽. Метрику и цели настраиваем за 8 000 ₽, передачу источника в заявку делаем как доработку сайта — 2 000 ₽ в час. Подробнее — на странице <a href="/direct/">Директа</a>. Когда метки работают, звонки тоже можно привязать к кампаниям — об этом в статье <a href="/stati/kolltreking-nuzhen-li-podryadchiku/">коллтрекинг: нужен ли подрядчику</a>.</p></div>
   <aside class="a-cta"><div><span class="tag">Услуга студии</span><b>Яндекс Директ</b><p>Настройка и ведение: считаем цену заявки, а не клика.</p></div><a class="button" href="/direct/">Подробнее и цены →</a></aside>
 </div></article>
-<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/mnogo-klikov-net-zayavok/"><span class="a-cl">Яндекс Директ</span><b>Много кликов, нет заявок: где теряются деньги</b><span class="a-mt">6 мин</span></a><a href="/stati/stoimost-zayavki-v-direkte-stroitelstvo/"><span class="a-cl">Яндекс Директ</span><b>Сколько стоит заявка в Директе по строительным нишам</b><span class="a-mt">5 мин</span></a><a href="/stati/minus-slova-dlya-stroitelnyh-nish/"><span class="a-cl">Яндекс Директ</span><b>Минус-слова для строительных ниш: базовый список и как собрать свой</b><span class="a-mt">5 мин</span></a></div></div></section>
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/mnogo-klikov-net-zayavok/"><span class="a-cl">Яндекс Директ</span><b>Много кликов, нет заявок: где теряются деньги</b><span class="a-mt">8 мин</span></a><a href="/stati/stoimost-zayavki-v-direkte-stroitelstvo/"><span class="a-cl">Яндекс Директ</span><b>Сколько стоит заявка в Директе по строительным нишам</b><span class="a-mt">6 мин</span></a><a href="/stati/minus-slova-dlya-stroitelnyh-nish/"><span class="a-cl">Яндекс Директ</span><b>Минус-слова для строительных ниш: базовый список и как собрать свой</b><span class="a-mt">7 мин</span></a></div></div></section>
 <div class="wrap"><section class="lead" id="request">
   <div>
     <div class="tag">Заявка</div>

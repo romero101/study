@@ -42,7 +42,7 @@ def slugify(s, used):
     return t
 
 
-def render(body):
+def render(body, include=None):
     """Возвращает (html, оглавление [(id, текст)], число знаков текста)."""
     out, toc, used = [], [], set()
     lines = body.strip('\n').split('\n')
@@ -58,6 +58,11 @@ def render(body):
         ln = lines[i].rstrip()
         if not ln.strip():
             flush(); i += 1; continue
+        if ln.startswith('@@'):
+            flush()
+            name, _, cap = ln[2:].partition('|')
+            out.append(include(name.strip(), inline(cap.strip())) if include else '')
+            i += 1; continue
         if ln.startswith('!!!'):
             flush()
             title = ln[3:].strip() or 'Коротко'

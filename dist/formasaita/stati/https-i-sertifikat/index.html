@@ -11,13 +11,15 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://formasaita.ru/stati/https-i-sertifikat/">
 <link rel="canonical" href="https://formasaita.ru/stati/https-i-sertifikat/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/assets/site.10664175.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%234558ed'/%3E%3Cpath d='M27 18h-5a14 14 0 0 0 0 28h5z' fill='%23fff'/%3E%3Cpath d='M37 18h5a14 14 0 0 1 0 28h-5z' fill='%23fff' opacity='.55'/%3E%3Crect x='29' y='10' width='6' height='44' rx='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta property="og:image" content="https://formasaita.ru/img/og.png">
+<link rel="stylesheet" href="/assets/site.6367238b.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "HTTPS и сертификат: зачем и сколько стоит", "description": "Нужен ли HTTPS сайту подрядчика: что покажет браузер без сертификата с октября 2026, почему хватит бесплатного Let's Encrypt и как проверить сайт за минуту.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "inLanguage": "ru", "mainEntityOfPage": "https://formasaita.ru/stati/https-i-sertifikat/", "author": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}, "publisher": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://formasaita.ru/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://formasaita.ru/stati/"}, {"@type": "ListItem", "position": 3, "name": "HTTPS и сертификат: зачем и сколько стоит"}]}</script>
 </head>
 <body class="sub">
 <header><div class="wrap">
-  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <a class="logo" href="/" aria-label="Форма сайта"><svg class="logo-mark" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#4558ed"/><path d="M27 18h-5a14 14 0 0 0 0 28h5z" fill="#fff"/><path d="M37 18h5a14 14 0 0 1 0 28h-5z" fill="#fff" opacity=".55"/><rect x="29" y="10" width="6" height="44" rx="3" fill="#fff"/></svg><b>форма<span>сайта</span></b></a>
   <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
   <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a></div></details>
@@ -27,20 +29,65 @@
 <article class="post"><div class="wrap">
   <p class="crumbs"><a href="/">Главная</a> · <a href="/stati/">Статьи</a> · Скорость и техника</p>
   <h1>HTTPS и сертификат: зачем и сколько стоит</h1>
-  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 2 мин чтения</p>
+  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 4 мин чтения</p>
   <nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#что-будет-без-https">Что будет без HTTPS</a></li><li><a href="#сколько-стоит">Сколько стоит</a></li><li><a href="#главный-риск-не-цена-а-продление">Главный риск — не цена, а продление</a></li><li><a href="#как-перевести-сайт-на-https">Как перевести сайт на HTTPS</a></li><li><a href="#из-нашей-практики">Из нашей практики</a></li><li><a href="#что-сделать-сегодня">Что сделать сегодня</a></li></ol></nav>
   <div class="md"><p>Нужен ли HTTPS сайту, где только цены на заборы и форма заявки? Да. Сертификат шифрует телефон, который человек отправляет через форму, а браузер без него предупреждает посетителя. Хорошая новость: для сайта подрядчика это бесплатно.</p>
 <h2 id="что-будет-без-https">Что будет без HTTPS</h2>
 <p>С выходом Chrome 154 в октябре 2026 года браузер по умолчанию начинает спрашивать разрешение перед первым заходом на любой публичный сайт без HTTPS (<a href="https://security.googleblog.com/2025/10/https-by-default.html" target="_blank" rel="noopener">блог безопасности Google</a>). Человек кликнул по объявлению о септике — и вместо вашей страницы видит предупреждение. Часть людей нажмёт «назад», а клик уже оплачен.</p>
+<figure class="fig"><div class="fig-body"><div class="cmp">
+  <div class="cmp-col cmp-bad"><span class="cmp-tag">Сайт без HTTPS</span>
+    <div class="ph"><div class="ph-scr">
+      <div class="ph-h">Соединение не защищено</div>
+      <div class="ph-t">Сайт site.ru не поддерживает защищённое соединение. Данные, которые вы отправите, могут увидеть посторонние.</div>
+      <div class="ph-btn">Вернуться назад</div>
+      <div class="ph-btn ph-btn--ghost">Всё равно перейти</div>
+    </div></div>
+    <p class="cmp-note">Человек кликнул по объявлению о септике и видит это вместо вашей страницы. Клик уже оплачен.</p>
+  </div>
+  <div class="cmp-col cmp-good"><span class="cmp-tag">Сайт с сертификатом</span>
+    <div class="ph"><div class="ph-scr">
+      <div class="ph-bar">Септик-сервис <i>☰</i></div>
+      <div class="ph-img ph-img--hero">Фото установленного септика</div>
+      <div class="ph-h">Септик под ключ за 1 день</div>
+      <div class="ph-t">Цена «от», что входит, гарантия</div>
+      <div class="ph-btn">Подобрать модель</div>
+    </div></div>
+    <p class="cmp-note">Страница открывается сразу. Телефон из формы уходит в зашифрованном виде.</p>
+  </div>
+</div></div><figcaption>Обобщённый макет: так выглядит заход на сайт без HTTPS и с ним. Точный текст предупреждения зависит от браузера.</figcaption></figure>
 <p>Вторая причина — форма. Без шифрования имя и телефон идут по сети открытым текстом. Посетитель об этом не думает, но отвечаете за это вы.</p>
 <h2 id="сколько-стоит">Сколько стоит</h2>
 <p>Для лендинга — ноль. Let's Encrypt — некоммерческий центр сертификации, он не берёт плату за сертификаты (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Крупные хостинги выпускают такие сертификаты сами, например у Timeweb бесплатный сертификат входит во все тарифы хостинга (<a href="https://timeweb.com/ru/services/hosting/" target="_blank" rel="noopener">Timeweb</a>).</p>
 <p>Платные сертификаты с проверкой организации (OV и EV) существуют, но Let's Encrypt их не выпускает и не планирует (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Подрядчику они не нужны: посетитель не видит разницы, замок в адресной строке одинаковый.</p>
+<figure class="fig"><div class="fig-body"><div class="cols">
+  <div><h4>Нужно</h4><ul class="check">
+    <li><span>Бесплатный сертификат Let's Encrypt от хостинга</span></li>
+    <li><span>Автоматическое продление</span></li>
+    <li><span>Перенаправление со старого адреса http на https для всех страниц</span></li>
+    <li><span>Картинки, шрифты и формы тоже по https</span></li>
+  </ul></div>
+  <div><h4>Платить не за что</h4><ul class="check">
+    <li class="no"><span>Платный сертификат OV или EV: замок в адресной строке тот же</span></li>
+    <li class="no"><span>Продление вручную «раз в три месяца»: его забудут</span></li>
+  </ul></div>
+</div></div><figcaption>Что нужно лендингу подрядчика, а за что платить не обязательно.</figcaption></figure>
 <h2 id="главный-риск-не-цена-а-продление">Главный риск — не цена, а продление</h2>
 <p>Сертификат Let's Encrypt действует 90 дней, продлевать его советуют каждые 60 (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Дальше сроки будут только короче: 64 дня с 10 февраля 2027 года и 45 дней с 16 февраля 2028 года (<a href="https://letsencrypt.org/2025/12/02/from-90-to-45" target="_blank" rel="noopener">Let's Encrypt</a>).</p>
+<figure class="fig"><div class="fig-body"><p class="fig-title">Срок действия сертификата Let's Encrypt</p>
+<div class="bars bars--one">
+  <div class="bar"><span>Сейчас</span><div><i class="blue" style="--w:100%"></i><b>90 дней</b></div></div>
+  <div class="bar"><span>С 10 февраля 2027</span><div><i class="blue" style="--w:71%"></i><b>64 дня</b></div></div>
+  <div class="bar"><span>С 16 февраля 2028</span><div><i class="blue" style="--w:50%"></i><b>45 дней</b></div></div>
+</div></div><figcaption>Сроки по объявлению Let's Encrypt. Чем короче срок, тем чаще продление — руками это делать уже нереально.</figcaption></figure>
 <p>Вручную это никто продлевать не будет. Значит, продление должно быть автоматическим — на хостинге или на сервере. Где оно ломается:</p>
 <ul><li>сайт переехал на другой хостинг, а старый продолжает пытаться обновить сертификат;</li><li>поменяли DNS-записи домена, и проверка перестала проходить;</li><li>хостинг заблокирован за неуплату — продлевать некому.</li></ul>
 <p>Когда сертификат истёк, браузер показывает на весь экран, что соединение небезопасно. Реклама при этом продолжает тратить деньги.</p>
+<figure class="fig"><div class="fig-body"><ol class="flow">
+  <li><b>Сертификат выпущен</b><span>одна кнопка в панели хостинга</span></li>
+  <li class="win"><b>Автопродление</b><span>хостинг сам обновляет его заранее</span></li>
+  <li class="lost"><b>Что-то поменяли</b><span>переезд, DNS-записи, хостинг заблокирован за неуплату</span></li>
+  <li class="lost"><b>Срок истёк</b><span>предупреждение на весь экран, а реклама продолжает тратить</span></li>
+</ol></div><figcaption>Сертификат ломается не сам: продление перестаёт работать после изменений, о которых никто не подумал.</figcaption></figure>
 <h2 id="как-перевести-сайт-на-https">Как перевести сайт на HTTPS</h2>
 <ol><li>Выпустите сертификат в панели хостинга — обычно это одна кнопка.</li><li>Настройте перенаправление с http:// на https:// для всех страниц.</li><li>Проверьте, что картинки, шрифты и формы тоже грузятся по https, иначе браузер покажет смешанное содержимое.</li><li>Обновите адрес в Метрике, Директе и на Картах.</li></ol>
 <p>Для Яндекса смена протокола — тоже переезд, но простой: те же 301-редиректы со старых адресов на новые и инструмент «Переезд сайта» в Вебмастере (<a href="https://yandex.ru/support/webmaster/ru/yandex-indexing/moving-site" target="_blank" rel="noopener">Яндекс Справка</a>). Адрес и содержимое не меняются.</p>
@@ -51,7 +98,7 @@
 <p>Мы делаем лендинги подрядчикам сразу на HTTPS с бесплатным сертификатом на вашем хостинге. Смотрите <a href="/#prices">цены</a> или закажите бесплатное демо на <a href="/">главной</a>. Подробнее о том, что проверять на хостинге, — в статье <a href="/stati/hosting-dlya-saita-podryadchika/">хостинг для сайта подрядчика</a>.</p></div>
   <aside class="a-cta"><div><span class="tag">Форма сайта</span><b>Сначала показываем готовый сайт</b><p>Соберём демо вашего сайта на ваших фото и ценах — бесплатно, до договора.</p></div><a class="button" href="/#prices">Цены и пакеты →</a></aside>
 </div></article>
-<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/sajt-gruzitsya-10-sekund/"><span class="a-cl">Скорость и техника</span><b>Почему сайт медленно грузится и что с этим делать</b><span class="a-mt">6 мин</span></a><a href="/stati/pagespeed-kakie-cifry-vazhny/"><span class="a-cl">Скорость и техника</span><b>PageSpeed: какие цифры важны, а какие можно игнорировать</b><span class="a-mt">5 мин</span></a><a href="/stati/kak-szhat-foto-dlya-saita/"><span class="a-cl">Скорость и техника</span><b>Как сжать фото для сайта и не потерять качество</b><span class="a-mt">5 мин</span></a></div></div></section>
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/sajt-gruzitsya-10-sekund/"><span class="a-cl">Скорость и техника</span><b>Почему сайт медленно грузится и что с этим делать</b><span class="a-mt">7 мин</span></a><a href="/stati/pagespeed-kakie-cifry-vazhny/"><span class="a-cl">Скорость и техника</span><b>PageSpeed: какие цифры важны, а какие можно игнорировать</b><span class="a-mt">7 мин</span></a><a href="/stati/kak-szhat-foto-dlya-saita/"><span class="a-cl">Скорость и техника</span><b>Как сжать фото для сайта и не потерять качество</b><span class="a-mt">7 мин</span></a></div></div></section>
 <div class="wrap"><section class="lead" id="request">
   <div>
     <div class="tag">Заявка</div>
