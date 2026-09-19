@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTTPS и сертификат: зачем и сколько стоит | Форма сайта</title>
+<meta name="description" content="Нужен ли HTTPS сайту подрядчика: что покажет браузер без сертификата с октября 2026, почему хватит бесплатного Let&#x27;s Encrypt и как проверить сайт за минуту.">
+<meta name="theme-color" content="#172333">
+<meta property="og:title" content="HTTPS и сертификат: зачем и сколько стоит | Форма сайта">
+<meta property="og:description" content="Нужен ли HTTPS сайту подрядчика: что покажет браузер без сертификата с октября 2026, почему хватит бесплатного Let&#x27;s Encrypt и как проверить сайт за минуту.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://formasaita.ru/stati/https-i-sertifikat/">
+<link rel="canonical" href="https://formasaita.ru/stati/https-i-sertifikat/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/site.6896aaca.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "HTTPS и сертификат: зачем и сколько стоит", "description": "Нужен ли HTTPS сайту подрядчика: что покажет браузер без сертификата с октября 2026, почему хватит бесплатного Let's Encrypt и как проверить сайт за минуту.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "inLanguage": "ru", "mainEntityOfPage": "https://formasaita.ru/stati/https-i-sertifikat/", "author": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}, "publisher": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://formasaita.ru/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://formasaita.ru/stati/"}, {"@type": "ListItem", "position": 3, "name": "HTTPS и сертификат: зачем и сколько стоит"}]}</script>
+</head>
+<body class="sub">
+<header><div class="wrap">
+  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
+  <a class="button button--sm" href="#request">Обсудить сайт</a>
+</div></header>
+
+<main id="top">
+<article class="post"><div class="wrap">
+  <p class="crumbs"><a href="/">Главная</a> · <a href="/stati/">Статьи</a> · Скорость и техника</p>
+  <h1>HTTPS и сертификат: зачем и сколько стоит</h1>
+  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 2 мин чтения</p>
+  <nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#что-будет-без-https">Что будет без HTTPS</a></li><li><a href="#сколько-стоит">Сколько стоит</a></li><li><a href="#главный-риск-не-цена-а-продление">Главный риск — не цена, а продление</a></li><li><a href="#как-перевести-сайт-на-https">Как перевести сайт на HTTPS</a></li><li><a href="#из-нашей-практики">Из нашей практики</a></li><li><a href="#что-сделать-сегодня">Что сделать сегодня</a></li></ol></nav>
+  <div class="md"><p>Нужен ли HTTPS сайту, где только цены на заборы и форма заявки? Да. Сертификат шифрует телефон, который человек отправляет через форму, а браузер без него предупреждает посетителя. Хорошая новость: для сайта подрядчика это бесплатно.</p>
+<h2 id="что-будет-без-https">Что будет без HTTPS</h2>
+<p>С выходом Chrome 154 в октябре 2026 года браузер по умолчанию начинает спрашивать разрешение перед первым заходом на любой публичный сайт без HTTPS (<a href="https://security.googleblog.com/2025/10/https-by-default.html" target="_blank" rel="noopener">блог безопасности Google</a>). Человек кликнул по объявлению о септике — и вместо вашей страницы видит предупреждение. Часть людей нажмёт «назад», а клик уже оплачен.</p>
+<p>Вторая причина — форма. Без шифрования имя и телефон идут по сети открытым текстом. Посетитель об этом не думает, но отвечаете за это вы.</p>
+<h2 id="сколько-стоит">Сколько стоит</h2>
+<p>Для лендинга — ноль. Let's Encrypt — некоммерческий центр сертификации, он не берёт плату за сертификаты (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Крупные хостинги выпускают такие сертификаты сами, например у Timeweb бесплатный сертификат входит во все тарифы хостинга (<a href="https://timeweb.com/ru/services/hosting/" target="_blank" rel="noopener">Timeweb</a>).</p>
+<p>Платные сертификаты с проверкой организации (OV и EV) существуют, но Let's Encrypt их не выпускает и не планирует (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Подрядчику они не нужны: посетитель не видит разницы, замок в адресной строке одинаковый.</p>
+<h2 id="главный-риск-не-цена-а-продление">Главный риск — не цена, а продление</h2>
+<p>Сертификат Let's Encrypt действует 90 дней, продлевать его советуют каждые 60 (<a href="https://letsencrypt.org/docs/faq/" target="_blank" rel="noopener">Let's Encrypt</a>). Дальше сроки будут только короче: 64 дня с 10 февраля 2027 года и 45 дней с 16 февраля 2028 года (<a href="https://letsencrypt.org/2025/12/02/from-90-to-45" target="_blank" rel="noopener">Let's Encrypt</a>).</p>
+<p>Вручную это никто продлевать не будет. Значит, продление должно быть автоматическим — на хостинге или на сервере. Где оно ломается:</p>
+<ul><li>сайт переехал на другой хостинг, а старый продолжает пытаться обновить сертификат;</li><li>поменяли DNS-записи домена, и проверка перестала проходить;</li><li>хостинг заблокирован за неуплату — продлевать некому.</li></ul>
+<p>Когда сертификат истёк, браузер показывает на весь экран, что соединение небезопасно. Реклама при этом продолжает тратить деньги.</p>
+<h2 id="как-перевести-сайт-на-https">Как перевести сайт на HTTPS</h2>
+<ol><li>Выпустите сертификат в панели хостинга — обычно это одна кнопка.</li><li>Настройте перенаправление с http:// на https:// для всех страниц.</li><li>Проверьте, что картинки, шрифты и формы тоже грузятся по https, иначе браузер покажет смешанное содержимое.</li><li>Обновите адрес в Метрике, Директе и на Картах.</li></ol>
+<p>Для Яндекса смена протокола — тоже переезд, но простой: те же 301-редиректы со старых адресов на новые и инструмент «Переезд сайта» в Вебмастере (<a href="https://yandex.ru/support/webmaster/ru/yandex-indexing/moving-site" target="_blank" rel="noopener">Яндекс Справка</a>). Адрес и содержимое не меняются.</p>
+<h2 id="из-нашей-практики">Из нашей практики</h2>
+<p>На аудите мы проверяем адрес дважды: с https:// и с http://. Второй вариант должен сам перебрасывать на защищённую версию. Это минутная проверка, и сделать её можете вы сами.</p>
+<h2 id="что-сделать-сегодня">Что сделать сегодня</h2>
+<ol><li>Откройте свой сайт с телефона и посмотрите, есть ли замок у адреса.</li><li>Наберите адрес с http:// в начале — должно перебросить на https://.</li><li>Нажмите на замок и посмотрите, до какого числа действует сертификат.</li><li>Спросите у хостинга или исполнителя, продлевается ли он автоматически.</li></ol>
+<p>Мы делаем лендинги подрядчикам сразу на HTTPS с бесплатным сертификатом на вашем хостинге. Смотрите <a href="/#prices">цены</a> или закажите бесплатное демо на <a href="/">главной</a>. Подробнее о том, что проверять на хостинге, — в статье <a href="/stati/hosting-dlya-saita-podryadchika/">хостинг для сайта подрядчика</a>.</p></div>
+  <aside class="a-cta"><div><span class="tag">Форма сайта</span><b>Сначала показываем готовый сайт</b><p>Соберём демо вашего сайта на ваших фото и ценах — бесплатно, до договора.</p></div><a class="button" href="/#prices">Цены и пакеты →</a></aside>
+</div></article>
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/sajt-gruzitsya-10-sekund/"><span class="a-cl">Скорость и техника</span><b>Почему сайт медленно грузится и что с этим делать</b><span class="a-mt">6 мин</span></a><a href="/stati/pagespeed-kakie-cifry-vazhny/"><span class="a-cl">Скорость и техника</span><b>PageSpeed: какие цифры важны, а какие можно игнорировать</b><span class="a-mt">5 мин</span></a><a href="/stati/kak-szhat-foto-dlya-saita/"><span class="a-cl">Скорость и техника</span><b>Как сжать фото для сайта и не потерять качество</b><span class="a-mt">5 мин</span></a></div></div></section>
+<div class="wrap"><section class="lead" id="request">
+  <div>
+    <div class="tag">Заявка</div>
+    <h2>Покажем, каким может быть ваш сайт.</h2>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <ol><li>Перезвоним в рабочий день, зададим 3–4 вопроса.</li><li>Соберём демо на ваших материалах.</li><li>Пришлём ссылку — посмотрите на телефоне.</li></ol>
+  </div>
+  <form id="lead-form" action="/send.php" method="post" novalidate>
+    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="page" value="/stati/https-i-sertifikat/">
+    <div class="row">
+      <label>Телефон<input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+      <label>Имя <i>· необязательно</i><input name="name" autocomplete="given-name" maxlength="80" placeholder="Как к вам обращаться"></label>
+    </div>
+    <label>Что нужно<select name="service" id="service"><option>Пакет «Лендинг»</option><option>Пакет «Лендинг + реклама»</option><option>Пакет «Под ключ на 3 месяца»</option><option>Лендинг под Яндекс Директ</option><option>Квиз-сайт</option><option>Калькулятор на сайт</option><option>Ускорение сайта</option><option>Переделка сайта</option><option>Мобильная версия</option><option>Аудит сайта</option><option>Ведение Яндекс Директа</option><option selected>Пока не знаю, нужен совет</option></select></label>
+    <label>Текущий сайт или название компании <i>· необязательно</i><input name="site" maxlength="300" placeholder="example.ru" autocapitalize="none"></label>
+    <label>Задача <i>· необязательно</i><textarea name="message" id="message" maxlength="2000" placeholder="Например: бурим скважины в Самаре, сайт старый, заявок с него нет"></textarea></label>
+    <button class="button" type="submit">Получить демо своего сайта ↗</button>
+    <p id="form-status" role="status"></p>
+    <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="/policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+  </form>
+</section></div>
+</main>
+
+<footer><div class="wrap">
+  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <nav aria-label="Услуги"><a href="/landing-pod-direct/">Лендинг под Директ</a><a href="/kviz-sait/">Квиз-сайт</a><a href="/kalkulyator-na-sait/">Калькулятор на сайт</a><a href="/uskorenie-saita/">Ускорение сайта</a><a href="/peredelat-sait/">Переделать сайт</a><a href="/mobilnaya-versiya/">Мобильная версия</a><a href="/audit/">Аудит сайта</a><a href="/direct/">Яндекс Директ</a><a href="/stati/">Статьи</a></nav>
+  <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
+</div></footer>
+<script src="/assets/site.d5122c87.js" defer></script>
+</body>
+</html>

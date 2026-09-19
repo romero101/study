@@ -123,3 +123,4 @@ footer nav[aria-label="Услуги"]{gap:6px 20px}
   .md td:first-child{font-weight:650}.md td:first-child:before{content:none}
 }
 @media(max-width:700px){.md td:first-child[data-h]:before{content:none}.md td:last-child{margin-top:0;font-size:inherit}}
+.md p,.md li,.md td{overflow-wrap:anywhere}
