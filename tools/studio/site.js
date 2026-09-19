@@ -92,3 +92,12 @@
     draw();
   }
 })();
+/* фильтр статей по разделу */
+(function(){
+  var chips=document.getElementById('chips');if(!chips)return;
+  chips.addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b)return;
+    chips.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});
+    document.querySelectorAll('#arts a').forEach(function(a){a.hidden=!!b.dataset.c&&a.dataset.c!==b.dataset.c;});
+  });
+})();

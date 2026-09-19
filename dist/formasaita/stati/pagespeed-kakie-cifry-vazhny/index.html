@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PageSpeed: какие цифры важны, а какие можно игнорировать | Форма сайта</title>
+<meta name="description" content="Низкий балл PageSpeed — повод не для паники, а для проверки двух цифр. Объясняем, что значат LCP и CLS, откуда скачет балл и как мерить мобильную версию честно.">
+<meta name="theme-color" content="#172333">
+<meta property="og:title" content="PageSpeed: какие цифры важны, а какие можно игнорировать | Форма сайта">
+<meta property="og:description" content="Низкий балл PageSpeed — повод не для паники, а для проверки двух цифр. Объясняем, что значат LCP и CLS, откуда скачет балл и как мерить мобильную версию честно.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://formasaita.ru/stati/pagespeed-kakie-cifry-vazhny/">
+<link rel="canonical" href="https://formasaita.ru/stati/pagespeed-kakie-cifry-vazhny/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/site.e7c1c460.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "PageSpeed: какие цифры важны, а какие можно игнорировать", "description": "Низкий балл PageSpeed — повод не для паники, а для проверки двух цифр. Объясняем, что значат LCP и CLS, откуда скачет балл и как мерить мобильную версию честно.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "inLanguage": "ru", "mainEntityOfPage": "https://formasaita.ru/stati/pagespeed-kakie-cifry-vazhny/", "author": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}, "publisher": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://formasaita.ru/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://formasaita.ru/stati/"}, {"@type": "ListItem", "position": 3, "name": "PageSpeed: какие цифры важны, а какие можно игнорировать"}]}</script>
+</head>
+<body class="sub">
+<header><div class="wrap">
+  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
+  <a class="button button--sm" href="#request">Обсудить сайт</a>
+</div></header>
+
+<main id="top">
+<article class="post"><div class="wrap">
+  <p class="crumbs"><a href="/">Главная</a> · <a href="/stati/">Статьи</a> · Скорость и техника</p>
+  <h1>PageSpeed: какие цифры важны, а какие можно игнорировать</h1>
+  <p class="a-meta"><time datetime="2026-09-19">19 сентября 2026</time> · 5 мин чтения</p>
+  <nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#что-такое-балл-pagespeed">Что такое балл PageSpeed</a></li><li><a href="#две-цифры-которые-решают">Две цифры, которые решают</a></li><li><a href="#лабораторные-и-полевые-данные-в-чём-разница">Лабораторные и полевые данные: в чём разница</a></li><li><a href="#почему-балл-скачет">Почему балл скачет</a></li><li><a href="#что-можно-смело-игнорировать">Что можно смело игнорировать</a></li><li><a href="#что-нельзя-игнорировать">Что нельзя игнорировать</a></li><li><a href="#низкий-балл-но-сайт-летает-так-бывает">Низкий балл, но сайт «летает» — так бывает?</a></li><li><a href="#что-сделать-сегодня">Что сделать сегодня</a></li></ol></nav>
+  <div class="md"><p>Низкий балл в PageSpeed пугает, особенно когда он красный. Но сам балл — это сводка, а решения принимаются по двум-трём цифрам под ним. Разбираем, на что смотреть, что можно спокойно пропустить и как не обмануть самого себя при замере.</p>
+<h2 id="что-такое-балл-pagespeed">Что такое балл PageSpeed</h2>
+<p>PageSpeed Insights запускает внутри себя Lighthouse — программу, которая загружает страницу в заданных условиях и считает несколько метрик. Балл от 0 до 100 — это взвешенная сумма этих метрик. В текущей версии веса такие (<a href="https://developer.chrome.com/docs/lighthouse/performance/performance-scoring" target="_blank" rel="noopener">Chrome for Developers</a>):</p>
+<div class="tbl"><table><thead><tr><th>Метрика</th><th>Что измеряет</th><th>Вес в балле</th></tr></thead><tbody><tr><td data-h="Метрика">Total Blocking Time</td><td data-h="Что измеряет">Сколько страница «висит» из-за скриптов</td><td data-h="Вес в балле">30%</td></tr><tr><td data-h="Метрика">Largest Contentful Paint (LCP)</td><td data-h="Что измеряет">Когда появился главный экран</td><td data-h="Вес в балле">25%</td></tr><tr><td data-h="Метрика">Cumulative Layout Shift (CLS)</td><td data-h="Что измеряет">Насколько элементы прыгают при загрузке</td><td data-h="Вес в балле">25%</td></tr><tr><td data-h="Метрика">First Contentful Paint</td><td data-h="Что измеряет">Когда появилось хоть что-то</td><td data-h="Вес в балле">10%</td></tr><tr><td data-h="Метрика">Speed Index</td><td data-h="Что измеряет">Как быстро заполняется экран в целом</td><td data-h="Вес в балле">10%</td></tr></tbody></table></div>
+<p>Балл удобен, чтобы сравнить «до и после». Но клиент не видит балл. Он видит, сколько ждал и не прыгнула ли кнопка из-под пальца.</p>
+<h2 id="две-цифры-которые-решают">Две цифры, которые решают</h2>
+<h3 id="lcp-когда-появился-главный-экран">LCP — когда появился главный экран</h3>
+<p>Это время, за которое на экране появился самый крупный элемент: фото наверху или заголовок. Для человека из рекламы это момент, когда он понял, куда попал. Хорошо — до 2,5 секунды, плохо — больше 4 секунд (<a href="https://web.dev/articles/lcp" target="_blank" rel="noopener">web.dev</a>).</p>
+<p>Если смотреть только на одну цифру, смотрите на эту. В наших замерах сайтов подрядчиков из рекламного блока Яндекса LCP на мобильном был от 4,0 до 77,3 секунды. После пересборки тех же страниц — от 1,0 до 1,9 секунды. Подробная таблица и причины — в статье <a href="/stati/sajt-gruzitsya-10-sekund/">почему сайт грузится 10 секунд</a>.</p>
+<h3 id="cls-прыгает-ли-страница">CLS — прыгает ли страница</h3>
+<p>CLS показывает, насколько элементы сдвигаются, пока страница догружается. Типичная картина: человек тянется нажать «Позвонить», в этот момент сверху догружается баннер, и палец попадает в другую кнопку. Хорошо — 0,1 и меньше, плохо — больше 0,25 (<a href="https://web.dev/articles/cls" target="_blank" rel="noopener">web.dev</a>).</p>
+<p>Причины у подрядчиков обычно простые: картинки без заданного размера, всплывающие плашки про cookie и акции, виджеты, которые вставляются в страницу после загрузки.</p>
+<h3 id="третья-цифра-если-есть-данные-inp">Третья цифра, если есть данные: INP</h3>
+<p>INP показывает, как быстро страница отвечает на нажатия. Хорошо — до 200 миллисекунд, плохо — больше 500 (<a href="https://web.dev/articles/inp" target="_blank" rel="noopener">web.dev</a>). В лабораторном замере её нет: она считается только по реальным посетителям. На лендингах подрядчика с простой формой она редко бывает проблемой, чаще — на сайтах с тяжёлыми квизами и калькуляторами.</p>
+<h2 id="лабораторные-и-полевые-данные-в-чём-разница">Лабораторные и полевые данные: в чём разница</h2>
+<p>Наверху отчёта PageSpeed иногда показывает блок с данными реальных пользователей, а ниже — результат лабораторного замера. Это разные вещи (<a href="https://developers.google.com/speed/docs/insights/v5/about" target="_blank" rel="noopener">Google, о PageSpeed Insights</a>):</p>
+<ul><li><b>полевые данные</b> — как страница открывалась у настоящих посетителей в Chrome за последние 28 дней;</li><li><b>лабораторные данные</b> — один прогон на эмулированном телефоне среднего уровня с мобильной сетью.</li></ul>
+<p>У небольшого сайта подрядчика полевых данных часто нет: посетителей слишком мало, и PageSpeed пишет, что данных недостаточно. Тогда остаётся лабораторный замер. Это нормально, просто помните, что это модель, а не реальность.</p>
+<h2 id="почему-балл-скачет">Почему балл скачет</h2>
+<p>Запустили проверку — 38. Через минуту — 52. Это не ошибка. Google прямо пишет, что результат зависит от внешних условий: сети, рекламы и A/B-тестов на странице, расширений браузера, нагрузки на сервер, и советует смотреть на производительность как на разброс, а не на одно число (<a href="https://developer.chrome.com/docs/lighthouse/performance/performance-scoring" target="_blank" rel="noopener">Chrome for Developers</a>).</p>
+<p>Как мерить, чтобы не обманываться:</p>
+<ol><li><b>Мерьте ту страницу, куда ведёт реклама.</b> Не главную, если реклама идёт на страницу услуги.</li><li><b>Смотрите вкладку «Мобильные».</b> Результат для компьютера почти всегда лучше, но ваши клиенты чаще всего открывают сайт с телефона между делами.</li><li><b>Делайте три прогона и берите средний.</b> Одиночный замер ничего не доказывает.</li><li><b>Сравнивайте в одинаковых условиях.</b> «До» и «после» — одним инструментом, в один день, по одному адресу.</li><li><b>Проверяйте на своём телефоне.</b> Через мобильный интернет, не через Wi-Fi. Если главный экран вы ждёте дольше пары секунд, никакой балл этого не отменит.</li></ol>
+<h2 id="что-можно-смело-игнорировать">Что можно смело игнорировать</h2>
+<p>В отчёте под баллом длинный список «возможностей» и «диагностики». Сами по себе эти пункты в балл не входят: он считается только по метрикам (<a href="https://developer.chrome.com/docs/lighthouse/performance/performance-scoring" target="_blank" rel="noopener">Chrome for Developers</a>). Поэтому не всё из списка нужно чинить.</p>
+<ul><li><b>Замечания к чужим скриптам, которые вам нужны.</b> Метрика, коллтрекинг — PageSpeed может ругаться на их код или кэширование. Исправить чужой код вы не можете, а отказываться от учёта заявок ради балла глупо. Можно лишь подключить их так, чтобы они не мешали главному экрану.</li><li><b>Погоня за сотней.</b> Google сам пишет, что 100 баллов от сайта не ожидают, а подъём с 99 до 100 требует примерно такого же улучшения метрик, как с 90 до 94. Наши демо получают 95–97 баллов на мобильном, и дальше мы не гонимся: клиент разницы не увидит.</li><li><b>Балл для компьютера</b>, если реклама идёт в основном на мобильные.</li><li><b>Советы, которые экономят доли секунды</b>, когда LCP у вас 10 секунд. Сначала крупное — вес фото, слайдеры, виджеты.</li></ul>
+<h2 id="что-нельзя-игнорировать">Что нельзя игнорировать</h2>
+<ul><li>LCP больше 4 секунд на мобильном.</li><li>CLS больше 0,1, особенно если прыгают кнопки звонка и формы.</li><li>Общий вес страницы в мегабайтах. На разобранных нами сайтах встречались страницы по 13, 15,7 и 30 МБ. Наши пересобранные версии тех же страниц весили от 269 до 418 КБ.</li><li>Любая метрика, которая ухудшилась после изменений на сайте. Это знак, что что-то сломали.</li></ul>
+<h2 id="низкий-балл-но-сайт-летает-так-бывает">Низкий балл, но сайт «летает» — так бывает?</h2>
+<p>Бывает. Вы открываете сайт на новом телефоне через быстрый интернет, и всё мгновенно. Лабораторный замер моделирует телефон среднего уровня на мобильной сети — и видит другую картину. У вашего клиента, который стоит на участке за городом, условия скорее ближе к лабораторным, чем к вашему офису.</p>
+<p>Бывает и наоборот: балл высокий, а сайт кажется медленным. Тогда проверьте, не грузится ли что-то тяжёлое уже после главного экрана — например, квиз, который вылезает через несколько секунд и перекрывает страницу. Балл его может не заметить, а человек — заметит.</p>
+<h2 id="что-сделать-сегодня">Что сделать сегодня</h2>
+<ol><li>Прогоните в PageSpeed Insights страницу, на которую ведёт реклама, три раза, вкладка «Мобильные».</li><li>Выпишите LCP, CLS и вес страницы — это ваша точка отсчёта.</li><li>Если LCP больше 4 секунд, начните с фото и первого экрана, а не со списка советов.</li><li>Проверьте сайт со своего телефона через мобильный интернет, заодно пройдитесь по <a href="/stati/mobilnaya-versiya-proverka-za-10-minut/">чек-листу мобильной версии</a>.</li></ol>
+<p>Если цифры плохие и непонятно, с чего начать, посмотрите нашу услугу <a href="/uskorenie-saita/">ускорения сайта</a>. Сначала бесплатно замерим вашу страницу и покажем, что тянет LCP вниз, потом договоримся о работе — от 20 000 ₽.</p></div>
+  <aside class="a-cta"><div><span class="tag">Услуга студии</span><b>Ускорение сайта</b><p>Было 10 секунд, стало полторы — с замером.</p></div><a class="button" href="/uskorenie-saita/">Подробнее и цены →</a></aside>
+</div></article>
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Читайте также</div><h2>По этой теме.</h2></div></div><div class="arts"><a href="/stati/sajt-gruzitsya-10-sekund/"><span class="a-cl">Скорость и техника</span><b>Почему сайт медленно грузится и что с этим делать</b><span class="a-mt">6 мин</span></a><a href="/stati/mobilnaya-versiya-proverka-za-10-minut/"><span class="a-cl">Скорость и техника</span><b>Мобильная версия сайта: что проверить за 10 минут</b><span class="a-mt">4 мин</span></a></div></div></section>
+<div class="wrap"><section class="lead" id="request">
+  <div>
+    <div class="tag">Заявка</div>
+    <h2>Покажем, каким может быть ваш сайт.</h2>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <ol><li>Перезвоним в рабочий день, зададим 3–4 вопроса.</li><li>Соберём демо на ваших материалах.</li><li>Пришлём ссылку — посмотрите на телефоне.</li></ol>
+  </div>
+  <form id="lead-form" action="/send.php" method="post" novalidate>
+    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="page" value="/stati/pagespeed-kakie-cifry-vazhny/">
+    <div class="row">
+      <label>Телефон<input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+      <label>Имя <i>· необязательно</i><input name="name" autocomplete="given-name" maxlength="80" placeholder="Как к вам обращаться"></label>
+    </div>
+    <label>Что нужно<select name="service" id="service"><option>Пакет «Лендинг»</option><option>Пакет «Лендинг + реклама»</option><option>Пакет «Под ключ на 3 месяца»</option><option>Лендинг под Яндекс Директ</option><option>Квиз-сайт</option><option>Калькулятор на сайт</option><option selected>Ускорение сайта</option><option>Переделка сайта</option><option>Мобильная версия</option><option>Аудит сайта</option><option>Ведение Яндекс Директа</option><option>Пока не знаю, нужен совет</option></select></label>
+    <label>Текущий сайт или название компании <i>· необязательно</i><input name="site" maxlength="300" placeholder="example.ru" autocapitalize="none"></label>
+    <label>Задача <i>· необязательно</i><textarea name="message" id="message" maxlength="2000" placeholder="Например: бурим скважины в Самаре, сайт старый, заявок с него нет"></textarea></label>
+    <button class="button" type="submit">Замерить мой сайт бесплатно ↗</button>
+    <p id="form-status" role="status"></p>
+    <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="/policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+  </form>
+</section></div>
+</main>
+
+<footer><div class="wrap">
+  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <nav aria-label="Услуги"><a href="/landing-pod-direct/">Лендинг под Директ</a><a href="/kviz-sait/">Квиз-сайт</a><a href="/kalkulyator-na-sait/">Калькулятор на сайт</a><a href="/uskorenie-saita/">Ускорение сайта</a><a href="/peredelat-sait/">Переделать сайт</a><a href="/mobilnaya-versiya/">Мобильная версия</a><a href="/audit/">Аудит сайта</a><a href="/direct/">Яндекс Директ</a><a href="/stati/">Статьи</a></nav>
+  <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
+</div></footer>
+<script src="/assets/site.d5122c87.js" defer></script>
+</body>
+</html>

@@ -1,22 +1,32 @@
 #!/usr/bin/env python3
-"""Страницы услуг сайта студии: tools/studio/pages.py -> dist/formasaita/<slug>/index.html
+"""Страницы услуг и статьи сайта студии.
+
+  tools/studio/pages.py        -> dist/formasaita/<slug>/index.html
+  content/stati/<slug>.md      -> dist/formasaita/stati/<slug>/index.html  (+ список /stati/)
 
 Стили берём из главной (dist/formasaita/index.html), чтобы не расходились,
 дописываем extra.css и кладём одним файлом в assets/ с хешем в имени:
 на хостинге css/js кэшируются на 45 дней.
 Запуск: python3 tools/studio/build.py
 """
-import hashlib, html, json, re, sys
+import hashlib, html, json, re, shutil, sys
+from datetime import date
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 OUT = ROOT / 'dist' / 'formasaita'
+ARTICLES = ROOT / 'content' / 'stati'
 SITE = 'https://formasaita.ru'
 sys.path.insert(0, str(HERE))
 from pages import PAGES, SERVICES  # noqa: E402
+import md  # noqa: E402
 
 e = html.escape
+MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
+          'сентября', 'октября', 'ноября', 'декабря']
+ICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' "
+        "height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E")
 
 
 def asset(name, text):
@@ -28,6 +38,83 @@ def asset(name, text):
     (OUT / 'assets' / f'{stem}.{h}.{ext}').write_text(text, encoding='utf-8')
     return f'/assets/{stem}.{h}.{ext}'
 
+
+def ru_date(iso):
+    d = date.fromisoformat(iso)
+    return f'{d.day} {MONTHS[d.month - 1]} {d.year}'
+
+
+# ---------- общий каркас ----------
+
+def shell(*, title, desc, path, css, js, body, ld='', og='website'):
+    url = f'{SITE}{path}'
+    foot = ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
+    return f'''<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<meta name="theme-color" content="#172333">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:type" content="{og}">
+<meta property="og:url" content="{url}">
+<link rel="canonical" href="{url}">
+<link rel="icon" href="{ICON}">
+<link rel="stylesheet" href="{css}">
+{ld}
+</head>
+<body class="sub">
+<header><div class="wrap">
+  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
+  <a class="button button--sm" href="#request">Обсудить сайт</a>
+</div></header>
+
+<main id="top">
+{body}
+</main>
+
+<footer><div class="wrap">
+  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <nav aria-label="Услуги">{foot}<a href="/stati/">Статьи</a></nav>
+  <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
+</div></footer>
+<script src="{js}" defer></script>
+</body>
+</html>
+'''
+
+
+def lead_form(*, h2, steps, service, placeholder, cta, page_path):
+    options = ''.join(f'<option{" selected" if s == service else ""}>{e(s)}</option>' for s in SERVICES)
+    return f'''<div class="wrap"><section class="lead" id="request">
+  <div>
+    <div class="tag">Заявка</div>
+    <h2>{h2}</h2>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <ol>{''.join(f"<li>{x}</li>" for x in steps)}</ol>
+  </div>
+  <form id="lead-form" action="/send.php" method="post" novalidate>
+    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="page" value="{e(page_path)}">
+    <div class="row">
+      <label>Телефон<input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+      <label>Имя <i>· необязательно</i><input name="name" autocomplete="given-name" maxlength="80" placeholder="Как к вам обращаться"></label>
+    </div>
+    <label>Что нужно<select name="service" id="service">{options}</select></label>
+    <label>Текущий сайт или название компании <i>· необязательно</i><input name="site" maxlength="300" placeholder="example.ru" autocapitalize="none"></label>
+    <label>Задача <i>· необязательно</i><textarea name="message" id="message" maxlength="2000" placeholder="{e(placeholder)}"></textarea></label>
+    <button class="button" type="submit">{cta} ↗</button>
+    <p id="form-status" role="status"></p>
+    <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="/policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+  </form>
+</section></div>'''
+
+
+# ---------- блоки страниц услуг ----------
 
 def head(tag, h2, lead=''):
     lead = f'<p>{lead}</p>' if lead else ''
@@ -87,42 +174,23 @@ def faq_ld(page):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
 
 
-def render(page, css, js, by_slug):
-    url = f'{SITE}/{page["slug"]}/'
+def art_cards(arts):
+    return '<div class="arts">' + ''.join(
+        f'<a href="/stati/{a["slug"]}/"><span class="a-cl">{e(a["cluster"])}</span><b>{e(a["h1"])}</b>'
+        f'<span class="a-mt">{a["minutes"]} мин</span></a>' for a in arts) + '</div>'
+
+
+def render_page(page, css, js, by_slug, arts):
     sections = []
     for i, b in enumerate(page['blocks']):
         cls = ' class="alt"' if i % 2 == 0 else ''
         sections.append(f'<section{cls}><div class="wrap">{BLOCKS[b["type"]](b)}</div></section>')
+    about = [a for a in arts if a['leads_to'] == f'/{page["slug"]}/'][:6]
+    if about:
+        sections.append('<section><div class="wrap">' + head('Статьи', 'Разобрали подробно.') + art_cards(about) + '</div></section>')
     facts = ''.join(f'<div><b>{x}</b><span>{y}</span></div>' for x, y in page['facts'])
     rel = ''.join(f'<a href="/{s}/"><b>{by_slug[s]["nav"]}</b><span>{by_slug[s]["short"]}</span></a>' for s in page['related'])
-    options = ''.join(f'<option{" selected" if s == page["service"] else ""}>{e(s)}</option>' for s in SERVICES)
-    foot = ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
-    return f'''<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{e(page["title"])}</title>
-<meta name="description" content="{e(page["desc"])}">
-<meta name="theme-color" content="#172333">
-<meta property="og:title" content="{e(page["title"])}">
-<meta property="og:description" content="{e(page["desc"])}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{url}">
-<link rel="canonical" href="{url}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="{css}">
-{faq_ld(page)}
-</head>
-<body class="sub">
-<header><div class="wrap">
-  <a class="logo" href="/">форма<span>сайта.</span></a>
-  <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/#process">Как работаем</a><a href="/#faq">Вопросы</a></nav>
-  <a class="button button--sm" href="#request">Обсудить сайт</a>
-</div></header>
-
-<main id="top">
-<section class="hero"><div class="wrap">
+    body = f'''<section class="hero"><div class="wrap">
   <p class="crumbs"><a href="/">Главная</a> · {page["nav"]}</p>
   <div class="tag">{page["tag"]}</div>
   <h1>{page["h1"]}</h1>
@@ -136,69 +204,167 @@ def render(page, css, js, by_slug):
 
 {chr(10).join(sections)}
 
-<section><div class="wrap">
+<section{' class="alt"' if len(sections) % 2 == 0 else ''}><div class="wrap">
   <div class="head"><div><div class="tag">Рядом по теме</div><h2>Что ещё смотрят.</h2></div></div>
   <div class="rel">{rel}</div>
 </div></section>
 
-<div class="wrap"><section class="lead" id="request">
-  <div>
-    <div class="tag">Заявка</div>
-    <h2>{page["form_h2"]}</h2>
-    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
-    <ol>{''.join(f"<li>{x}</li>" for x in page["form_steps"])}</ol>
-  </div>
-  <form id="lead-form" action="/send.php" method="post" novalidate>
-    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <input type="hidden" name="page" value="/{page["slug"]}/">
-    <div class="row">
-      <label>Телефон<input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
-      <label>Имя <i>· необязательно</i><input name="name" autocomplete="given-name" maxlength="80" placeholder="Как к вам обращаться"></label>
-    </div>
-    <label>Что нужно<select name="service" id="service">{options}</select></label>
-    <label>Текущий сайт или название компании <i>· необязательно</i><input name="site" maxlength="300" placeholder="example.ru" autocapitalize="none"></label>
-    <label>Задача <i>· необязательно</i><textarea name="message" id="message" maxlength="2000" placeholder="{e(page["placeholder"])}"></textarea></label>
-    <button class="button" type="submit">{page["cta"]} ↗</button>
-    <p id="form-status" role="status"></p>
-    <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="/policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
-  </form>
-</section></div>
-</main>
+''' + lead_form(h2=page['form_h2'], steps=page['form_steps'], service=page['service'],
+                 placeholder=page['placeholder'], cta=page['cta'], page_path=f'/{page["slug"]}/')
+    return shell(title=page['title'], desc=page['desc'], path=f'/{page["slug"]}/', css=css, js=js,
+                 body=body, ld=faq_ld(page))
 
-<footer><div class="wrap">
-  <span>© Форма сайта, 2026 · formasaita.ru</span>
-  <nav aria-label="Услуги">{foot}</nav>
-  <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
-</div></footer>
-<script src="{js}" defer></script>
-</body>
-</html>
-'''
 
+# ---------- статьи ----------
+
+SERVICE_OF = {'/' + p['slug'] + '/': p for p in PAGES}
+REQUIRED = ('n', 'title', 'h1', 'desc', 'query', 'leads_to', 'cluster', 'date')
+
+
+def load_articles():
+    arts, problems = [], []
+    for f in sorted(ARTICLES.glob('*.md')):
+        if f.name.startswith('_'):
+            continue
+        meta, body = md.meta_and_body(f.read_text(encoding='utf-8'))
+        miss = [k for k in REQUIRED if not meta.get(k)]
+        if miss:
+            problems.append(f'{f.name}: нет {", ".join(miss)}')
+            continue
+        htm, toc, chars = md.render(body)
+        for href in re.findall(r'href="(/[^"#]*)', htm):
+            if not (href == '/' or href.startswith('/stati/') or href in SERVICE_OF or href == '/policy.html'):
+                problems.append(f'{f.name}: ссылка на несуществующую страницу {href}')
+        arts.append(dict(meta, slug=f.stem, html=htm, toc=toc, chars=chars, n=int(meta['n']),
+                         minutes=max(2, round(chars / 1300))))
+    slugs = {a['slug'] for a in arts}
+    for a in arts:
+        for s in re.findall(r'href="/stati/([^/"]+)/', a['html']):
+            if s not in slugs:
+                problems.append(f'{a["slug"]}: ссылка на статью, которой нет: {s}')
+    arts.sort(key=lambda a: a['n'])
+    return arts, problems
+
+
+def render_article(a, arts, css, js):
+    svc = SERVICE_OF.get(a['leads_to'])
+    near = [x for x in arts if x['cluster'] == a['cluster'] and x['slug'] != a['slug']]
+    near += [x for x in arts if x['leads_to'] == a['leads_to'] and x not in near and x['slug'] != a['slug']]
+    near = near[:3]
+    toc = ''
+    if len(a['toc']) >= 3:
+        toc = '<nav class="toc" aria-label="Содержание"><b>Содержание</b><ol>' + ''.join(
+            f'<li><a href="#{i}">{e(t)}</a></li>' for i, t in a['toc']) + '</ol></nav>'
+    if svc:
+        cta = (f'<aside class="a-cta"><div><span class="tag">Услуга студии</span><b>{e(svc["nav"])}</b>'
+               f'<p>{e(svc["short"])}.</p></div><a class="button" href="{a["leads_to"]}">Подробнее и цены →</a></aside>')
+        service, form_cta = svc['service'], svc['cta']
+    else:
+        cta = ('<aside class="a-cta"><div><span class="tag">Форма сайта</span><b>Сначала показываем готовый сайт</b>'
+               '<p>Соберём демо вашего сайта на ваших фото и ценах — бесплатно, до договора.</p></div>'
+               '<a class="button" href="/#prices">Цены и пакеты →</a></aside>')
+        service, form_cta = 'Пока не знаю, нужен совет', 'Получить демо своего сайта'
+    more = ('<section class="alt"><div class="wrap">' + head('Читайте также', 'По этой теме.') + art_cards(near)
+            + '</div></section>') if near else ''
+    ld = {'@context': 'https://schema.org', '@type': 'Article', 'headline': a['h1'], 'description': a['desc'],
+          'datePublished': a['date'], 'dateModified': a.get('updated', a['date']), 'inLanguage': 'ru',
+          'mainEntityOfPage': f'{SITE}/stati/{a["slug"]}/',
+          'author': {'@type': 'Organization', 'name': 'Форма сайта', 'url': SITE + '/'},
+          'publisher': {'@type': 'Organization', 'name': 'Форма сайта', 'url': SITE + '/'}}
+    crumbs = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+        {'@type': 'ListItem', 'position': 1, 'name': 'Главная', 'item': SITE + '/'},
+        {'@type': 'ListItem', 'position': 2, 'name': 'Статьи', 'item': SITE + '/stati/'},
+        {'@type': 'ListItem', 'position': 3, 'name': a['h1']}]}
+    ld_html = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False) + '</script>' for x in (ld, crumbs))
+    body = f'''<article class="post"><div class="wrap">
+  <p class="crumbs"><a href="/">Главная</a> · <a href="/stati/">Статьи</a> · {e(a["cluster"])}</p>
+  <h1>{e(a["h1"])}</h1>
+  <p class="a-meta"><time datetime="{a["date"]}">{ru_date(a["date"])}</time> · {a["minutes"]} мин чтения</p>
+  {toc}
+  <div class="md">{a["html"]}</div>
+  {cta}
+</div></article>
+{more}
+''' + lead_form(h2='Покажем, каким может быть ваш сайт.', steps=[
+        'Перезвоним в рабочий день, зададим 3–4 вопроса.', 'Соберём демо на ваших материалах.',
+        'Пришлём ссылку — посмотрите на телефоне.'], service=service,
+        placeholder='Например: бурим скважины в Самаре, сайт старый, заявок с него нет',
+        cta=form_cta, page_path=f'/stati/{a["slug"]}/')
+    return shell(title=a['title'] + ' | Форма сайта', desc=a['desc'], path=f'/stati/{a["slug"]}/',
+                 css=css, js=js, body=body, ld=ld_html, og='article')
+
+
+def render_index(arts, css, js):
+    clusters = []
+    for a in arts:
+        if a['cluster'] not in clusters:
+            clusters.append(a['cluster'])
+    chips = '<button type="button" class="on" data-c="">Все · ' + str(len(arts)) + '</button>' + ''.join(
+        f'<button type="button" data-c="{e(c)}">{e(c)} · {sum(1 for a in arts if a["cluster"] == c)}</button>' for c in clusters)
+    items = ''.join(
+        f'<a href="/stati/{a["slug"]}/" data-c="{e(a["cluster"])}"><span class="a-cl">{e(a["cluster"])}</span>'
+        f'<b>{e(a["h1"])}</b><span class="a-ds">{e(a["desc"])}</span><span class="a-mt">{a["minutes"]} мин</span></a>' for a in arts)
+    body = f'''<section class="hero"><div class="wrap">
+  <p class="crumbs"><a href="/">Главная</a> · Статьи</p>
+  <div class="tag">Статьи</div>
+  <h1>Как подрядчику получать заявки <span>с сайта и рекламы.</span></h1>
+  <p class="intro">Разборы для владельцев строительных и монтажных компаний: Директ, сайт, цена заявки, скорость. С цифрами из наших замеров и ссылками на источники.</p>
+  <div class="chips" id="chips">{chips}</div>
+  <div class="arts arts--all" id="arts">{items}</div>
+</div></section>
+''' + lead_form(h2='Покажем, каким может быть ваш сайт.', steps=[
+        'Перезвоним в рабочий день, зададим 3–4 вопроса.', 'Соберём демо на ваших материалах.',
+        'Пришлём ссылку — посмотрите на телефоне.'], service='Пока не знаю, нужен совет',
+        placeholder='Например: бурим скважины в Самаре, сайт старый, заявок с него нет',
+        cta='Получить демо своего сайта', page_path='/stati/')
+    return shell(title='Статьи для подрядчиков: сайт, Яндекс Директ, заявки | Форма сайта',
+                 desc='Разборы для подрядчиков: почему с сайта нет заявок, сколько стоит заявка в Директе, как ускорить сайт и сколько стоит лендинг. С цифрами и источниками.',
+                 path='/stati/', css=css, js=js, body=body)
+
+
+# ---------- сборка ----------
 
 def main():
     index = (OUT / 'index.html').read_text(encoding='utf-8')
     base = re.search(r'<style>(.*?)</style>', index, re.S).group(1)
     css = asset('site.css', base + (HERE / 'extra.css').read_text(encoding='utf-8'))
     js = asset('site.js', (HERE / 'site.js').read_text(encoding='utf-8'))
+    arts, problems = load_articles()
+    for p in problems:
+        print('!!', p)
     by_slug = {p['slug']: p for p in PAGES}
     for p in PAGES:
         d = OUT / p['slug']
         d.mkdir(parents=True, exist_ok=True)
-        (d / 'index.html').write_text(render(p, css, js, by_slug), encoding='utf-8')
-        print('ok', p['slug'])
-    urls = [f'{SITE}/'] + [f'{SITE}/{p["slug"]}/' for p in PAGES]
+        (d / 'index.html').write_text(render_page(p, css, js, by_slug, arts), encoding='utf-8')
+    print('услуг:', len(PAGES))
+
+    sdir = OUT / 'stati'
+    if sdir.exists():
+        shutil.rmtree(sdir)
+    sdir.mkdir()
+    (sdir / 'index.html').write_text(render_index(arts, css, js), encoding='utf-8')
+    for a in arts:
+        (sdir / a['slug']).mkdir()
+        (sdir / a['slug'] / 'index.html').write_text(render_article(a, arts, css, js), encoding='utf-8')
+    print('статей:', len(arts), '· знаков всего:', sum(a['chars'] for a in arts))
+
+    urls = [f'{SITE}/'] + [f'{SITE}/{p["slug"]}/' for p in PAGES] + [f'{SITE}/stati/'] + \
+           [f'{SITE}/stati/{a["slug"]}/' for a in arts]
     (OUT / 'sitemap.xml').write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n', encoding='utf-8')
-    # ссылки на услуги в подвале главной — между маркерами, чтобы пересборка не плодила дубли
-    links = '<!--svc--><nav aria-label="Услуги">' + ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES) + '</nav><!--/svc-->'
-    if '<!--svc-->' in index:
-        index = re.sub(r'<!--svc-->.*?<!--/svc-->', links, index, flags=re.S)
-    else:
-        index = index.replace('  <nav aria-label="Служебные ссылки">', '  ' + links + '\n  <nav aria-label="Служебные ссылки">', 1)
+
+    # главная: ссылки на услуги в подвале и «Статьи» в шапке — между маркерами, пересборка не плодит дубли
+    links = ('<!--svc--><nav aria-label="Услуги">' + ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
+             + '<a href="/stati/">Статьи</a></nav><!--/svc-->')
+    index = re.sub(r'<!--svc-->.*?<!--/svc-->', links, index, flags=re.S) if '<!--svc-->' in index else \
+        index.replace('  <nav aria-label="Служебные ссылки">', '  ' + links + '\n  <nav aria-label="Служебные ссылки">', 1)
+    if '/stati/' not in index.split('</header>')[0]:
+        index = index.replace('<a href="#process">Как работаем</a>', '<a href="#process">Как работаем</a><a href="/stati/">Статьи</a>', 1)
     (OUT / 'index.html').write_text(index, encoding='utf-8')
+    return 1 if problems else 0
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
