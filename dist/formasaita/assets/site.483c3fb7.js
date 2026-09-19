@@ -101,3 +101,4 @@
     document.querySelectorAll('#arts a').forEach(function(a){a.hidden=!!b.dataset.c&&a.dataset.c!==b.dataset.c;});
   });
 })();
+document.querySelectorAll('.mnav a').forEach(function(a){a.addEventListener('click',function(){a.closest('details').removeAttribute('open');});});

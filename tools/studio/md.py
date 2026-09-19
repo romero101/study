@@ -92,7 +92,7 @@ def render(body):
             q = []
             while i < n and lines[i].startswith('>'):
                 q.append(lines[i][1:].strip()); i += 1
-            out.append('<blockquote><p>' + inline(' '.join(q)) + '</p></blockquote>')
+            out.append('<blockquote><p>' + '<br>'.join(inline(x) for x in q if x) + '</p></blockquote>')
             continue
         m = re.match(r'(\d+)[.)]\s+(.*)|[-*]\s+(.*)', ln)
         if m:

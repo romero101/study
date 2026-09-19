@@ -24,6 +24,8 @@ if (strlen($digits) !== 11) { http_response_code(422); exit('{"ok":false,"error"
 
 $name = $clean('name', 80);  $company = $clean('company', 200);  $site = $clean('site', 300);
 $service = $clean('service', 120);  $message = $clean('message', 2000);
+$page = $clean('page', 120);
+if ($page !== '' && !preg_match('~^/[a-z0-9/_-]*$~', $page)) $page = '';
 $ip = $_SERVER['REMOTE_ADDR'] ?? '0';
 
 /* повтор того же номера в течение минуты вторую сделку не создаёт */
@@ -34,7 +36,7 @@ if ($isDup) exit('{"ok":true}');
 
 $body = implode("\n", array_filter([
     $service ? "Услуга: $service" : '', "Телефон: $phone", $name ? "Имя: $name" : '',
-    $company ? "Компания: $company" : '', $site ? "Сайт: $site" : '', $message ? "Задача: $message" : '',
+    $company ? "Компания: $company" : '', $site ? "Сайт: $site" : '', $message ? "Задача: $message" : '', $page ? "Страница: $page" : '',
     'Время: ' . date('d.m.Y H:i'), "IP: $ip",
 ]));
 
@@ -47,7 +49,7 @@ if (!$data['stages']) $data['stages'] = ['Не связывались', 'Доз�
 crm_add_lead($data, [
     'company' => $company ?: ($name ?: 'Заявка с сайта'), 'was_url' => $site,
     'contacts' => trim("$name $phone"), 'source' => 'site',
-], 'сайт', 'Заявка с сайта' . ($service ? " · $service" : '') . ($message ? "\n$message" : ''));
+], 'сайт', 'Заявка с сайта' . ($service ? " · $service" : '') . ($page ? "\nСо страницы: $page" : '') . ($message ? "\n$message" : ''));
 $saved = crm_write($data);
 
 /* 2. журнал — закрытый .php-файл, снаружи не читается */

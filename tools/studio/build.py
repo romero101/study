@@ -71,6 +71,7 @@ def shell(*, title, desc, path, css, js, body, ld='', og='website'):
   <a class="logo" href="/">форма<span>сайта.</span></a>
   <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
+  <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a></div></details>
 </div></header>
 
 <main id="top">
@@ -290,7 +291,7 @@ def render_article(a, arts, css, js):
         'Пришлём ссылку — посмотрите на телефоне.'], service=service,
         placeholder='Например: бурим скважины в Самаре, сайт старый, заявок с него нет',
         cta=form_cta, page_path=f'/stati/{a["slug"]}/')
-    return shell(title=a['title'] + ' | Форма сайта', desc=a['desc'], path=f'/stati/{a["slug"]}/',
+    return shell(title=a['title'] + (' | Форма сайта' if len(a['title']) <= 58 else ''), desc=a['desc'], path=f'/stati/{a["slug"]}/',
                  css=css, js=js, body=body, ld=ld_html, og='article')
 
 
