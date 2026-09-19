@@ -3,3 +3,5 @@ Disallow: /admin/
 Disallow: /demo/
 Disallow: /send.php
 Allow: /
+
+Sitemap: https://formasaita.ru/sitemap.xml

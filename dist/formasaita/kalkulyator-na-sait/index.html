@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор стоимости на сайт — расчёт до звонка | Форма сайта</title>
+<meta name="description" content="Калькулятор, который показывает цену без ввода телефона и передаёт расчёт в заявку. Для скважин, заборов, кровли, септиков и любых услуг с метражом.">
+<meta name="theme-color" content="#172333">
+<meta property="og:title" content="Калькулятор стоимости на сайт — расчёт до звонка | Форма сайта">
+<meta property="og:description" content="Калькулятор, который показывает цену без ввода телефона и передаёт расчёт в заявку. Для скважин, заборов, кровли, септиков и любых услуг с метражом.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://formasaita.ru/kalkulyator-na-sait/">
+<link rel="canonical" href="https://formasaita.ru/kalkulyator-na-sait/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23172333'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%234558ed'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/assets/site.f61f3574.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Можно поставить калькулятор на Тильду или WordPress?", "acceptedAnswer": {"@type": "Answer", "text": "Да. Калькулятор — самостоятельный блок кода, встраивается в любую страницу. Если сайт при этом грузится десять секунд, сначала предложим его ускорить — иначе до калькулятора мало кто дойдёт."}}, {"@type": "Question", "name": "Конкуренты увидят мои цены.", "acceptedAnswer": {"@type": "Answer", "text": "Они их и так знают: позвонить под видом клиента — пять минут. А вот клиент без цены на сайте уходит к тому, у кого она есть."}}, {"@type": "Question", "name": "У нас сложный расчёт, в калькулятор не уложить.", "acceptedAnswer": {"@type": "Answer", "text": "Обычно укладываются 80% типовых заказов, остальное — «по смете после замера». Калькулятор даёт порядок цены, а не заменяет сметчика."}}, {"@type": "Question", "name": "Как расчёт попадает ко мне?", "acceptedAnswer": {"@type": "Answer", "text": "Кнопка «Отправить расчёт» копирует его и открывает чат в MAX, либо человек оставляет телефон — и расчёт приходит вместе с заявкой."}}]}</script>
+</head>
+<body class="sub">
+<header><div class="wrap">
+  <a class="logo" href="/">форма<span>сайта.</span></a>
+  <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/#process">Как работаем</a><a href="/#faq">Вопросы</a></nav>
+  <a class="button button--sm" href="#request">Обсудить сайт</a>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+  <p class="crumbs"><a href="/">Главная</a> · Калькулятор на сайт</p>
+  <div class="tag">Калькулятор стоимости</div>
+  <h1>Клиент узнаёт цену сам —<br><span>и звонит уже с суммой.</span></h1>
+  <p class="intro">Калькулятор стоимости на сайт считает по вашему прайсу: метры, тип, доп. работы. Телефон для результата не нужен. Расчёт одним нажатием уходит вам — в заявку или в MAX.</p>
+  <div class="hero-actions">
+    <a class="button" href="#request">Получить демо с калькулятором ↗</a>
+    <a class="button button--ghost" href="/#prices">Посмотреть цены</a>
+  </div>
+  <div class="facts"><div><b>от 15 000 ₽</b><span>калькулятор на ваш сайт</span></div><div><b>3–5 дней</b><span>от прайса до запуска</span></div><div><b>без телефона</b><span>цена видна сразу</span></div></div>
+</div></section>
+
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Живой пример</div><h2>Подвигайте ползунок.</h2></div><p>Так это выглядит для посетителя. Сумма меняется сразу, без кнопки «рассчитать» и без формы.</p></div><div class="widget" id="ex">
+  <div class="w-in">
+    <label>Тип забора<select id="ex-type">
+      <option value="2900">Профнастил, высота 2 м</option>
+      <option value="1900">Сетка 3D</option>
+      <option value="4300">Евроштакетник</option>
+      <option value="5600">Жалюзи</option></select></label>
+    <label>Длина — <span id="ex-len-out">60 м</span><input type="range" id="ex-len" min="10" max="200" step="5" value="60"></label>
+    <label class="check"><input type="checkbox" id="ex-gate" checked> Откатные ворота</label>
+    <label class="check"><input type="checkbox" id="ex-wicket" checked> Калитка</label>
+    <p class="w-hint">Это пример: цены условные. На вашем сайте калькулятор считает по вашему прайсу.</p>
+  </div>
+  <div class="w-out">
+    <span class="w-cap">Забор с установкой</span>
+    <div class="w-big" id="ex-sum">—</div>
+    <p id="ex-per" style="margin:0;color:#c3cfdf;font-size:15.5px"></p>
+    <p class="w-say">Посетитель увидел цену, не оставив телефон. Дальше у него одна кнопка — отправить этот расчёт вам в MAX или заявкой. Вы перезваниваете человеку, который уже знает сумму.</p>
+    <a class="button" href="#request" id="ex-go">Хочу такой калькулятор ↗</a>
+  </div>
+</div>
+</div></section>
+<section><div class="wrap"><div class="head"><div><div class="tag">Зачем он нужен</div><h2>Что меняет калькулятор.</h2></div></div><div class="grid"><article class="card"><h3>Отвечает на главный вопрос</h3><p>«Сколько стоит» — первое, что хочет знать человек с рекламы. Сайт без цены проигрывает сайту с ценой, даже если там дороже.</p></article><article class="card"><h3>Отсеивает нецелевых</h3><p>Тот, кого сумма не устроила, не звонит и не тратит время менеджера. Тот, кто позвонил, к цене уже готов.</p></article><article class="card"><h3>Даёт менеджеру контекст</h3><p>В заявке видно: профнастил, 60 метров, ворота и калитка. Разговор начинается с дела, а не с «что вы хотели».</p></article><article class="card"><h3>Кормит рекламу данными</h3><p>Расчёт — отдельная цель в Метрике. Директ учится на тех, кто считал цену, а не на случайных кликах.</p></article></div></div></section>
+<section class="alt"><div class="wrap"><div class="faq"><div><div class="tag">Важная деталь</div><h2>Почему цена —<br>без телефона.</h2></div><div class="prose"><p>Распространённая схема — «оставьте номер, и мы пришлём расчёт». Она собирает контакты, но злит людей: им обещали цену, а получили звонок. Часть оставляет чужой номер, часть уходит.</p><p>Мы делаем наоборот. Цена видна сразу, а контакт человек оставляет, когда хочет зафиксировать расчёт или задать вопрос. Таких заявок меньше, чем «выпрошенных» номеров, но до договора из них доходит больше.</p><p>Если цена зависит от выезда и точной она быть не может — так и пишем: «ориентир, точно после замера». Вилка честнее, чем «цена по запросу».</p></div></div></div></section>
+<section><div class="wrap"><div class="head"><div><div class="tag">Какие бывают</div><h2>Считаем так,<br>как считаете вы.</h2></div></div><div class="steps"><div><h3>По метражу</h3><p>Заборы, кровля, отделка, фасады: длина или площадь × ставка + доп. работы.</p></div><div><h3>По глубине</h3><p>Скважины: метры бурения, обсадная труба, обустройство под ключ.</p></div><div><h3>По ступеням</h3><p>Септики, котлы, кондиционеры: число жильцов или площадь подбирает модель и цену.</p></div><div><h3>По смете</h3><p>Нет публичного прайса — калькулятор честно показывает состав работ и стоимость монтажа «от».</p></div></div></div></section>
+<section class="alt"><div class="wrap"><div class="head"><div><div class="tag">Цена</div><h2>Сколько стоит калькулятор.</h2></div></div><ul class="plist plist--box"><li><div><b>Калькулятор на существующий сайт</b><small>По вашему прайсу, расчёт уходит в заявку и в MAX, цель в Метрике</small></div><div class="pr">от 15 000 ₽</div></li><li><div><b>Лендинг с калькулятором под ключ</b><small>Калькулятор уже входит в стоимость лендинга</small></div><div class="pr">60 000 ₽</div></li></ul><p class="note">Цены в калькуляторе лежат в одном файле: поменять ставку — минута, программист не нужен. <a href="/#prices">Весь прайс →</a></p></div></section>
+<section><div class="wrap"><div class="faq"><div><div class="tag">Вопросы</div><h2>Про калькуляторы.</h2></div><div><details><summary>Можно поставить калькулятор на Тильду или WordPress?</summary><p>Да. Калькулятор — самостоятельный блок кода, встраивается в любую страницу. Если сайт при этом грузится десять секунд, сначала предложим его ускорить — иначе до калькулятора мало кто дойдёт.</p></details><details><summary>Конкуренты увидят мои цены.</summary><p>Они их и так знают: позвонить под видом клиента — пять минут. А вот клиент без цены на сайте уходит к тому, у кого она есть.</p></details><details><summary>У нас сложный расчёт, в калькулятор не уложить.</summary><p>Обычно укладываются 80% типовых заказов, остальное — «по смете после замера». Калькулятор даёт порядок цены, а не заменяет сметчика.</p></details><details><summary>Как расчёт попадает ко мне?</summary><p>Кнопка «Отправить расчёт» копирует его и открывает чат в MAX, либо человек оставляет телефон — и расчёт приходит вместе с заявкой.</p></details></div></div></div></section>
+
+<section><div class="wrap">
+  <div class="head"><div><div class="tag">Рядом по теме</div><h2>Что ещё смотрят.</h2></div></div>
+  <div class="rel"><a href="/kviz-sait/"><b>Квиз-сайт</b><span>Три вопроса вместо формы — и телефон в самом конце</span></a><a href="/landing-pod-direct/"><b>Лендинг под Директ</b><span>Посадочная, на которой оплаченный клик становится заявкой</span></a><a href="/peredelat-sait/"><b>Переделать сайт</b><span>Новый вариант рядом со старым — до оплаты</span></a></div>
+</div></section>
+
+<div class="wrap"><section class="lead" id="request">
+  <div>
+    <div class="tag">Заявка</div>
+    <h2>Соберём калькулятор по вашему прайсу.</h2>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <ol><li>Перезвоним в рабочий день, зададим 3–4 вопроса.</li><li>Соберём демо на ваших материалах.</li><li>Пришлём ссылку — посмотрите на телефоне.</li></ol>
+  </div>
+  <form id="lead-form" action="/send.php" method="post" novalidate>
+    <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <input type="hidden" name="page" value="/kalkulyator-na-sait/">
+    <div class="row">
+      <label>Телефон<input name="phone" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required></label>
+      <label>Имя <i>· необязательно</i><input name="name" autocomplete="given-name" maxlength="80" placeholder="Как к вам обращаться"></label>
+    </div>
+    <label>Что нужно<select name="service" id="service"><option>Пакет «Лендинг»</option><option>Пакет «Лендинг + реклама»</option><option>Пакет «Под ключ на 3 месяца»</option><option>Лендинг под Яндекс Директ</option><option>Квиз-сайт</option><option selected>Калькулятор на сайт</option><option>Ускорение сайта</option><option>Переделка сайта</option><option>Мобильная версия</option><option>Аудит сайта</option><option>Ведение Яндекс Директа</option><option>Пока не знаю, нужен совет</option></select></label>
+    <label>Текущий сайт или название компании <i>· необязательно</i><input name="site" maxlength="300" placeholder="example.ru" autocapitalize="none"></label>
+    <label>Задача <i>· необязательно</i><textarea name="message" id="message" maxlength="2000" placeholder="Например: кровельные работы, цена зависит от площади и материала"></textarea></label>
+    <button class="button" type="submit">Получить демо с калькулятором ↗</button>
+    <p id="form-status" role="status"></p>
+    <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="/policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p>
+  </form>
+</section></div>
+</main>
+
+<footer><div class="wrap">
+  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <nav aria-label="Услуги"><a href="/landing-pod-direct/">Лендинг под Директ</a><a href="/kviz-sait/">Квиз-сайт</a><a href="/kalkulyator-na-sait/">Калькулятор на сайт</a><a href="/uskorenie-saita/">Ускорение сайта</a><a href="/peredelat-sait/">Переделать сайт</a><a href="/mobilnaya-versiya/">Мобильная версия</a><a href="/audit/">Аудит сайта</a><a href="/direct/">Яндекс Директ</a></nav>
+  <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
+</div></footer>
+<script src="/assets/site.bbe33c05.js" defer></script>
+</body>
+</html>

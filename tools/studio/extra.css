@@ -1,0 +1,66 @@
+
+/* страницы услуг */
+.sub h1{font-size:clamp(34px,5vw,64px);max-width:980px}
+.sub .hero{padding:48px 0 60px}
+.crumbs{font-size:14px;color:#566277;margin:0 0 26px}
+.crumbs a{text-decoration:underline;text-underline-offset:3px}
+.sub .facts{grid-template-columns:repeat(3,1fr)}
+.sub .grid .card{padding:26px}
+.sub .grid .card p{margin:0}
+.nums td:nth-child(2){color:#b3402f;font-weight:650;white-space:nowrap}
+.nums td:last-child{color:#1c7a4b}
+.plist--box{background:#fff;border:1px solid #e3e7ef;border-radius:16px;padding:26px 28px}
+.alt .plist--box{background:#f8f9fc}
+.note a{color:#4558ed;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.prose p{margin:0 0 18px;color:#3c485b}
+.prose p:last-child{margin:0}
+.rel{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rel a{display:block;padding:22px 24px;background:#fff;border:1px solid #e3e7ef;border-radius:14px;transition:border-color .15s,transform .15s}
+.rel a:hover{border-color:#4558ed;transform:translateY(-2px)}
+.rel b{display:block;font-size:17px;margin-bottom:4px}
+.rel span{font-size:14.5px;color:#566277}
+footer nav[aria-label="Услуги"]{gap:6px 20px}
+/* виджеты */
+.widget{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#fff;border:1px solid #e3e7ef;border-radius:20px;overflow:hidden}
+.alt .widget{background:#f8f9fc}
+.w-in{padding:32px}
+.w-out{padding:32px;background:#172333;color:#fff;display:flex;flex-direction:column}
+.w-in label{display:block;font-size:14px;font-weight:600;margin:0 0 18px;color:#172333}
+.w-in label i{font-style:normal;font-weight:400;color:#566277}
+.w-in input[type=number],.w-in select{display:block;width:100%;margin-top:7px;min-height:50px;padding:12px 14px;border:1.5px solid #cfd6e4;border-radius:10px;background:#fff;font-size:16px}
+.w-in input[type=range]{display:block;width:100%;margin-top:12px;accent-color:#4558ed;height:28px}
+.w-in .check{display:flex;align-items:center;gap:10px;font-weight:400;font-size:16px;min-height:44px;margin:0}
+.w-in .check input{width:22px;height:22px;accent-color:#4558ed}
+.w-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.w-out dl{margin:0 0 20px;display:grid;grid-template-columns:1fr auto;gap:12px 18px;font-size:15.5px;color:#c3cfdf}
+.w-out dt{margin:0}.w-out dd{margin:0;text-align:right;color:#fff;font-weight:650;white-space:nowrap}
+.w-big{font-size:40px;font-weight:750;letter-spacing:-.035em;line-height:1.1;margin:6px 0 4px}
+.w-cap{font-size:14px;color:#9aa8ff;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.w-say{font-size:16px;color:#dbe3ee;margin:16px 0 22px;padding-top:16px;border-top:1px solid #2d3b4f}
+.w-out .button{margin-top:auto}
+.w-hint{font-size:13.5px;color:#566277;margin:6px 0 0}
+.qz{background:#fff;border:1px solid #e3e7ef;border-radius:20px;padding:32px;max-width:760px}
+.alt .qz{background:#f8f9fc}
+.qz-track{height:6px;background:#e3e7ef;border-radius:9px;overflow:hidden;margin-bottom:26px}
+.qz-track i{display:block;height:100%;width:0;background:#4558ed;transition:width .25s}
+.qz-step{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#566277;font-weight:600;margin:0 0 8px}
+.qz h3{font-size:24px;margin-bottom:18px}
+.qz p{color:#566277;margin:0 0 20px}
+.qz-opts{display:flex;flex-wrap:wrap;gap:10px}
+.qz-opts button{min-height:50px;padding:12px 20px;border:1.5px solid #cfd6e4;border-radius:10px;background:#fff;cursor:pointer;font-size:16px}
+.qz-opts button:hover{border-color:#4558ed;color:#4558ed}
+@media(max-width:980px){.rel{grid-template-columns:1fr 1fr}.widget{grid-template-columns:1fr}}
+@media(max-width:700px){
+  .sub .hero{padding:30px 0 44px}.crumbs{margin-bottom:18px}
+  .sub .facts{grid-template-columns:1fr 1fr}
+  .rel{grid-template-columns:1fr}
+  .w-in,.w-out,.qz{padding:24px 20px}.w-big{font-size:34px}
+  .plist--box{padding:22px 20px}
+  .nums td:first-child{font-weight:650}
+  .nums td:nth-child(2):before{content:"было: ";color:#566277;font-weight:400}
+  .nums td:last-child:before{content:"стало: ";color:#566277;font-weight:400}
+  .nums td:last-child{font-size:16px;margin-top:2px}
+  .qz-opts button{width:100%;text-align:left}
+}
+.w-row label i{display:block;margin-top:2px}
+@media(max-width:700px){.nums td,.nums td:last-child,.nums td:nth-child(2){white-space:normal}}
