@@ -25,8 +25,8 @@ import md  # noqa: E402
 e = html.escape
 MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа',
           'сентября', 'октября', 'ноября', 'декабря']
-ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%234558ed'/%3E%3Cpath d='M27 18h-5a14 14 0 0 0 0 28h5z' fill='%23fff'/%3E%3Cpath d='M37 18h5a14 14 0 0 1 0 28h-5z' fill='%23fff' opacity='.55'/%3E%3Crect x='29' y='10' width='6' height='44' rx='3' fill='%23fff'/%3E%3C/svg%3E"
-LOGO_MARK = '<svg class="logo-mark" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#4558ed"/><path d="M27 18h-5a14 14 0 0 0 0 28h5z" fill="#fff"/><path d="M37 18h5a14 14 0 0 1 0 28h-5z" fill="#fff" opacity=".55"/><rect x="29" y="10" width="6" height="44" rx="3" fill="#fff"/></svg>'
+ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234558ed'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='system-ui,-apple-system,Roboto,Arial,sans-serif' font-weight='800' font-size='44' fill='%23fff'%3E%D1%84%3C/text%3E%3C/svg%3E"
+LOGO_MARK = '<svg class="logo-mark" aria-hidden="true" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#4558ed"/><text x="32" y="46" text-anchor="middle" font-family="system-ui,-apple-system,Roboto,Arial,sans-serif" font-weight="800" font-size="44" fill="#fff">ф</text></svg>'
 
 
 def asset(name, text):
