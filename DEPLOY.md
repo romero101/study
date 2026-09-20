@@ -50,3 +50,15 @@
 Пока `"demo": True` в `tools/upgrade.py`: страница закрыта от индексации, заявки уходят в студию
 (журнал `leads.log.php` рядом с сайтом; почта и Telegram — в `send.php`). Для боевого запуска поставить
 `"demo": False`, вписать `"email"` клиента и пересобрать.
+
+## Демо не должны попадать в поиск
+
+Три слоя, все нужны:
+1. `<meta name="robots" content="noindex,nofollow">` в каждом демо — ставят генераторы.
+2. Заголовок `X-Robots-Tag: noindex, nofollow, noarchive` — действует на все файлы, включая картинки.
+   Для `formasaita.ru/demo/` лежит в `builder/demo-root/.htaccess` → на сервере `www/formasaita.ru/demo/.htaccess`
+   (rsync отдельных демо его не трогает). Для поддоменов `topdrillrus` и `skvazhina-ekb` блок дописан в конец их
+   `.htaccess` прямо на сервере: после выкладки `dist/*-v2/` проверить `curl -sI … | grep -i x-robots` и дописать заново, если пропал.
+   В `builder/shared/.htaccess` этот заголовок НЕ добавлять — он уедет на боевой сайт клиента.
+3. В `robots.txt` обход демо НЕ запрещаем: при `Disallow` робот не видит noindex, и Google может показать голый адрес.
+При запуске сайта на домене клиента: убрать метатег, заголовок туда не переносить.
