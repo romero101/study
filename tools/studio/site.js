@@ -1,4 +1,5 @@
 (function(){
+  function goal(n){try{ym(112830617,'reachGoal',n)}catch(e){}}
   var rub=function(n){return Math.round(n).toLocaleString('ru-RU')+' ₽';};
   var $=function(id){return document.getElementById(id);};
 
@@ -16,11 +17,14 @@
       data.append('_elapsed',String(Math.round((Date.now()-opened)/1000)));
       button.disabled=true;say('','');
       fetch('/send.php',{method:'POST',body:data}).then(function(r){return r.json().then(function(j){if(!r.ok||!j.ok)throw new Error();});})
-        .then(function(){form.reset();say('ok','Заявка принята. Перезвоним в ближайший рабочий день.');})
+        .then(function(){goal('lead');form.reset();say('ok','Заявка принята. Перезвоним в ближайший рабочий день.');})
         .catch(function(){say('bad','Не получилось отправить. Проверьте интернет и нажмите ещё раз — данные в форме сохранились.');})
         .then(function(){button.disabled=false;});
     });
   }
+  document.querySelectorAll('a[href="#request"]').forEach(function(a){a.addEventListener('click',function(){goal('cta');});});
+  var used={};function once(n){if(!used[n]){used[n]=1;goal(n);}}
+  ['cpl','ex','qz'].forEach(function(id){var el=$(id);if(el){el.addEventListener('input',function(){once('calc');});el.addEventListener('click',function(ev){if(ev.target.closest('button'))once('calc');});}});
   /* кнопка под виджетом переносит расчёт в поле «Задача» */
   function carry(btn,text){
     if(!btn)return;
