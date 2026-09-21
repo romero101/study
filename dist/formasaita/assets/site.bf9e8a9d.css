@@ -319,6 +319,7 @@ footer nav[aria-label="Услуги"]{gap:6px 20px}
 .hero-vis--solo .tip{top:auto;left:auto;bottom:34px;right:calc(50% + 84px)}
 @media(max-width:980px){.hero-vis--solo{justify-content:flex-start;padding-left:0}.hero-vis--solo .tip{right:auto;left:180px;bottom:30px}}
 @media(max-width:700px){.hero-vis--solo .ph{width:200px}.hero-vis--solo .ph .ph-scr{height:340px}}
+.hero .rel{margin-top:44px}
 
 /* ===== иллюстрации в статьях и на страницах: макеты телефона, схемы, графики ===== */
 .fig{margin:32px 0 34px;padding:0}

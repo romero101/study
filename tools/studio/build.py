@@ -69,7 +69,9 @@ def shell(*, title, desc, path, css, js, body, ld='', og='website'):
 <meta property="og:type" content="{og}">
 <meta property="og:url" content="{url}">
 <link rel="canonical" href="{url}">
-<link rel="icon" href="{ICON}">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="120x120" href="/img/favicon-120.png">
+<link rel="icon" type="image/svg+xml" href="{ICON}">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <meta property="og:image" content="https://formasaita.ru/img/og.png">
 <link rel="stylesheet" href="{css}">
@@ -374,6 +376,18 @@ def render_index(arts, css, js):
                  path='/stati/', css=css, js=js, body=body)
 
 
+def render_404(arts, css, js):
+    body = f'''<section class="hero"><div class="wrap">
+  <div class="tag">Ошибка 404</div>
+  <h1>Такой страницы нет. <span>Зато есть другие.</span></h1>
+  <p class="intro">Возможно, адрес набран с ошибкой или страница переехала. Вот с чего обычно начинают.</p>
+  <div class="hero-actions"><a class="button" href="/">На главную</a><a class="button button--ghost" href="/stati/">Статьи</a><a class="button button--ghost" href="/#prices">Цены</a></div>
+  <div class="rel">{''.join(f'<a href="/{p["slug"]}/"><b>{p["nav"]}</b><span>{p["short"]}</span></a>' for p in PAGES[:6])}</div>
+</div></section>'''
+    html_ = shell(title='Страница не найдена — Форма сайта', desc='Такой страницы нет. Перейдите на главную, к услугам или статьям студии «Форма сайта».', path='/404.html', css=css, js=js, body=body)
+    return html_.replace('<link rel="canonical"', '<meta name="robots" content="noindex">\n<link rel="canonical"', 1).replace('href="#request"', 'href="/#request"')
+
+
 # ---------- сборка ----------
 
 def main():
@@ -395,6 +409,8 @@ def main():
     if (ROOT / 'content' / 'site-img').exists():
         shutil.copytree(ROOT / 'content' / 'site-img', OUT / 'img', dirs_exist_ok=True)
 
+    (OUT / '404.html').write_text(render_404(arts, css, js), encoding='utf-8')
+
     sdir = OUT / 'stati'
     if sdir.exists():
         shutil.rmtree(sdir)
@@ -407,11 +423,12 @@ def main():
         (sdir / a['slug'] / 'index.html').write_text(render_article(a, arts, css, js), encoding='utf-8')
     print('статей:', len(arts), '· знаков всего:', sum(a['chars'] for a in arts))
 
-    urls = [f'{SITE}/'] + [f'{SITE}/{p["slug"]}/' for p in PAGES] + [f'{SITE}/stati/'] + \
-           [f'{SITE}/stati/{a["slug"]}/' for a in arts]
+    today = date.today().isoformat()
+    urls = [(f'{SITE}/', today)] + [(f'{SITE}/{p["slug"]}/', today) for p in PAGES] + [(f'{SITE}/stati/', today)] + \
+           [(f'{SITE}/stati/{a["slug"]}/', a.get('updated', a['date'])) for a in arts]
     (OUT / 'sitemap.xml').write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n', encoding='utf-8')
+        + ''.join(f'<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n' for u, d in urls) + '</urlset>\n', encoding='utf-8')
 
     # главная: ссылки на услуги в подвале и «Статьи» в шапке — между маркерами, пересборка не плодит дубли
     links = ('<!--svc--><nav aria-label="Услуги">' + ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
