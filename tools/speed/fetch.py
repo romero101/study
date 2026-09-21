@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Грубый замер «как браузер»: HTML, затем все картинки/css/js со страницы в 6 потоков.
+"""ВНИМАНИЕ: total_kb здесь завышен — считаются ВСЕ файлы из кода страницы, включая то, что браузер при открытии
+не качает (видео, картинки ниже экрана). Для веса страницы использовать Lighthouse total-byte-weight
+(npx lighthouse URL --throttling-method=provided --only-audits=total-byte-weight). Отсюда брать только ttfb и page_s.
+
+Грубый замер «как браузер»: HTML, затем все картинки/css/js со страницы в 6 потоков.
 Печатает JSON: время ответа сервера, время HTML, время всей страницы, вес, число файлов.
 Работает на python3.6 без сторонних пакетов. Запуск: python3 fetch.py URL [URL...]"""
 import json, re, sys, time, ssl, gzip, zlib
