@@ -55,7 +55,7 @@ METRIKA = '''<!-- Yandex.Metrika -->
 
 def shell(*, title, desc, path, css, js, body, ld='', og='website'):
     url = f'{SITE}{path}'
-    foot = ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
+    foot = ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES if p.get('foot'))
     return f'''<!doctype html>
 <html lang="ru">
 <head>
@@ -174,7 +174,12 @@ def b_widget(b):
     return head(b['tag'], b['h2'], b.get('lead', '')) + body
 
 
-BLOCKS = {'cards': b_cards, 'steps': b_steps, 'nums': b_nums, 'price': b_price,
+def b_links(b):
+    items = ''.join(f'<a href="/{s}/"><b>{n}</b><span>{t}</span></a>' for s, n, t in b['items'])
+    return head(b['tag'], b['h2'], b.get('lead', '')) + f'<div class="rel">{items}</div>'
+
+
+BLOCKS = {'links': b_links, 'cards': b_cards, 'steps': b_steps, 'nums': b_nums, 'price': b_price,
           'text': b_text, 'faq': b_faq, 'widget': b_widget}
 
 
@@ -195,7 +200,7 @@ def art_cards(arts):
 
 
 SHOT_H = {'calc-zabor': 1835, 'calc-septik': 1468, 'calc-skvazhina': 1567, 'calc-krovlya': 1713, 'quiz-zabor-2': 1365,
-          'quiz-septik-1': 1315, 'hero-septik': 540, 'hero-krovlya': 566, 'form-zabor': 1219, 'process-zabor': 1085}
+          'quiz-septik-1': 1315, 'hero-septik': 540, 'garantiya-krovlya': 760, 'faq-zabor': 592, 'quiz-zabor-1': 1500, 'hero-krovlya': 566, 'form-zabor': 1219, 'process-zabor': 1085}
 
 
 def hero_vis(v):
@@ -211,6 +216,11 @@ def hero_vis(v):
     return f'<div class="hero-vis hero-vis--solo">{shot}{tip}</div>'
 
 
+def crumb_parent(page, by_slug):
+    parent = page['slug'].rsplit('/', 1)[0] if '/' in page['slug'] else ''
+    return f'<a href="/{parent}/">{by_slug[parent]["nav"]}</a> · ' if parent in by_slug else ''
+
+
 def render_page(page, css, js, by_slug, arts):
     sections = []
     for i, b in enumerate(page['blocks']):
@@ -222,7 +232,7 @@ def render_page(page, css, js, by_slug, arts):
     facts = ''.join(f'<div><b>{x}</b><span>{y}</span></div>' for x, y in page['facts'])
     rel = ''.join(f'<a href="/{s}/"><b>{by_slug[s]["nav"]}</b><span>{by_slug[s]["short"]}</span></a>' for s in page['related'])
     body = f'''<section class="hero"><div class="wrap">
-  <p class="crumbs"><a href="/">Главная</a> · {page["nav"]}</p>
+  <p class="crumbs"><a href="/">Главная</a> · {crumb_parent(page, by_slug)}{page["nav"]}</p>
  <div class="hero-grid"><div>
   <div class="tag">{page["tag"]}</div>
   <h1>{page["h1"]}</h1>
@@ -433,7 +443,7 @@ def main():
         + ''.join(f'<url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n' for u, d in urls) + '</urlset>\n', encoding='utf-8')
 
     # главная: ссылки на услуги в подвале и «Статьи» в шапке — между маркерами, пересборка не плодит дубли
-    links = ('<!--svc--><nav aria-label="Услуги">' + ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES)
+    links = ('<!--svc--><nav aria-label="Услуги">' + ''.join(f'<a href="/{p["slug"]}/">{p["nav"]}</a>' for p in PAGES if p.get('foot'))
              + '<a href="/stati/">Статьи</a></nav><!--/svc-->')
     index = re.sub(r'<!--svc-->.*?<!--/svc-->', links, index, flags=re.S) if '<!--svc-->' in index else \
         index.replace('  <nav aria-label="Служебные ссылки">', '  ' + links + '\n  <nav aria-label="Служебные ссылки">', 1)
