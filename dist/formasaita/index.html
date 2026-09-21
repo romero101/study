@@ -174,6 +174,11 @@ details.mnav{display:none;border:0}
 @media(max-width:700px){.logo-mark{width:28px;height:28px}.logo{gap:7px;font-size:19px!important}header .button--sm{white-space:nowrap;padding:9px 12px!important;font-size:14px}}
 @media(max-width:360px){header .button--sm{display:none}}
 .also{margin-top:34px;padding-top:26px;border-top:1px solid #e3e7ef;display:flex;flex-wrap:wrap;gap:8px 8px;align-items:center;font-size:15.5px}.also b{margin-right:6px}.also a{padding:7px 14px;border-radius:99px;background:#f1f3f8;transition:background .15s}.also a:hover{background:#e3e7ff;color:#4558ed}.also span{flex-basis:100%;color:#566277;margin-top:10px}.also span a{padding:0;background:none;color:#4558ed;text-decoration:underline;text-underline-offset:3px}
+.hphone{font-weight:700;font-size:16px;white-space:nowrap;margin-left:auto}.hphone:hover{color:#4558ed}header nav+.hphone{margin-left:0}
+.fcontacts{display:flex;flex-direction:column;gap:4px}.fcontacts a{font-weight:700;color:#172333;text-decoration:none;font-size:16px;padding:0}
+.callbar{display:none}
+@media(max-width:980px){.hphone{display:none}}
+@media(max-width:700px){.callbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:6;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#f8f9fcf2;backdrop-filter:blur(10px);border-top:1px solid #e3e7ef}.callbar a{min-height:46px;display:grid;place-items:center;border-radius:10px;font-weight:650;font-size:15.5px;background:#4558ed;color:#fff}.callbar a+a{background:#fff;color:#172333;box-shadow:inset 0 0 0 2px #cfd6e4}body{padding-bottom:64px}}
 /*home*/
 .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}
 .hero-grid h1{font-size:clamp(38px,4.7vw,66px)}
@@ -205,7 +210,7 @@ details.mnav{display:none;border:0}
 /*/home*/
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Форма сайта","url":"https://formasaita.ru/","logo":"https://formasaita.ru/img/icon-180.png","image":"https://formasaita.ru/img/og.png","description":"Веб-студия: сайты и лендинги для подрядчиков, калькуляторы, квизы, Яндекс Директ, SEO.","areaServed":"RU","priceRange":"от 15 000 ₽","knowsAbout":["лендинги для подрядчиков","Яндекс Директ","калькулятор на сайт","квиз-сайт","ускорение сайта"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Форма сайта","url":"https://formasaita.ru/","logo":"https://formasaita.ru/img/icon-180.png","image":"https://formasaita.ru/img/og.png","description":"Веб-студия: сайты и лендинги для подрядчиков, калькуляторы, квизы, Яндекс Директ, SEO.","telephone":"+79290537603","areaServed":"RU","priceRange":"от 15 000 ₽","knowsAbout":["лендинги для подрядчиков","Яндекс Директ","калькулятор на сайт","квиз-сайт","ускорение сайта"]}</script>
 <!-- Yandex.Metrika -->
 <script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=112830617','ym');ym(112830617,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});</script>
 <noscript><div><img src="https://mc.yandex.ru/watch/112830617" style="position:absolute;left:-9999px" alt=""></div></noscript>
@@ -217,8 +222,9 @@ details.mnav{display:none;border:0}
   <nav aria-label="Разделы">
     <a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#process">Как работаем</a><a href="/stati/">Статьи</a><a href="#faq">Вопросы</a>
   </nav>
+  <a class="hphone" href="tel:+79290537603">+7 (929) 053-76-03</a>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
-  <details class="mnav"><summary aria-label="Меню"></summary><div><a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#process">Как работаем</a><a href="/stati/">Статьи</a><a href="#faq">Вопросы</a></div></details>
+  <details class="mnav"><summary aria-label="Меню"></summary><div><a href="#services">Услуги</a><a href="#prices">Цены</a><a href="#process">Как работаем</a><a href="/stati/">Статьи</a><a href="#faq">Вопросы</a><a href="tel:+79290537603">+7 (929) 053-76-03</a></div></details>
 </div></header>
 
 <main id="top">
@@ -351,7 +357,7 @@ details.mnav{display:none;border:0}
   <div>
     <div class="tag">Заявка</div>
     <h2>Покажем, каким может быть ваш сайт.</h2>
-    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть. Или позвоните: <a href="tel:+79290537603" style="color:#fff;font-weight:700;white-space:nowrap">+7 (929) 053-76-03</a></p>
     <ol><li>Перезвоним в рабочий день, зададим 3–4 вопроса.</li><li>Соберём демо на ваших материалах.</li><li>Пришлём ссылку — посмотрите на телефоне.</li></ol>
   </div>
   <form id="lead-form" action="send.php" method="post" novalidate>
@@ -370,9 +376,10 @@ details.mnav{display:none;border:0}
   </form>
 </section></div>
 </main>
+<div class="callbar"><a href="tel:+79290537603" data-goal="call">Позвонить</a><a href="#request">Оставить заявку</a></div>
 
 <footer><div class="wrap">
-  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <span class="fcontacts"><a href="tel:+79290537603">+7 (929) 053-76-03</a>© Форма сайта, 2026 · formasaita.ru</span>
   <!--svc--><nav aria-label="Услуги"><a href="/landing-pod-direct/">Лендинг под Директ</a><a href="/kviz-sait/">Квиз-сайт</a><a href="/kalkulyator-na-sait/">Калькулятор на сайт</a><a href="/uskorenie-saita/">Ускорение сайта</a><a href="/peredelat-sait/">Переделать сайт</a><a href="/mobilnaya-versiya/">Мобильная версия</a><a href="/audit/">Аудит сайта</a><a href="/direct/">Яндекс Директ</a><a href="/stati/">Статьи</a></nav><!--/svc-->
   <nav aria-label="Служебные ссылки"><a href="policy.html">Политика обработки данных</a><a href="admin/" rel="nofollow">Вход для сотрудников</a></nav>
 </div></footer>
@@ -383,6 +390,7 @@ details.mnav{display:none;border:0}
   function fmt(v){var d=v.replace(/\D/g,'');if(!d)return'';if(d[0]==='8')d='7'+d.slice(1);if(d[0]!=='7')d='7'+d;d=d.slice(0,11);var s='+7';if(d.length>1)s+=' ('+d.slice(1,4);if(d.length>=5)s+=') '+d.slice(4,7);if(d.length>=8)s+='-'+d.slice(7,9);if(d.length>=10)s+='-'+d.slice(9,11);return s;}
   phone.addEventListener('input',function(){var end=phone.selectionStart===phone.value.length,next=fmt(phone.value);if(end||next.length<phone.value.length)phone.value=next;});
   document.querySelectorAll('a[href="#request"]').forEach(function(a){a.addEventListener('click',function(){try{ym(112830617,'reachGoal','cta')}catch(e){}});});
+  document.querySelectorAll('a[href^="tel:"]').forEach(function(a){a.addEventListener('click',function(){try{ym(112830617,'reachGoal','call')}catch(e){}});});
   document.querySelectorAll('.mnav a').forEach(function(a){a.addEventListener('click',function(){a.closest('details').removeAttribute('open');});});
   document.querySelectorAll('[data-service]').forEach(function(a){a.addEventListener('click',function(){document.getElementById('service').value=a.dataset.service;});});
   function say(kind,text){status.className=kind;status.textContent=text;}

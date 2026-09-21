@@ -23,6 +23,7 @@
     });
   }
   document.querySelectorAll('a[href="#request"]').forEach(function(a){a.addEventListener('click',function(){goal('cta');});});
+  document.querySelectorAll('a[href^="tel:"]').forEach(function(a){a.addEventListener('click',function(){goal('call');});});
   var used={};function once(n){if(!used[n]){used[n]=1;goal(n);}}
   ['cpl','ex','qz'].forEach(function(id){var el=$(id);if(el){el.addEventListener('input',function(){once('calc');});el.addEventListener('click',function(ev){if(ev.target.closest('button'))once('calc');});}});
   /* кнопка под виджетом переносит расчёт в поле «Задача» */

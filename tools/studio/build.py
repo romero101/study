@@ -81,16 +81,18 @@ def shell(*, title, desc, path, css, js, body, ld='', og='website'):
 <header><div class="wrap">
   <a class="logo" href="/" aria-label="Форма сайта">{LOGO_MARK}<b>форма<span>сайта</span></b></a>
   <nav aria-label="Разделы"><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a></nav>
+  <a class="hphone" href="tel:+79290537603">+7 (929) 053-76-03</a>
   <a class="button button--sm" href="#request">Обсудить сайт</a>
-  <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a></div></details>
+  <details class="mnav"><summary aria-label="Меню"></summary><div><a href="/#services">Услуги</a><a href="/#prices">Цены</a><a href="/stati/">Статьи</a><a href="/#faq">Вопросы</a><a href="/">Главная</a><a href="tel:+79290537603">+7 (929) 053-76-03</a></div></details>
 </div></header>
 
 <main id="top">
 {body}
 </main>
+<div class="callbar"><a href="tel:+79290537603">Позвонить</a><a href="#request">Оставить заявку</a></div>
 
 <footer><div class="wrap">
-  <span>© Форма сайта, 2026 · formasaita.ru</span>
+  <span class="fcontacts"><a href="tel:+79290537603">+7 (929) 053-76-03</a>© Форма сайта, 2026 · formasaita.ru</span>
   <nav aria-label="Услуги">{foot}<a href="/stati/">Статьи</a></nav>
   <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
 </div></footer>
@@ -106,7 +108,7 @@ def lead_form(*, h2, steps, service, placeholder, cta, page_path):
   <div>
     <div class="tag">Заявка</div>
     <h2>{h2}</h2>
-    <p>Оставьте телефон и адрес текущего сайта, если он есть.</p>
+    <p>Оставьте телефон и адрес текущего сайта, если он есть. Или позвоните: <a href="tel:+79290537603" style="color:#fff;font-weight:700;white-space:nowrap">+7 (929) 053-76-03</a></p>
     <ol>{''.join(f"<li>{x}</li>" for x in steps)}</ol>
   </div>
   <form id="lead-form" action="/send.php" method="post" novalidate>
