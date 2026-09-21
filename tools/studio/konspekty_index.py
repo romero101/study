@@ -27,6 +27,7 @@ out = ['# Указатель конспектов роликов', '',
        'Конспекты лежат в `docs/seo/konspekty/<ID>.md`. Дословных расшифровок нет и не будет.', '',
        '| ID | Ролик | Кто говорит | Когда | Для каких тем | Цифр | Статус |', '|---|---|---|---|---|---|---|']
 for v, t, c, p, fo, n, e in rows:
+    t, c = t.replace('|', '·'), c.replace('|', '·')
     out.append(f'| {v} | {t[:80]} | {c[:30]} | {p[:12]} | {fo[:90]} | {n} | {"нет расшифровки" if e else "снят"} |')
 (K / '_INDEX.md').write_text('\n'.join(out) + '\n', encoding='utf-8')
 print(len(rows), 'файлов; без расшифровки:', sum(1 for r in rows if r[6]), '; цифр всего:', sum(r[5] for r in rows))
