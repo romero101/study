@@ -92,7 +92,7 @@ def shell(*, title, desc, path, css, js, body, ld='', og='website'):
 <div class="callbar"><a href="tel:+79290537603">Позвонить</a><a href="#request">Оставить заявку</a></div>
 
 <footer><div class="wrap">
-  <span class="fcontacts"><a href="tel:+79290537603">+7 (929) 053-76-03</a>© Форма сайта, 2026 · formasaita.ru</span>
+  <span class="fcontacts"><a href="tel:+79290537603">+7 (929) 053-76-03</a>пн–пт 9:00–18:00 (мск)<br>© Форма сайта, 2026 · ИП Кочкин Роман Андреевич · ИНН 526109316232 · ОГРНИП 318527500132392 · Нижний Новгород</span>
   <nav aria-label="Услуги">{foot}<a href="/stati/">Статьи</a></nav>
   <nav aria-label="Служебные ссылки"><a href="/policy.html">Политика обработки данных</a></nav>
 </div></footer>
@@ -287,10 +287,15 @@ def include_factory(fname, problems):
     return include
 
 
+HOLD = set((ARTICLES / '_hold.txt').read_text(encoding='utf-8').split()) if (ARTICLES / '_hold.txt').exists() else set()
+
+
 def load_articles():
     arts, problems = [], []
     for f in sorted(ARTICLES.glob('*.md')):
         if f.name.startswith('_'):
+            continue
+        if f.stem in HOLD:
             continue
         meta, body = md.meta_and_body(f.read_text(encoding='utf-8'))
         miss = [k for k in REQUIRED if not meta.get(k)]
