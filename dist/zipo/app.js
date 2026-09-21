@@ -66,7 +66,7 @@ function update() {
   const s = state();
   $('len-range').value = Math.min(CALC.max, Math.max(CALC.min, s.len || CALC.min));
   drawFence(s.type);
-  $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? 'ПОДБОР ЗАБОРА' : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
+  $('out-label').textContent = (mode === 'quiz' && !quiz.done) ? (CALC.quizLabel || (CALC.noun === 'Забор' ? 'ПОДБОР ЗАБОРА' : 'ПОДБОР РЕШЕНИЯ')) : 'ПРЕДВАРИТЕЛЬНО · ' + s.t.name.toUpperCase();
   if (!s.valid) { $('out-price').textContent = CALC.askLen || 'Укажите длину'; $('out-formula').textContent = `От ${CALC.min} до ${CALC.max} ${CALC.unit}. Больше — позвоните, посчитаем отдельно.`; $('gift').textContent = ''; $('out-list').replaceChildren(); return; }
   const q = quote(s);
   $('out-price').textContent = q.total ? `от ${money(q.total)} ₽` : 'По смете';

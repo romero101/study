@@ -4,6 +4,9 @@ import re, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import build
+if '--all' in sys.argv or len([a for a in sys.argv[1:] if not a.startswith('-')]):
+    build.HOLD = set()
+sys.argv = [a for a in sys.argv if not a.startswith('-')]
 
 arts, problems = build.load_articles()
 want = sys.argv[1:]
