@@ -113,6 +113,11 @@ SEO от 30 000 ₽/мес; карточки на Картах и 2ГИС 12 000
 ## Страницы услуг, на которые можно ссылаться
 
 / (главная, цены: /#prices), /landing-pod-direct/, /kviz-sait/, /kalkulyator-na-sait/, /uskorenie-saita/,
-/peredelat-sait/, /mobilnaya-versiya/, /audit/, /direct/.
-Страниц /seo/…, /sait-dlya/… пока нет — не ссылайся на них.
-Ссылки на другие статьи — `/stati/<slug>/`, только на те, что пишутся в этой же партии (список slug даёт задание).
+/peredelat-sait/, /mobilnaya-versiya/, /audit/, /direct/, /direct/stroitelnye-kompanii/, /sait-i-direct/,
+/stroitelnye-kompanii/, /seo/, /seo/yandex-karty/, /seo/stroitelnye-kompanii/, /seo/prodvizhenie-landinga/,
+/sait-dlya/ (каталог ниш) и /sait-dlya/<ниша>/ для 18 ниш: burenie-skvazhin, zabory, septiki, krovlya, natyazhnye-potolki,
+osteklenie, kuhni-na-zakaz, remont-kvartir, shtukaturka, stroitelstvo-domov, bani, landshaft, vorota, lestnicy,
+metallokonstrukcii, otoplenie, elektrik, avtoservis.
+Ссылки на другие статьи — `/stati/<slug>/`: на любой slug из `_batch1.tsv`, `_batch2.tsv` (опубликованы) и `_batch3.tsv` (пишутся сейчас).
+Телефон студии: +7 (929) 053-76-03. Цена сайта компании на несколько страниц — от 110 000 ₽ (до 8 страниц, далее 8 000 ₽ за страницу).
+Иллюстрации обязательны — по руководству `_FIGURES.md` (3–5 на статью).
