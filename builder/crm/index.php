@@ -200,6 +200,7 @@ cursor:pointer;min-height:34px}
   .quick button{white-space:nowrap;flex:0 0 auto;min-height:40px}
   .script>summary span{min-width:0;flex-basis:100%}
 }
+.speed h4{margin:14px 0 6px;font-size:14px}.speed ul{margin:0 0 8px;padding-left:18px;font-size:14px}.speed li{margin:3px 0}
 </style>
 </head>
 <body>

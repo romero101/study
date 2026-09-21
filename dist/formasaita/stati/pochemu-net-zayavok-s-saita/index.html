@@ -16,7 +16,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234558ed'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='system-ui,-apple-system,Roboto,Arial,sans-serif' font-weight='800' font-size='44' fill='%23fff'%3E%D1%84%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <meta property="og:image" content="https://formasaita.ru/img/og.png">
-<link rel="stylesheet" href="/assets/site.80c6df9b.css">
+<link rel="stylesheet" href="/assets/site.3ed34ee5.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Почему сайт не приносит заявки: 12 причин и проверка за минуту", "description": "Сайт не приносит заявки, а реклама крутится? 12 причин — от скорости до пропавших писем — и как проверить каждую за минуту с телефона без программиста.", "datePublished": "2026-09-19", "dateModified": "2026-09-19", "inLanguage": "ru", "mainEntityOfPage": "https://formasaita.ru/stati/pochemu-net-zayavok-s-saita/", "author": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}, "publisher": {"@type": "Organization", "name": "Форма сайта", "url": "https://formasaita.ru/"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://formasaita.ru/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://formasaita.ru/stati/"}, {"@type": "ListItem", "position": 3, "name": "Почему сайт не приносит заявки: 12 причин и проверка за минуту"}]}</script>
 <!-- Yandex.Metrika -->
 <script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=112830617','ym');ym(112830617,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});</script>
@@ -45,15 +45,13 @@
 <h2 id="1-сайт-долго-грузится">1. Сайт долго грузится</h2>
 <p>Человек нажал на объявление и смотрит на белый экран. Многие не ждут — возвращаются в выдачу к следующему подрядчику, а клик уже списан.</p>
 <p><b>Проверка.</b> Откройте сайт на телефоне через мобильный интернет, не через Wi-Fi офиса. Считайте секунды до момента, когда видно заголовок и кнопку. Точнее — <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">PageSpeed Insights</a>, строка LCP. Google считает хорошим LCP до 2,5 секунды, плохим — больше 4 секунд (<a href="https://web.dev/articles/lcp" target="_blank" rel="noopener">web.dev</a>).</p>
-<p><b>Из нашей практики.</b> В сентябре 2026 мы замерили сайты подрядчиков, которые в тот день стояли в рекламном блоке Яндекса. Сайт по септикам из Новосибирска показывал главный экран через 77,3 секунды, сайт по заборам из Нижнего Новгорода — через 21,9 секунды. Те же страницы с теми же фото в нашей сборке — 1,6 и 1,4 секунды.</p>
-<figure class="fig"><div class="fig-body"><p class="fig-title">Время до главного экрана на телефоне (LCP)</p>
+<p><b>Из нашей практики.</b> В сентябре 2026 мы замерили сайты подрядчиков, которые в тот день стояли в рекламном блоке Яндекса. Страница сайта по заборам из Нижнего Новгорода весила 37 МБ — как сотня обычных лендингов, сайта по септикам из Новосибирска — 21 МБ. Те же страницы с теми же фото в нашей сборке — 0,3 и 0,1 МБ. На мобильном интернете такие страницы открываются долго, а на офисном Wi-Fi этого не заметно.</p>
+<figure class="fig"><div class="fig-body"><p class="fig-title">Вес страницы со всеми картинками</p>
 <p class="legend"><span><i></i>действующий сайт из рекламы</span><span><i></i>наша сборка той же страницы</span></p>
 <div class="bars">
-  <div class="bar"><span>Септики, Новосибирск</span><div><i style="--w:100%"></i><b>77,3 с</b></div><div><i style="--w:2%"></i><b>1,6 с</b></div></div>
-  <div class="bar"><span>Заборы, Нижний Новгород</span><div><i style="--w:28%"></i><b>21,9 с</b></div><div><i style="--w:2%"></i><b>1,4 с</b></div></div>
-</div>
-<p class="tags-h">Пороги Google для LCP</p>
-<div class="scale"><span>до 2,5 с<small>хорошо</small></span><span>2,5–4 с<small>терпимо</small></span><span>больше 4 с<small>плохо</small></span></div></div><figcaption>Наш замер, Lighthouse, мобильный профиль, сентябрь 2026. Те же страницы с теми же фото — разница в десятки секунд.</figcaption></figure>
+  <div class="bar"><span>Заборы, Нижний Новгород</span><div><i style="--w:100%"></i><b>37 МБ</b></div><div><i style="--w:0.8%"></i><b>0,3 МБ</b></div></div>
+  <div class="bar"><span>Септики, Новосибирск</span><div><i style="--w:57%"></i><b>21 МБ</b></div><div><i style="--w:0.3%"></i><b>0,1 МБ</b></div></div>
+</div></div><figcaption>Вес страницы со всеми картинками и скриптами, замер с сервера в Москве, сентябрь 2026. «Было» — действующий сайт компании, «стало» — наша сборка той же страницы с теми же фото и текстами. Разница — в десятки раз.</figcaption></figure>
 <p><b>Что делать.</b> Сжать фото, убрать видео и слайдер с первого экрана, отказаться от тяжёлых виджетов. Если сайт на конструкторе, иногда проще пересобрать страницу, чем чинить. Подробнее — на странице <a href="/uskorenie-saita/">ускорения сайта</a>.</p>
 <h2 id="2-на-телефоне-неудобно">2. На телефоне неудобно</h2>
 <p>Реклама подрядчиков в основном смотрится с телефона: человек стоит на участке и ищет, кто пробурит скважину. Если на телефоне текст мелкий, кнопка уезжает за край, а номер не нажимается — заявки не будет.</p>

@@ -92,32 +92,20 @@ function drawLog(l) {
 /* ------------------------------------------------- скорость: было / стало */
 function drawSpeed(l) {
   var box = document.getElementById("d-speed"), sp = l.speed;
-  box.hidden = !sp;
-  if (!sp) return;
-  if (!sp.now) {  // демо ещё нет — показываем только замер их сайта
-    var kb = sp.was.kb >= 1024 ? String(Math.round(sp.was.kb / 102.4) / 10).replace(".", ",") + " МБ" : sp.was.kb + " КБ";
-    box.innerHTML = "<h3>Скорость их сайта на телефоне</h3><table>" +
-      '<tr><td>Главный экран появился</td><td class="bad">' + String(sp.was.lcp).replace(".", ",") + " с</td></tr>" +
-      '<tr><td>Страницей можно пользоваться</td><td class="bad">' + String(sp.was.tti).replace(".", ",") + " с</td></tr>" +
-      '<tr><td>Вес страницы</td><td class="bad">' + kb + "</td></tr>" +
-      '<tr><td>Запросов к серверу</td><td class="bad">' + sp.was.req + "</td></tr>" +
-      '<tr><td>Оценка Lighthouse, из 100</td><td class="bad">' + sp.was.score + "</td></tr></table>" +
-      "<p>Замер " + esc(sp.at) + ": Lighthouse, эмуляция телефона на медленном 4G. Наши демо в этих условиях открываются за 1–2 с.</p>";
-    return;
-  }
-  function sec(v) { return String(v).replace(".", ",") + " с"; }
-  function row(name, was, now, fmt, times) {
-    return "<tr><td>" + name + '</td><td class="bad">' + fmt(was) + '</td><td class="ok">' + fmt(now) + '</td><td class="x">' +
-      (times && now ? "×" + (was / now >= 10 ? Math.round(was / now) : String(Math.round(was / now * 10) / 10).replace(".", ",")) : "") + "</td></tr>";
-  }
-  box.innerHTML = "<h3>Скорость на телефоне: их сайт → наше демо</h3><table><tr><th></th><th>Было</th><th>Стало</th><th></th></tr>" +
-    row("Главный экран появился", sp.was.lcp, sp.now.lcp, sec, true) +
-    row("Страницей можно пользоваться", sp.was.tti, sp.now.tti, sec, true) +
-    row("Вес страницы", sp.was.kb, sp.now.kb, function (v) { return v >= 1024 ? String(Math.round(v / 102.4) / 10).replace(".", ",") + " МБ" : v + " КБ"; }, true) +
-    row("Запросов к серверу", sp.was.req, sp.now.req, String, false) +
-    row("Оценка Lighthouse, из 100", sp.was.score, sp.now.score, String, false) +
-    "</table><p>Замер " + esc(sp.at) + ": Lighthouse, эмуляция телефона Moto G на медленном 4G — те же условия, что в Google PageSpeed. " +
-    "Для звонка: «у вас главный экран — " + sec(sp.was.lcp) + ", у нас — " + sec(sp.now.lcp) + "».</p>";
+  box.hidden = !(sp && sp.msk);
+  if (!sp || !sp.msk) return;  // старые замеры Lighthouse из Амстердама не показываем: для звонка они неверны
+  var m = sp.msk;
+  function mb(v) { return v >= 1024 ? String(Math.round(v / 102.4) / 10).replace(".", ",") + " МБ" : v + " КБ"; }
+  function sec(a) { return a.map(function (v) { return String(v).replace(".", ","); }).join("–") + " с"; }
+  var rows = '<tr><td>Вес страницы со всеми файлами</td><td class="bad">' + mb(m.kb) + "</td>" +
+    (m.demo_kb ? '<td class="ok">' + mb(m.demo_kb) + "</td>" : "<td></td>") + "</tr>" +
+    '<tr><td>Ответ сервера из Москвы</td><td class="' + (m.ttfb[0] >= 1 ? "bad" : "") + '">' + sec(m.ttfb) + "</td><td></td></tr>" +
+    '<tr><td>Вся страница из Москвы, быстрый канал</td><td>' + sec(m.page) + "</td><td></td></tr>";
+  var finds = (sp.findings || []).map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("");
+  box.innerHTML = "<h3>Их сайт: замер из России</h3><table><tr><th></th><th>Их сайт</th><th>Наше демо</th></tr>" + rows + "</table>" +
+    (finds ? "<h4>Что видно с телефона</h4><ul>" + finds + "</ul>" : "") +
+    "<p>Замер " + esc(m.at) + " с сервера в Москве (канал дата-центра, два прогона). На мобильном интернете тяжёлая страница открывается дольше — " +
+    "перед звонком откройте сайт со своего телефона не по Wi-Fi. Секунды из прежних замеров Lighthouse не называть: они шли из-за рубежа.</p>";
 }
 
 /* ---------------------------------------------------------- скрипт звонка */
