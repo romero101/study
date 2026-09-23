@@ -195,3 +195,9 @@ document.querySelectorAll('dialog').forEach(d => { d.addEventListener('click', e
 document.addEventListener('focusin', e => { if (e.target.matches('input:not([type=range]):not([type=checkbox]):not([type=radio]),textarea')) document.body.classList.add('kbd'); });
 document.addEventListener('focusout', () => document.body.classList.remove('kbd'));
 update();
+
+/* Видео Рутуба: iframe создаётся только по клику, чтобы десять плееров не грузились вместе со страницей */
+document.querySelectorAll('[data-embed]').forEach(b => b.addEventListener('click', () => {
+  const f = document.createElement('iframe'); f.src = `https://rutube.ru/play/embed/${b.dataset.embed}?autoplay=1`; f.allow = 'autoplay; fullscreen; clipboard-write'; f.allowFullscreen = true; f.title = b.getAttribute('aria-label') || 'Видео';
+  b.replaceWith(f); goal('video');
+}));

@@ -135,6 +135,20 @@ def build(slug):
                         ([("chat", c["max"], "max", "Написать в MAX")] if c.get("max") else []) + ([("ghost", m["telegram"], "tg", "Написать в Telegram")] if m.get("telegram") else []))
         messengers = (f'<section id="messengers" class="tint"><div class="msgr">{pic(img, m["image"], m["name"], "(max-width:760px) 60vw, 20vw")}'
                       f'<div><h2>{e(m["title"])}</h2><p>{e(m["text"])}</p><p class="who"><b>{e(m["name"])}</b><small>{e(m["role"])}</small></p><div class="actions">{links}</div></div></div></section>')
+    place = ""
+    if c.get("place"):
+        pl = c["place"]
+        photos = "".join(pic(img, k, cap, "(max-width:760px) 92vw, 30vw") for k, cap in pl["images"])
+        facts = "".join(f"<li><b>{e(a)}</b><span>{e(x)}</span></li>" for a, x in pl.get("facts", []))
+        mapf = (f'<iframe class="map" src="{e(pl["map"])}" loading="lazy" title="Карта: {e(pl.get("address", ""))}" allowfullscreen></iframe>' if pl.get("map") else "")
+        place = (f'<section id="place" class="tint"><div class="head"><div><p class="eyebrow">{e(pl.get("eyebrow", "ГДЕ МЫ"))}</p><h2>{e(pl["title"])}</h2></div>{note(pl)}</div>'
+                 f'<div class="place"><div class="place-map">{mapf}</div><div class="place-photos">{photos}</div><ul class="place-facts">{facts}</ul></div></section>')
+    embeds = ""
+    if c.get("embeds"):
+        ev = c["embeds"]
+        items = "".join(f'<figure class="embed"><button type="button" class="embed-face" data-embed="{e(it["id"])}" aria-label="Смотреть: {e(it["title"])}">{pic(img, it["poster"], it["title"], "(max-width:760px) 92vw, 30vw")}<span class="play" aria-hidden="true"></span></button>'
+                        f'<figcaption><b>{e(it["title"])}</b>{f"<small>{e(it[chr(109)+chr(101)+chr(116)+chr(97)])}</small>" if it.get("meta") else ""}</figcaption></figure>' for it in ev["items"])
+        embeds = (f'<section id="videos" class="tint"><div class="head"><div><p class="eyebrow">{e(ev.get("eyebrow", "ВИДЕО"))}</p><h2>{e(ev["title"])}</h2></div>{note(ev)}</div><div class="embeds">{items}</div></section>')
     videos = ""
     if c.get("videos"):
         vv = c["videos"]
@@ -201,7 +215,7 @@ def build(slug):
 <label class="field" for="summary">Расчёт<textarea id="summary" name="Параметры" rows="4" maxlength="2000"></textarea></label>
 <button class="button primary" type="submit">{e(c["lead"]["button"])} ↗</button><p class="hint">{form_note}</p><p class="error" id="form-error" role="alert"></p>
 <p class="consent">Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank" rel="noopener">политикой обработки персональных данных</a>.</p></form></section>''',
-        'feature': feature, 'guarantee': guar, 'reviews': reviews, 'why': why, 'quote': quote, 'team': team, 'messengers': messengers, 'videos': videos,
+        'feature': feature, 'guarantee': guar, 'reviews': reviews, 'why': why, 'quote': quote, 'team': team, 'messengers': messengers, 'videos': videos, 'place': place, 'embeds': embeds,
     }
     ORDER = c.get('order', ['trust', 'types', 'calc', 'feature', 'works', 'process', 'guarantee', 'reviews', 'faq', 'request'])
     main_html = ''.join(SEC[k] for k in ORDER if SEC.get(k))
