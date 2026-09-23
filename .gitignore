@@ -15,3 +15,4 @@ dist/strana-zaborov-source/raw2/
 dist/_sheet/
 dist/krysha-source/raw/
 dist/septic-src/
+tools/service/clients/*/raw/

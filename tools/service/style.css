@@ -314,3 +314,6 @@ blockquote footer small{display:block;font-weight:400;color:var(--muted);font-si
 
 /* читаемость: мелкие подписи не меньше 13 px */
 .eyebrow{font-size:13px}.shot span{font-size:13px}.out-label{font-size:12.5px}.type .price small{font-size:13px}.trust li{font-size:14px}
+
+/* фильтры галереи переносятся, когда не влезают в ширину телефона */
+.filters{flex-wrap:wrap;row-gap:8px}

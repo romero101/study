@@ -234,7 +234,7 @@ def build(slug):
 
     site = {"demo": demo, "max": c.get("max", ""), "phone": phone,
             "types": {k: {kk: vv for kk, vv in {"name": v["name"], "rate": v.get("rate"), "draw": v.get("draw", "prof"), "steps": v.get("steps"), "install": v.get("install")}.items() if vv is not None or kk == "rate"} for k, v in calc["types"].items()},
-            "gifts": calc.get("gifts", []), "rows": calc["rows"], "colors": calc.get("colors", []), "questions": c["quiz"],
+            "gifts": calc.get("gifts", []), "filters": c["works"].get("filters", []), "rows": calc["rows"], "colors": calc.get("colors", []), "questions": c["quiz"],
             "shots": c["works"]["shots"], "extraRates": {x["id"]: x["rate"] for x in calc["extras"] if x.get("rate")},
             "extraFixed": {x["id"]: x["fixed"] for x in calc["extras"] if x.get("fixed")},
             "calc": {"unit": calc["unit"], "noun": calc["noun"], "min": calc["min"], "max": calc["max"], "posts": bool(calc.get("posts")),

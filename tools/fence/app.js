@@ -4,6 +4,7 @@
 const SITE = window.SITE, DEMO = SITE.demo, MAX = SITE.max || '', opened = Date.now();
 const $ = id => document.getElementById(id);
 const money = n => new Intl.NumberFormat('ru-RU').format(n);
+const typeName = k => (SITE.types[k] && SITE.types[k].name) || ((SITE.filters || []).find(f => f[0] === k) || [])[1] || k;
 const TYPES = SITE.types, GIFTS = SITE.gifts || [], COLORS = SITE.colors || [], QUESTIONS = SITE.questions, SHOTS = SITE.shots;
 /* Движок общий: заборы (метры, столбы, цвет, рисунок забора), кровля и отделка (м², без рисунка). Отличия — в SITE.calc. */
 const CALC = Object.assign({unit: 'м', noun: 'Забор', min: 5, max: 400, posts: true, per: 'за метр'}, SITE.calc || {});
@@ -24,7 +25,7 @@ function quote(s) {
   if (t.steps) {
     const st = t.steps.find(x => s.len <= x[0]), install = t.install || 0;
     if (!st) return {total: 0, formula: '', model: ''};  // больше, чем рассчитана старшая модель серии — только по смете
-    return {total: st[1] + install, formula: `${st[2]}: станция от ${money(st[1])} ₽` + (install ? ` + монтаж от ${money(install)} ₽` : ''), model: st[2]};
+    return {total: st[1] + install + s.extraFixed, formula: `${st[2]}: от ${money(st[1])} ₽` + (install ? ` + монтаж от ${money(install)} ₽` : '') + (s.extraFixed ? ` + ${money(s.extraFixed)} ₽ (выбранные работы)` : ''), model: st[2]};
   }
   if (!t.rate) return {total: 0, formula: '', model: ''};
   return {total: s.len * (t.rate + s.extraRate) + s.extraFixed, formula: `${s.len} ${CALC.unit} × от ${money(t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : '') + (s.extraFixed ? ` + ${money(s.extraFixed)} ₽ (ворота, калитка)` : ''), model: ''};
@@ -156,11 +157,11 @@ document.querySelectorAll('[data-start-quiz]').forEach(b => b.addEventListener('
 
 /* ---------------------------------------------------------------- галерея */
 $('gallery').replaceChildren(...SHOTS.map(([file, type, caption]) => { const b = document.createElement('button'), img = document.createElement('img'), tag = document.createElement('span');
-  b.className = 'shot'; b.type = 'button'; b.dataset.type = type; b.setAttribute('aria-label', `Увеличить фото: ${TYPES[type].name}`);
-  img.loading = 'lazy'; img.decoding = 'async'; img.alt = `${TYPES[type].name} — работа компании`; img.width = 640; img.height = 480;
+  b.className = 'shot'; b.type = 'button'; b.dataset.type = type; b.setAttribute('aria-label', `Увеличить фото: ${typeName(type)}`);
+  img.loading = 'lazy'; img.decoding = 'async'; img.alt = `${typeName(type)} — работа компании`; img.width = 640; img.height = 480;
   img.srcset = `img/${file}-640.webp 640w, img/${file}-1280.webp 1280w`; img.sizes = '(max-width:760px) 50vw, 25vw'; img.src = `img/${file}-640.webp`;
-  tag.textContent = caption || TYPES[type].name; b.append(img, tag);
-  b.addEventListener('click', () => { $('photo-large').src = `img/${file}-1280.webp`; $('photo-large').alt = img.alt; $('photo-caption').textContent = `${caption || TYPES[type].name} · фото компании`; $('photo-dialog').showModal(); }); return b; }));
+  tag.textContent = caption || typeName(type); b.append(img, tag);
+  b.addEventListener('click', () => { $('photo-large').src = `img/${file}-1280.webp`; $('photo-large').alt = img.alt; $('photo-caption').textContent = `${caption || typeName(type)} · фото компании`; $('photo-dialog').showModal(); }); return b; }));
 document.querySelectorAll('[data-filter]').forEach(f => f.addEventListener('click', () => { document.querySelectorAll('[data-filter]').forEach(x => x.setAttribute('aria-selected', String(x === f)));
   document.querySelectorAll('.shot').forEach(s => { s.hidden = f.dataset.filter !== 'all' && s.dataset.type !== f.dataset.filter; }); }));
 
