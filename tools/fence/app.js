@@ -16,6 +16,7 @@ function state() {
   return {type, t: TYPES[type], len, valid: len >= CALC.min && len <= CALC.max, height: val('height'),
     extras: [...document.querySelectorAll('.checks input:checked')].map(i => i.nextElementSibling.textContent.split(' — ')[0]),
     extraRate: [...document.querySelectorAll('.checks input:checked')].reduce((a, i) => a + ((SITE.extraRates || {})[i.id] || 0), 0),
+    extraFixed: [...document.querySelectorAll('.checks input:checked')].reduce((a, i) => a + ((SITE.extraFixed || {})[i.id] || 0), 0),
     extraIds: [...document.querySelectorAll('.checks input:checked')].map(i => i.id)};
 }
 function quote(s) {
@@ -26,7 +27,7 @@ function quote(s) {
     return {total: st[1] + install, formula: `${st[2]}: станция от ${money(st[1])} ₽` + (install ? ` + монтаж от ${money(install)} ₽` : ''), model: st[2]};
   }
   if (!t.rate) return {total: 0, formula: '', model: ''};
-  return {total: s.len * (t.rate + s.extraRate), formula: `${s.len} ${CALC.unit} × от ${money(t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : ''), model: ''};
+  return {total: s.len * (t.rate + s.extraRate) + s.extraFixed, formula: `${s.len} ${CALC.unit} × от ${money(t.rate + s.extraRate)} ₽ ${CALC.per}` + (s.extraRate ? ' (с выбранными работами)' : '') + (s.extraFixed ? ` + ${money(s.extraFixed)} ₽ (ворота, калитка)` : ''), model: ''};
 }
 function giftFor(len) { return GIFTS.find(g => len >= g[0]); }
 
@@ -34,6 +35,17 @@ function drawFence(typeKey) {
   if (!$('fence-svg') || !color) return;
   const type = TYPES[typeKey].draw, c = color[2], dark = 'rgba(0,0,0,.22)', svg = $('fence-svg');
   let s = '';
+  if (type === 'brick') {
+    // кирпичные столбы на монолитном основании, между ними профнастил цвета RAL
+    s += `<rect x="0" y="68" width="320" height="12" fill="#8f8f8a"/><rect x="0" y="66" width="320" height="3" fill="#6e6e69"/>`;
+    for (let x = 12; x < 320; x += 80) s += `<rect x="${x}" y="20" width="56" height="48" fill="${c}"/>` + Array.from({length: 6}, (_, i) => `<rect x="${x + 4 + i * 9}" y="20" width="3" height="48" fill="${dark}"/>`).join('');
+    for (let x = 0; x <= 320; x += 80) {
+      s += `<rect x="${x - 12}" y="12" width="24" height="56" fill="#9a5b3c"/>`;
+      for (let y = 14; y < 66; y += 6) { const off = ((y - 14) / 6) % 2 ? 6 : 0; for (let bx = x - 12 + off - 12; bx < x + 12; bx += 12) { const bw = Math.min(bx + 11, x + 12) - Math.max(bx, x - 12); if (bw > 0) s += `<rect x="${Math.max(bx, x - 12)}" y="${y}" width="${bw}" height="5" fill="#b3714f"/>`; } }
+      s += `<rect x="${x - 15}" y="8" width="30" height="5" rx="1" fill="#5c5f5e"/>`;
+    }
+    svg.innerHTML = s; return;
+  }
   for (let x = 0; x <= 320; x += 80) s += `<rect x="${x - 3}" y="14" width="6" height="66" fill="#3a3f3c"/>`;
   if (type === 'prof') {
     s += `<rect x="0" y="18" width="320" height="58" fill="${c}"/>`;
@@ -74,7 +86,7 @@ function update() {
   const g = giftFor(s.len), next = [...GIFTS].reverse().find(x => x[0] > s.len), gift = $('gift');
   gift.className = 'gift' + (g ? ' on' : '');
   gift.textContent = (g ? `🎁 В подарок: ${g[1]}. ` : '') + (next && next[0] - s.len <= 25 ? `Ещё ${next[0] - s.len} м — и в подарок ${next[1]}.` : '');
-  const rows = (CALC.posts ? [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]] : []).concat(SITE.rows).concat(s.extras.map((e, n) => [e, (SITE.extraRates || {})[s.extraIds[n]] ? `+${money(SITE.extraRates[s.extraIds[n]])} ₽ ${CALC.per}` : 'в смете']));
+  const rows = (CALC.posts ? [['Столбы, шаг 2,5 м', `≈ ${Math.ceil(s.len / 2.5) + 1} шт`]] : []).concat(SITE.rows).concat(s.extras.map((e, n) => [e, (SITE.extraRates || {})[s.extraIds[n]] ? `+${money(SITE.extraRates[s.extraIds[n]])} ₽ ${CALC.per}` : (SITE.extraFixed || {})[s.extraIds[n]] ? `от ${money(SITE.extraFixed[s.extraIds[n]])} ₽` : 'в смете']));
   $('out-list').replaceChildren(...rows.map(r => { const li = document.createElement('li'), b = document.createElement('b'); li.textContent = r[0]; b.textContent = r[1]; li.append(b); return li; }));
 }
 

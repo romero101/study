@@ -1,0 +1,10 @@
+Generated using the built-in image_gen tool.
+Common brief: photorealistic architectural magazine photography for a fence company near Novosibirsk; highest available quality; landscape 16:9; fence dominates the foreground; generous quiet space on the left for website text; natural materials and lighting. No people, text, logos, house numbers, watermarks or cars.
+
+hero_a.png: Modern dark timber and glass house in a pine forest. New graphite euro metal picket fence in two staggered rows, matching sliding driveway gate and separate pedestrian wicket. Warm golden-hour sunset through pine trunks, maintained green lawn.
+
+hero_b.png: Long straight anthracite corrugated sheet metal fence with matching pedestrian wicket along a plot. Tidy house with dark roof and birches behind it. Early summer morning golden light, delicate mist, dew on grass.
+
+hero_c.png: White euro metal picket fence with matching double-leaf swing gates at a light house in a cottage community. Evening sunshine, green lawn, thuja shrubs, clean sky.
+
+Native output: 1672 x 941 PNG. Final centered edge crop: 1664 x 936 PNG, exact 16:9, no upscaling.

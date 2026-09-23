@@ -1,0 +1,608 @@
+OpenAI Codex v0.155.0-alpha.9.2
+--------
+workdir: /Users/test/formasaita/study/tools/service/clients/potolok34/gen
+model: gpt-6-astra
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 01a0ca1e-f350-7413-9b85-f75d315ec14e
+--------
+user
+Сгенерируй встроенным инструментом генерации изображений 9 снимков и сохрани PNG в текущую папку под указанными именами. ГЛАВНОЕ ТРЕБОВАНИЕ — чтобы снимки не выглядели как ИИ-картинки: документальный стиль, будто снято на телефон прорабом на объекте — естественный свет из окна, лёгкий шум, несовершенная композиция, обычные российские квартиры в состоянии ремонта (голые стены, стремянка, пыль, коробки, провода), никакой глянцевости и студийного света. Люди — настоящие суровые русские мужики-монтажники натяжных потолков 35–55 лет: обветренные лица, щетина, морщины, рабочие руки, простая тёмная рабочая одежда без надписей, никаких улыбок в камеру — заняты делом. Разные лица на каждом снимке. Никаких логотипов, букв, надписей. Формат 3:2, если не указано иное.
+1) crew_heatgun.png: монтажник на стремянке греет тепловой пушкой натягиваемое белое полотно потолка, второй мужик внизу держит шпатель-лопатку, комната в ремонте, окно с дневным светом.
+2) crew_profile.png: монтажник крепит алюминиевый багет к стене под потолком перфоратором, стоит на стремянке, защитные очки, пыль в луче света.
+3) crew_spot.png: крупный план рук монтажника, который вставляет точечный светильник в готовый белый натяжной потолок, закладная платформа видна, лицо частично в кадре.
+4) measurer.png: замерщик лет 50 в тёмной куртке с лазерным дальномером и блокнотом меряет комнату в квартире, хозяйка на втором плане размыта.
+5) leader.png: формат 2:3, поясной портрет владельца небольшой потолочной фирмы лет 50, суровый, седая щетина, тёмная рабочая куртка, стоит у своей белой газели с рулонами полотна на фоне, пасмурный день, смотрит в камеру спокойно, без улыбки.
+6) team.png: формат 16:9, четверо монтажников с инструментом стоят у белого фургона во дворе панельного дома, утро, обычные позы, кто-то с термосом, никто не позирует красиво.
+7) check.png: монтажник проверяет уровнем ровность готового натяжного потолка у люстры, снизу вверх, комната с новым потолком, но стены ещё без обоев.
+8) hero.png: формат 16:9, готовая жилая комната в обычной российской квартире после ремонта с белым матовым натяжным потолком, точечные светильники и парящая подсветка по периметру, вечер, тёплый свет, реалистично, как фото риелтора на телефон, без людей.
+9) office.png: формат 3:2, маленький офис-склад потолочной фирмы: стол, образцы плёнок веером, рулоны полотна, тепловая пушка, стремянки у стены, обычная лампа дневного света, без людей.
+Работай до конца сам, без вопросов. В конце перечисли файлы.
+
+codex
+Использую навык imagegen: сгенерирую девять снимков с указанными сценами и сохраню PNG в текущую папку. В запросах задам бытовую съёмку на телефон, фактуру ремонта и отсутствие надписей.
+
+exec
+/bin/zsh -lc 'cat /Users/test/.codex/skills/.system/imagegen/SKILL.md' in /Users/test/formasaita/study/tools/service/clients/potolok34/gen
+ succeeded in 0ms:
+---
+name: "imagegen"
+description: "Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas."
+---
+
+# Image Generation Skill
+
+Generates or edits images for the current project (for example website assets, game assets, UI mockups, product mockups, wireframes, logo design, photorealistic images, or infographics).
+
+## Top-level modes and rules
+
+This skill has exactly two top-level modes:
+
+- **Default built-in tool mode (preferred):** built-in `image_gen` tool for image generation, editing, and transparent-image requests. Does not require `OPENAI_API_KEY`.
+- **Fallback CLI mode:** `scripts/image_gen.py` CLI. Use when the user explicitly asks for or confirms the CLI/API/model path. Requires `OPENAI_API_KEY`.
+
+Within CLI fallback, the CLI exposes three subcommands:
+
+- `generate`
+- `edit`
+- `generate-batch`
+
+Rules:
+- Use the built-in `image_gen` tool by default for normal image generation and editing requests.
+- Do not switch to CLI fallback for ordinary quality, size, or file-path control.
+- For transparent images, ask built-in `image_gen` for a transparent background and preserve the generated alpha.
+- Never silently switch from built-in `image_gen` or CLI `gpt-image-2` to CLI `gpt-image-1.5`; ask the user first unless they explicitly requested `gpt-image-1.5`.
+- The word `batch` by itself does not mean CLI fallback. If the user asks for many assets or says to batch-generate assets without explicitly asking for CLI/API/model controls, stay on the built-in path and issue one built-in call per requested asset or variant.
+- If the built-in tool fails or is unavailable, tell the user the CLI fallback exists and that it requires `OPENAI_API_KEY`. Proceed only if the user explicitly asks for that fallback.
+- If the user explicitly asks for CLI mode, use the bundled `scripts/image_gen.py` workflow. Do not create one-off SDK runners.
+- Never modify `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
+
+Built-in save-path policy:
+- In built-in tool mode, Codex saves generated images under `$CODEX_HOME/*` by default.
+- Do not describe or rely on OS temp as the default built-in destination.
+- Do not describe or rely on a destination-path argument (if any) on the built-in `image_gen` tool. If a specific location is needed, generate first and then move or copy the selected output from `$CODEX_HOME/generated_images/...`.
+- Save-path precedence in built-in mode:
+  1. If the user names a destination, move or copy the selected output there.
+  2. If the image is meant for the current project, move or copy the final selected image into the workspace before finishing.
+  3. If the image is only for preview or brainstorming, render it inline; the underlying file can remain at the default `$CODEX_HOME/*` path.
+- Never leave a project-referenced asset only at the default `$CODEX_HOME/*` path.
+- Do not overwrite an existing asset unless the user explicitly asked for replacement; otherwise create a sibling versioned filename such as `hero-v2.png` or `item-icon-edited.png`.
+
+Shared prompt guidance for both modes lives in `references/prompting.md` and `references/sample-prompts.md`.
+
+Fallback-only docs/resources for CLI mode:
+- `references/cli.md`
+- `references/image-api.md`
+- `references/codex-network.md`
+- `scripts/image_gen.py`
+
+## When to use
+- Generate a new image (concept art, product shot, cover, website hero)
+- Generate a new image using one or more reference images for style, composition, or mood
+- Edit an existing image (inpainting, lighting or weather transformations, background replacement, object removal, compositing, transparent background)
+- Produce many assets or variants for one task
+
+## When not to use
+- Extending or matching an existing SVG/vector icon set, logo system, or illustration library inside the repo
+- Creating simple shapes, diagrams, wireframes, or icons that are better produced directly in SVG, HTML/CSS, or canvas
+- Making a small project-local asset edit when the source file already exists in an editable native format
+- Any task where the user clearly wants deterministic code-native output instead of a generated bitmap
+
+## Decision tree
+
+Think about two separate questions:
+
+1. **Intent:** is this a new image or an edit of an existing image?
+2. **Execution strategy:** is this one asset or many assets/variants?
+
+Intent:
+- If the user wants to modify an existing image while preserving parts of it, treat the request as **edit**.
+- If the user provides images only as references for style, composition, mood, or subject guidance, treat the request as **generate**.
+- If the user provides no images, treat the request as **generate**.
+
+Built-in edit semantics:
+- Built-in edit mode is for images already visible in the conversation context, such as attached images or images generated earlier in the thread.
+- If the user wants to edit a local image file with the built-in tool, first load it with built-in `view_image` tool so the image is visible in the conversation context, then proceed with the built-in edit flow.
+- Do not promise arbitrary filesystem-path editing through the built-in tool.
+- If a local file still needs direct file-path control, masks, or other explicit CLI-only parameters, use the explicit CLI fallback only when the user asks for it.
+- For edits, preserve invariants aggressively and save non-destructively by default.
+
+Execution strategy:
+- In the built-in default path, produce many assets or variants by issuing one `image_gen` call per requested asset or variant.
+- In the CLI fallback path, use the CLI `generate-batch` subcommand only when the user explicitly chose CLI mode and needs many prompts/assets.
+- For many distinct assets, do not use `n` as a substitute for separate prompts. `n` is for variants of one prompt; distinct assets need distinct built-in calls or distinct CLI `generate-batch` jobs.
+
+Assume the user wants a new image unless they clearly ask to change an existing one.
+
+## Workflow
+1. Decide the top-level mode: built-in by default, including transparent-output requests; fallback CLI only if explicitly requested or confirmed.
+2. Decide the intent: `generate` or `edit`.
+3. Decide whether the output is preview-only or meant to be consumed by the current project.
+4. Decide the execution strategy: single asset vs repeated built-in calls vs CLI `generate-batch`.
+5. Collect inputs up front: prompt(s), exact text (verbatim), constraints/avoid list, and any input images.
+6. For every input image, label its role explicitly:
+   - reference image
+   - edit target
+   - supporting insert/style/compositing input
+7. If the edit target is only on the local filesystem and you are staying on the built-in path, inspect it with `view_image` first so the image is available in conversation context.
+8. If the user asked for a photo, illustration, sprite, product image, banner, or other explicitly raster-style asset, use `image_gen` rather than substituting SVG/HTML/CSS placeholders. If the request is for an icon, logo, or UI graphic that should match existing repo-native SVG/vector/code assets, prefer editing those directly instead.
+9. Augment the prompt based on specificity:
+   - If the user's prompt is already specific and detailed, normalize it into a clear spec without adding creative requirements.
+   - If the user's prompt is generic, add tasteful augmentation only when it materially improves output quality.
+10. Use the built-in `image_gen` tool by default.
+11. For transparent-output requests, ask built-in `image_gen` for a transparent background and preserve the generated alpha channel.
+12. Inspect outputs and validate: subject, style, composition, text accuracy, and invariants/avoid items.
+13. Iterate with a single targeted change, then re-check.
+14. For preview-only work, render the image inline; the underlying file may remain at the default `$CODEX_HOME/generated_images/...` path.
+15. For project-bound work, move or copy the selected artifact into the workspace and update any consuming code or references. Never leave a project-referenced asset only at the default `$CODEX_HOME/generated_images/...` path.
+16. For batches or multi-asset requests, persist every requested deliverable final in the workspace unless the user explicitly asked to keep outputs preview-only. Discarded variants do not need to be kept unless requested.
+17. If the user explicitly chooses or confirms the CLI fallback, then use the fallback-only docs for model, quality, size, `input_fidelity`, masks, output format, output paths, and network setup.
+18. Always report the final saved path(s) for any workspace-bound asset(s), plus the final prompt or prompt set and whether the built-in tool or fallback CLI mode was used.
+
+## Transparent image requests
+
+Ask built-in `image_gen` for a genuinely transparent background and preserve its alpha.
+
+## Prompt augmentation
+
+Reformat user prompts into a structured, production-oriented spec. Make the user's goal clearer and more actionable, but do not blindly add detail.
+
+Treat this as prompt-shaping guidance, not a closed schema. Use only the lines that help, and add a short extra labeled line when it materially improves clarity.
+
+### Specificity policy
+
+Use the user's prompt specificity to decide how much augmentation is appropriate:
+
+- If the prompt is already specific and detailed, preserve that specificity and only normalize/structure it.
+- If the prompt is generic, you may add tasteful augmentation when it will materially improve the result.
+
+Allowed augmentations:
+- composition or framing hints
+- polish level or intended-use hints
+- practical layout guidance
+- reasonable scene concreteness that supports the stated request
+
+Not allowed augmentations:
+- extra characters or objects that are not implied by the request
+- brand names, slogans, palettes, or narrative beats that are not implied
+- arbitrary side-specific placement unless the surrounding layout supports it
+
+## Use-case taxonomy (exact slugs)
+
+Classify each request into one of these buckets and keep the slug consistent across prompts and references.
+
+Generate:
+- photorealistic-natural — candid/editorial lifestyle scenes with real texture and natural lighting.
+- product-mockup — product/packaging shots, catalog imagery, merch concepts.
+- ui-mockup — app/web interface mockups and wireframes; specify the desired fidelity.
+- infographic-diagram — diagrams/infographics with structured layout and text.
+- scientific-educational — classroom explainers, scientific diagrams, and learning visuals with required labels and accuracy constraints.
+- ads-marketing — campaign concepts and ad creatives with audience, brand position, scene, and exact tagline/copy.
+- productivity-visual — slide, chart, workflow, and data-heavy business visuals.
+- logo-brand — logo/mark exploration, vector-friendly.
+- illustration-story — comics, children’s book art, narrative scenes.
+- stylized-concept — style-driven concept art, 3D/stylized renders.
+- historical-scene — period-accurate/world-knowledge scenes.
+
+Edit:
+- text-localization — translate/replace in-image text, preserve layout.
+- identity-preserve — try-on, person-in-scene; lock face/body/pose.
+- precise-object-edit — remove/replace a specific element (including interior swaps).
+- lighting-weather — time-of-day/season/atmosphere changes only.
+- background-extraction — transparent background / clean cutout. Ask built-in `image_gen` for actual transparency.
+- style-transfer — apply reference style while changing subject/scene.
+- compositing — multi-image insert/merge with matched lighting/perspective.
+- sketch-to-render — drawing/line art to photoreal render.
+
+## Shared prompt schema
+
+Use the following labeled spec as shared prompt scaffolding for both top-level modes:
+
+```text
+Use case: <taxonomy slug>
+Asset type: <where the asset will be used>
+Primary request: <user's main prompt>
+Input images: <Image 1: role; Image 2: role> (optional)
+Scene/backdrop: <environment>
+Subject: <main subject>
+Style/medium: <photo/illustration/3D/etc>
+Composition/framing: <wide/close/top-down; placement>
+Lighting/mood: <lighting + mood>
+Color palette: <palette notes>
+Materials/textures: <surface details>
+Text (verbatim): "<exact text>"
+Constraints: <must keep/must avoid>
+Avoid: <negative constraints>
+```
+
+Notes:
+- `Asset type` and `Input images` are prompt scaffolding, not dedicated CLI flags.
+- `Scene/backdrop` refers to the visual setting. It is not the same as the fallback CLI `background` parameter, which controls output transparency behavior.
+- Fallback-only execution notes such as `Quality:`, `Input fidelity:`, masks, output format, and output paths belong in the CLI path only. Do not treat them as built-in `image_gen` tool arguments.
+
+Augmentation rules:
+- Keep it short.
+- Add only the details needed to improve the prompt materially.
+- For edits, explicitly list invariants (`change only X; keep Y unchanged`).
+- If any critical detail is missing and blocks success, ask a question; otherwise proceed.
+
+## Examples
+
+### Generation example (hero image)
+```text
+Use case: product-mockup
+Asset type: landing page hero
+Primary request: a minimal hero image of a ceramic coffee mug
+Style/medium: clean product photography
+Composition/framing: wide composition with usable negative space for page copy if needed
+Lighting/mood: soft studio lighting
+Constraints: no logos, no text, no watermark
+```
+
+### Edit example (invariants)
+```text
+Use case: precise-object-edit
+Asset type: product photo background replacement
+Primary request: replace only the background with a warm sunset gradient
+Constraints: change only the background; keep the product and its edges unchanged; no text; no watermark
+```
+
+## Prompting best practices
+- Structure prompt as scene/backdrop -> subject -> details -> constraints.
+- Include intended use (ad, UI mock, infographic) to set the mode and polish level.
+- Use camera/composition language for photorealism.
+- Only use SVG/vector stand-ins when the user explicitly asked for vector output or a non-image placeholder.
+- Quote exact text and specify typography + placement.
+- For tricky words, spell them letter-by-letter and require verbatim rendering.
+- For multi-image inputs, reference images by index and describe how they should be used.
+- For edits, repeat invariants every iteration to reduce drift.
+- Iterate with single-change follow-ups.
+- If the prompt is generic, add only the extra detail that will materially help.
+- If the prompt is already detailed, normalize it instead of expanding it.
+- For CLI fallback only, see `references/cli.md` and `references/image-api.md` for model, `quality`, `input_fidelity`, masks, output format, and output-path guidance.
+- For transparent images, ask built-in `image_gen` for actual transparency and preserve its alpha.
+
+More principles shared by both modes: `references/prompting.md`.
+Copy/paste specs shared by both modes: `references/sample-prompts.md`.
+
+## Guidance by asset type
+Asset-type templates (website assets, game assets, wireframes, logo) are consolidated in `references/sample-prompts.md`.
+
+## gpt-image-2 guidance for CLI fallback
+
+The fallback CLI defaults to `gpt-image-2`.
+
+- Use `gpt-image-2` for new CLI/API workflows unless the user confirms a different model.
+- CLI `gpt-image-2` does not support `background=transparent`; ask before using `gpt-image-1.5` unless the user explicitly requested that model.
+- `gpt-image-2` always uses high fidelity for image inputs; do not set `input_fidelity` with this model.
+- `gpt-image-2` supports `quality` values `low`, `medium`, `high`, and `auto`.
+- Use `quality low` for fast drafts, thumbnails, and quick iterations. Use `medium`, `high`, or `auto` for final assets, dense text, diagrams, identity-sensitive edits, or high-resolution outputs.
+- Square images are typically fastest to generate. Use `1024x1024` for fast square drafts.
+- If the user asks for 4K-style output, use `3840x2160` for landscape or `2160x3840` for portrait.
+- `gpt-image-2` size may be `auto` or `WIDTHxHEIGHT` if all constraints hold: max edge `<= 3840px`, both edges multiples of `16px`, long-to-short ratio `<= 3:1`, total pixels between `655,360` and `8,294,400`.
+
+Popular `gpt-image-2` sizes:
+- `1024x1024` square
+- `1536x1024` landscape
+- `1024x1536` portrait
+- `2048x2048` 2K square
+- `2048x1152` 2K landscape
+- `3840x2160` 4K landscape
+- `2160x3840` 4K portrait
+- `auto`
+
+## Fallback CLI mode only
+
+### Temp and output conventions
+These conventions apply only to the CLI fallback. They do not describe built-in `image_gen` output behavior.
+- Use `tmp/imagegen/` for intermediate files (for example JSONL batches); delete them when done.
+- Write final artifacts under `output/imagegen/`.
+- Use `--out` or `--out-dir` to control output paths; keep filenames stable and descriptive.
+
+### Dependencies
+Prefer `uv` for dependency management in this repo.
+
+Required Python package:
+```bash
+uv pip install openai
+```
+
+Optional for image inspection and downscaling:
+```bash
+uv pip install pillow
+```
+
+Portability note:
+- If you are using the installed skill outside this repo, install dependencies into that environment with its package manager.
+- In uv-managed environments, `uv pip install ...` remains the preferred path.
+
+### Environment
+- `OPENAI_API_KEY` must be set for live API calls.
+- Do not ask the user for `OPENAI_API_KEY` when using the built-in `image_gen` tool.
+- Never ask the user to paste the full key in chat. Ask them to set it locally and confirm when ready.
+
+If the key is missing, give the user these steps:
+1. Create an API key in the OpenAI platform UI: https://platform.openai.com/api-keys
+2. Set `OPENAI_API_KEY` as an environment variable in their system.
+3. Offer to guide them through setting the environment variable for their OS/shell if needed.
+
+If installation is not possible in this environment, tell the user which dependency is missing and how to install it into their active environment.
+
+### Script-mode notes
+- CLI commands + examples: `references/cli.md`
+- API parameter quick reference: `references/image-api.md`
+- Network approvals / sandbox settings for CLI mode: `references/codex-network.md`
+
+## Reference map
+- `references/prompting.md`: shared prompting principles for both modes.
+- `references/sample-prompts.md`: shared copy/paste prompt recipes for both modes.
+- `references/cli.md`: fallback-only CLI usage via `scripts/image_gen.py`.
+- `references/image-api.md`: fallback-only API/CLI parameter reference.
+- `references/codex-network.md`: fallback-only network/sandbox troubleshooting for CLI mode.
+- `scripts/image_gen.py`: fallback-only CLI implementation. Use only when the user explicitly chooses or confirms CLI mode.
+
+exec
+/bin/zsh -lc "pwd; rg --files -g AGENTS.md -g '*.png' -g '"'!node_modules'"' -g '"'!vendor'"' . /Users/test/formasaita/study/tools/service/clients/potolok34 2>/dev/null | head -60" in /Users/test/formasaita/study/tools/service/clients/potolok34/gen
+ succeeded in 0ms:
+/Users/test/formasaita/study/tools/service/clients/potolok34/gen
+
+codex
+Первый вариант получился с горелкой вместо тепловой пушки — исправлю этот кадр. Остальные сцены генерирую отдельно, с разными лицами и нужными пропорциями.
+
+codex
+Готовы три монтажные сцены: прогрев полотна, работа с профилем и установка светильника. Далее — замерщик, владелец и бригада у фургона.
+
+codex
+Готовы ещё три кадра. Остались проверка потолка, жилая комната вечером и офис-склад; затем проверю файлы и сохраню весь набор под заданными именами.
+
+codex
+Все девять сцен сгенерированы. На нескольких кадрах заметил мелкие маркировки на одежде и упаковке; уберу их встроенным редактором, чтобы соблюсти требование без надписей.
+
+codex
+Правки готовы. Сохраняю девять PNG в текущую папку и проверяю размеры и читаемость файлов.
+
+apply patch
+patch: completed
+/Users/test/formasaita/study/tools/service/clients/potolok34/gen/imagegen-prompts.json
+diff --git a/tools/service/clients/potolok34/gen/imagegen-prompts.json b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a605a05c67daeafaf3700b38107d4e0e47d8f90
+--- /dev/null
++++ b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+@@ -0,0 +1,54 @@
++{
++  "tool": "built-in image_gen",
++  "images": [
++    {
++      "file": "crew_heatgun.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-e558b314-d3a8-498f-9536-f314512673ac.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Two installers in a bare plaster Russian apartment, dusty floor, boxes, wires, daylight window. Stocky black-haired man aged 44 on a stepladder holds a LARGE CYLINDRICAL FORCED-AIR GAS SPACE HEATER, a short wide metal barrel with carry handle on top, round black outlet grille and hose, the actual portable thermal cannon used for stretch ceilings. Hot air directed upward at partly tensioned white PVC ceiling. NO blowtorch, NO welding torch, NO exposed flame. Second lean man aged 53 with receding hair and moustache below holds installation spatula. Both working and looking upward.",
++      "edit_prompt": "Remove all text, letters, printed packaging markings and logos on cardboard boxes, heater controls, tools and other objects, replacing with plain matching surfaces. Preserve people, faces, poses, heater, ceiling, daylight and 3:2 composition exactly."
++    },
++    {
++      "file": "crew_profile.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-fc66e7ac-ecec-4dee-b869-10f0783ca76e.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Installer aged 39 with narrow angular face, short light brown hair and reddish stubble, protective clear safety glasses, plain dark work jacket. Standing on a stepladder, uses a rotary hammer drill with two hands to fasten a narrow aluminum stretch-ceiling perimeter profile horizontally to bare concrete wall just below unfinished ceiling. Bit actually contacts profile mounting hole, reasonable working position, subtle falling dust in window daylight. Bare walls, dusty ladder, loose wires, ordinary unfinished Russian apartment. Candid side view, focused on work.",
++      "edit_prompt": "Correct drilling contact point: move rotary hammer and both hands slightly upward together so drill bit contacts a mounting hole THROUGH the flat aluminum perimeter profile, not the plaster below it. Keep plausible hands and grip. Add a small amount of fine drilling dust falling in natural window light. Preserve man, face, ladder, room, clothes, realistic smartphone look and 3:2 framing. No letters, labels or logos anywhere."
++    },
++    {
++      "file": "crew_spot.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-c02c8de8-fba9-449b-a168-22b549083a1f.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2 close-up smartphone photo viewed upward. Rough working hands of installer aged 48 inserting a white round recessed spotlight into a circular cutout in a finished white matte PVC stretch ceiling. Light partially inserted, supporting mounting platform visible just inside the opening above reinforcing ring, plausible spring clips and short wiring. Part of face appears cropped at side: broad nose, curly graying hair, patchy gray stubble, weathered skin, focused eyes looking at light. Natural window light, realistic close focusing, no exaggerated blur. Bare plaster wall visible at edge."
++    },
++    {
++      "file": "measurer.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-3a350231-4108-4ec5-8b38-48539628f5d8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. A 50-year-old Russian room measurer with long face, high forehead, thinning sandy-gray hair, short salt-and-pepper stubble, dark everyday work jacket, measures an ordinary partially renovated apartment room using a small laser distance meter held aimed toward opposite wall, other hand holding small open notebook with blank visible page, no writing or readable screen. A middle-aged female homeowner in ordinary clothes in soft focus farther behind him near doorway. Unfinished plaster patches, radiator, daylight window, modest domestic clutter, plausible candid working posture, looking at measurement not camera."
++    },
++    {
++      "file": "leader.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-aa89658f-3263-4ba8-9910-779c7367ccf8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Vertical portrait aspect ratio 2:3, waist-up. Owner of a small Russian stretch ceiling installation company aged about 52, square weathered face, close-cropped silver hair, pronounced gray stubble, wrinkles around tired eyes, sturdy build, plain worn dark work jacket. He stands beside his white GAZelle-style work van, rolls of white ceiling material visible behind through open cargo door. Overcast daylight, ordinary unremarkable yard, subdued natural light. Looks calmly directly at phone camera without smile, arms relaxed, informal imperfect framing, ordinary smartphone snapshot, no retouching. No lettering, branding or license plate text visible."
++    },
++    {
++      "file": "team.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-d19ec220-ce36-41ba-8c62-78a60acb0645.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape exactly 16:9. Four distinct Russian male ceiling installers ages 36–55 standing casually by plain white work van in courtyard of a Soviet panel apartment block early morning, ordinary phone snapshot. Different faces from all other pictures: one bald broad-faced 46-year-old with dark stubble holding tool bag; tall lean 55-year-old with gray moustache carrying folded stepladder; shorter 36-year-old with black buzzcut holding unbranded drill case; stocky 49-year-old with wavy brown hair and short beard holding plain metal thermos. Worn dark clothes without writing, unsmiling, looking at each other or equipment, unposed uneven spacing. Patchy asphalt and parked cars, everyday flat morning daylight, nothing heroic. No visible letters, logos, numbers or license plate text.",
++      "edit_prompt": "Remove the tiny white lettering/logo on the chest of the third man from the left, replacing with matching plain dark fabric. Remove any other branding or text on clothes, tool bags, ladder, vehicles and equipment. Preserve all four faces, scene, poses, texture, documentary smartphone look and wide 16:9 composition."
++    },
++    {
++      "file": "check.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-833f7cad-9c08-4613-a8bd-019218ec95ca.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Low angle smartphone snapshot looking upward at a Russian installer aged 45 with a shaved head, long narrow face, thick brows and short brown beard, dark work sweatshirt. He stands on stepladder checking the flatness of a completed white matte stretch ceiling with a long aluminum spirit level held gently horizontally just under the ceiling near a simple modest chandelier. Both hands grip separate parts of the level realistically, level is visibly aligned with ceiling plane, no distortion or pressing into membrane. Serious focused profile looking at bubble vial. Ceiling new and finished, room walls still bare patchy plaster without wallpaper, daylight from side window. Imperfect candid composition, no readable scale or text on level."
++    },
++    {
++      "file": "hero.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-965a22f7-21c8-40e4-8a5c-1e213a35fee5.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape 16:9. No people. Ordinary modest lived-in Russian apartment living room after renovation, photographed on a phone by a real estate agent from doorway at slightly imperfect angle. Flat white MATTE stretch ceiling with small recessed spotlights and restrained warm floating perimeter LED illumination in a thin shadow gap. Evening, warm practical room lighting, dark blue dusk through window. Modest beige sofa slightly rumpled, inexpensive wood-look laminate, simple curtains, radiator beneath window, small coffee table and plain television stand. Ceiling prominently visible, realistic ordinary room proportions and furnishings, not luxury or showroom, no elaborate styling. Mild smartphone noise in shadows and slightly blown light sources, no HDR or glossy render look, no lettering anywhere."
++    },
++    {
++      "file": "office.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-2b2679c1-5cec-4062-9ba0-400a341d9fb2.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. No people. A small utilitarian Russian stretch ceiling company's office combined with storage room, genuine modest rented premises. Scuffed ordinary desk with fan-shaped spread of PVC ceiling film sample swatches in white cream gray and muted colors, no labels. Rolls of ceiling material stored on shelving and in corner. A portable cylindrical gas forced-air heat gun on floor, two used folding stepladders leaning against wall, a worn office chair, plain boxes, extension cord. Simple fluorescent ceiling tube provides mundane slightly cool flat lighting, small window with weak daylight. Patchy painted walls, everyday clutter without staged decoration. Handheld phone snapshot with slight tilt, subtle noise, realistic fabric, metal and plastic. No labels, letters, logos, paperwork text or signage.",
++      "edit_prompt": "Remove all lettering, labels, logo marks and printed graphics from the packages and canisters on the windowsill, cardboard boxes, rolls, tools and ladder platforms. Make packaging plain unprinted materials. Preserve entire room, fan of samples, all objects, lighting, textures, camera composition and 3:2 framing."
++    }
++  ]
++}
+
+exec
+/bin/zsh -lc "python3 - <<'PY'
+import json, shutil, struct
+from pathlib import Path
+root=Path.cwd()
+data=json.loads((root/'imagegen-prompts.json').read_text())
+for item in data['images']:
+    src=Path(item['source']); dst=root/item['file']
+    if dst.exists():
+        raise RuntimeError(f'File already exists: {dst}')
+    shutil.copy2(src,dst)
+    raw=dst.read_bytes()
+    assert raw[:8] == b'\\x89PNG\\r\\n\\x1a\\n'
+    w,h=struct.unpack('>II',raw[16:24])
+    print(f'{dst.name}: {w}x{h}, {len(raw):,} bytes')
+PY" in /Users/test/formasaita/study/tools/service/clients/potolok34/gen
+ succeeded in 0ms:
+crew_heatgun.png: 1536x1024, 2,151,699 bytes
+crew_profile.png: 1536x1024, 2,285,416 bytes
+crew_spot.png: 1536x1024, 2,354,776 bytes
+measurer.png: 1536x1024, 2,088,865 bytes
+leader.png: 1024x1536, 2,387,724 bytes
+team.png: 1672x941, 2,494,093 bytes
+check.png: 1536x1024, 2,007,485 bytes
+hero.png: 1672x941, 1,899,026 bytes
+office.png: 1536x1024, 2,265,623 bytes
+
+diff --git a/tools/service/clients/potolok34/gen/imagegen-prompts.json b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a605a05c67daeafaf3700b38107d4e0e47d8f90
+--- /dev/null
++++ b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+@@ -0,0 +1,54 @@
++{
++  "tool": "built-in image_gen",
++  "images": [
++    {
++      "file": "crew_heatgun.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-e558b314-d3a8-498f-9536-f314512673ac.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Two installers in a bare plaster Russian apartment, dusty floor, boxes, wires, daylight window. Stocky black-haired man aged 44 on a stepladder holds a LARGE CYLINDRICAL FORCED-AIR GAS SPACE HEATER, a short wide metal barrel with carry handle on top, round black outlet grille and hose, the actual portable thermal cannon used for stretch ceilings. Hot air directed upward at partly tensioned white PVC ceiling. NO blowtorch, NO welding torch, NO exposed flame. Second lean man aged 53 with receding hair and moustache below holds installation spatula. Both working and looking upward.",
++      "edit_prompt": "Remove all text, letters, printed packaging markings and logos on cardboard boxes, heater controls, tools and other objects, replacing with plain matching surfaces. Preserve people, faces, poses, heater, ceiling, daylight and 3:2 composition exactly."
++    },
++    {
++      "file": "crew_profile.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-fc66e7ac-ecec-4dee-b869-10f0783ca76e.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Installer aged 39 with narrow angular face, short light brown hair and reddish stubble, protective clear safety glasses, plain dark work jacket. Standing on a stepladder, uses a rotary hammer drill with two hands to fasten a narrow aluminum stretch-ceiling perimeter profile horizontally to bare concrete wall just below unfinished ceiling. Bit actually contacts profile mounting hole, reasonable working position, subtle falling dust in window daylight. Bare walls, dusty ladder, loose wires, ordinary unfinished Russian apartment. Candid side view, focused on work.",
++      "edit_prompt": "Correct drilling contact point: move rotary hammer and both hands slightly upward together so drill bit contacts a mounting hole THROUGH the flat aluminum perimeter profile, not the plaster below it. Keep plausible hands and grip. Add a small amount of fine drilling dust falling in natural window light. Preserve man, face, ladder, room, clothes, realistic smartphone look and 3:2 framing. No letters, labels or logos anywhere."
++    },
++    {
++      "file": "crew_spot.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-c02c8de8-fba9-449b-a168-22b549083a1f.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2 close-up smartphone photo viewed upward. Rough working hands of installer aged 48 inserting a white round recessed spotlight into a circular cutout in a finished white matte PVC stretch ceiling. Light partially inserted, supporting mounting platform visible just inside the opening above reinforcing ring, plausible spring clips and short wiring. Part of face appears cropped at side: broad nose, curly graying hair, patchy gray stubble, weathered skin, focused eyes looking at light. Natural window light, realistic close focusing, no exaggerated blur. Bare plaster wall visible at edge."
++    },
++    {
++      "file": "measurer.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-3a350231-4108-4ec5-8b38-48539628f5d8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. A 50-year-old Russian room measurer with long face, high forehead, thinning sandy-gray hair, short salt-and-pepper stubble, dark everyday work jacket, measures an ordinary partially renovated apartment room using a small laser distance meter held aimed toward opposite wall, other hand holding small open notebook with blank visible page, no writing or readable screen. A middle-aged female homeowner in ordinary clothes in soft focus farther behind him near doorway. Unfinished plaster patches, radiator, daylight window, modest domestic clutter, plausible candid working posture, looking at measurement not camera."
++    },
++    {
++      "file": "leader.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-aa89658f-3263-4ba8-9910-779c7367ccf8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Vertical portrait aspect ratio 2:3, waist-up. Owner of a small Russian stretch ceiling installation company aged about 52, square weathered face, close-cropped silver hair, pronounced gray stubble, wrinkles around tired eyes, sturdy build, plain worn dark work jacket. He stands beside his white GAZelle-style work van, rolls of white ceiling material visible behind through open cargo door. Overcast daylight, ordinary unremarkable yard, subdued natural light. Looks calmly directly at phone camera without smile, arms relaxed, informal imperfect framing, ordinary smartphone snapshot, no retouching. No lettering, branding or license plate text visible."
++    },
++    {
++      "file": "team.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-d19ec220-ce36-41ba-8c62-78a60acb0645.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape exactly 16:9. Four distinct Russian male ceiling installers ages 36–55 standing casually by plain white work van in courtyard of a Soviet panel apartment block early morning, ordinary phone snapshot. Different faces from all other pictures: one bald broad-faced 46-year-old with dark stubble holding tool bag; tall lean 55-year-old with gray moustache carrying folded stepladder; shorter 36-year-old with black buzzcut holding unbranded drill case; stocky 49-year-old with wavy brown hair and short beard holding plain metal thermos. Worn dark clothes without writing, unsmiling, looking at each other or equipment, unposed uneven spacing. Patchy asphalt and parked cars, everyday flat morning daylight, nothing heroic. No visible letters, logos, numbers or license plate text.",
++      "edit_prompt": "Remove the tiny white lettering/logo on the chest of the third man from the left, replacing with matching plain dark fabric. Remove any other branding or text on clothes, tool bags, ladder, vehicles and equipment. Preserve all four faces, scene, poses, texture, documentary smartphone look and wide 16:9 composition."
++    },
++    {
++      "file": "check.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-833f7cad-9c08-4613-a8bd-019218ec95ca.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Low angle smartphone snapshot looking upward at a Russian installer aged 45 with a shaved head, long narrow face, thick brows and short brown beard, dark work sweatshirt. He stands on stepladder checking the flatness of a completed white matte stretch ceiling with a long aluminum spirit level held gently horizontally just under the ceiling near a simple modest chandelier. Both hands grip separate parts of the level realistically, level is visibly aligned with ceiling plane, no distortion or pressing into membrane. Serious focused profile looking at bubble vial. Ceiling new and finished, room walls still bare patchy plaster without wallpaper, daylight from side window. Imperfect candid composition, no readable scale or text on level."
++    },
++    {
++      "file": "hero.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-965a22f7-21c8-40e4-8a5c-1e213a35fee5.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape 16:9. No people. Ordinary modest lived-in Russian apartment living room after renovation, photographed on a phone by a real estate agent from doorway at slightly imperfect angle. Flat white MATTE stretch ceiling with small recessed spotlights and restrained warm floating perimeter LED illumination in a thin shadow gap. Evening, warm practical room lighting, dark blue dusk through window. Modest beige sofa slightly rumpled, inexpensive wood-look laminate, simple curtains, radiator beneath window, small coffee table and plain television stand. Ceiling prominently visible, realistic ordinary room proportions and furnishings, not luxury or showroom, no elaborate styling. Mild smartphone noise in shadows and slightly blown light sources, no HDR or glossy render look, no lettering anywhere."
++    },
++    {
++      "file": "office.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-2b2679c1-5cec-4062-9ba0-400a341d9fb2.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. No people. A small utilitarian Russian stretch ceiling company's office combined with storage room, genuine modest rented premises. Scuffed ordinary desk with fan-shaped spread of PVC ceiling film sample swatches in white cream gray and muted colors, no labels. Rolls of ceiling material stored on shelving and in corner. A portable cylindrical gas forced-air heat gun on floor, two used folding stepladders leaning against wall, a worn office chair, plain boxes, extension cord. Simple fluorescent ceiling tube provides mundane slightly cool flat lighting, small window with weak daylight. Patchy painted walls, everyday clutter without staged decoration. Handheld phone snapshot with slight tilt, subtle noise, realistic fabric, metal and plastic. No labels, letters, logos, paperwork text or signage.",
++      "edit_prompt": "Remove all lettering, labels, logo marks and printed graphics from the packages and canisters on the windowsill, cardboard boxes, rolls, tools and ladder platforms. Make packaging plain unprinted materials. Preserve entire room, fan of samples, all objects, lighting, textures, camera composition and 3:2 framing."
++    }
++  ]
++}
+
+codex
+Сгенерированы встроенным инструментом и сохранены в текущую папку все 9 PNG:
+
+- crew_heatgun.png
+- crew_profile.png
+- crew_spot.png
+- measurer.png
+- leader.png
+- team.png
+- check.png
+- hero.png
+- office.png
+
+Запросы генерации сохранены в `imagegen-prompts.json`.
+diff --git a/tools/service/clients/potolok34/gen/imagegen-prompts.json b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..4a605a05c67daeafaf3700b38107d4e0e47d8f90
+--- /dev/null
++++ b/tools/service/clients/potolok34/gen/imagegen-prompts.json
+@@ -0,0 +1,54 @@
++{
++  "tool": "built-in image_gen",
++  "images": [
++    {
++      "file": "crew_heatgun.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-e558b314-d3a8-498f-9536-f314512673ac.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Two installers in a bare plaster Russian apartment, dusty floor, boxes, wires, daylight window. Stocky black-haired man aged 44 on a stepladder holds a LARGE CYLINDRICAL FORCED-AIR GAS SPACE HEATER, a short wide metal barrel with carry handle on top, round black outlet grille and hose, the actual portable thermal cannon used for stretch ceilings. Hot air directed upward at partly tensioned white PVC ceiling. NO blowtorch, NO welding torch, NO exposed flame. Second lean man aged 53 with receding hair and moustache below holds installation spatula. Both working and looking upward.",
++      "edit_prompt": "Remove all text, letters, printed packaging markings and logos on cardboard boxes, heater controls, tools and other objects, replacing with plain matching surfaces. Preserve people, faces, poses, heater, ceiling, daylight and 3:2 composition exactly."
++    },
++    {
++      "file": "crew_profile.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-fc66e7ac-ecec-4dee-b869-10f0783ca76e.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Installer aged 39 with narrow angular face, short light brown hair and reddish stubble, protective clear safety glasses, plain dark work jacket. Standing on a stepladder, uses a rotary hammer drill with two hands to fasten a narrow aluminum stretch-ceiling perimeter profile horizontally to bare concrete wall just below unfinished ceiling. Bit actually contacts profile mounting hole, reasonable working position, subtle falling dust in window daylight. Bare walls, dusty ladder, loose wires, ordinary unfinished Russian apartment. Candid side view, focused on work.",
++      "edit_prompt": "Correct drilling contact point: move rotary hammer and both hands slightly upward together so drill bit contacts a mounting hole THROUGH the flat aluminum perimeter profile, not the plaster below it. Keep plausible hands and grip. Add a small amount of fine drilling dust falling in natural window light. Preserve man, face, ladder, room, clothes, realistic smartphone look and 3:2 framing. No letters, labels or logos anywhere."
++    },
++    {
++      "file": "crew_spot.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-c02c8de8-fba9-449b-a168-22b549083a1f.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2 close-up smartphone photo viewed upward. Rough working hands of installer aged 48 inserting a white round recessed spotlight into a circular cutout in a finished white matte PVC stretch ceiling. Light partially inserted, supporting mounting platform visible just inside the opening above reinforcing ring, plausible spring clips and short wiring. Part of face appears cropped at side: broad nose, curly graying hair, patchy gray stubble, weathered skin, focused eyes looking at light. Natural window light, realistic close focusing, no exaggerated blur. Bare plaster wall visible at edge."
++    },
++    {
++      "file": "measurer.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-3a350231-4108-4ec5-8b38-48539628f5d8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. A 50-year-old Russian room measurer with long face, high forehead, thinning sandy-gray hair, short salt-and-pepper stubble, dark everyday work jacket, measures an ordinary partially renovated apartment room using a small laser distance meter held aimed toward opposite wall, other hand holding small open notebook with blank visible page, no writing or readable screen. A middle-aged female homeowner in ordinary clothes in soft focus farther behind him near doorway. Unfinished plaster patches, radiator, daylight window, modest domestic clutter, plausible candid working posture, looking at measurement not camera."
++    },
++    {
++      "file": "leader.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-aa89658f-3263-4ba8-9910-779c7367ccf8.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Vertical portrait aspect ratio 2:3, waist-up. Owner of a small Russian stretch ceiling installation company aged about 52, square weathered face, close-cropped silver hair, pronounced gray stubble, wrinkles around tired eyes, sturdy build, plain worn dark work jacket. He stands beside his white GAZelle-style work van, rolls of white ceiling material visible behind through open cargo door. Overcast daylight, ordinary unremarkable yard, subdued natural light. Looks calmly directly at phone camera without smile, arms relaxed, informal imperfect framing, ordinary smartphone snapshot, no retouching. No lettering, branding or license plate text visible."
++    },
++    {
++      "file": "team.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-d19ec220-ce36-41ba-8c62-78a60acb0645.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape exactly 16:9. Four distinct Russian male ceiling installers ages 36–55 standing casually by plain white work van in courtyard of a Soviet panel apartment block early morning, ordinary phone snapshot. Different faces from all other pictures: one bald broad-faced 46-year-old with dark stubble holding tool bag; tall lean 55-year-old with gray moustache carrying folded stepladder; shorter 36-year-old with black buzzcut holding unbranded drill case; stocky 49-year-old with wavy brown hair and short beard holding plain metal thermos. Worn dark clothes without writing, unsmiling, looking at each other or equipment, unposed uneven spacing. Patchy asphalt and parked cars, everyday flat morning daylight, nothing heroic. No visible letters, logos, numbers or license plate text.",
++      "edit_prompt": "Remove the tiny white lettering/logo on the chest of the third man from the left, replacing with matching plain dark fabric. Remove any other branding or text on clothes, tool bags, ladder, vehicles and equipment. Preserve all four faces, scene, poses, texture, documentary smartphone look and wide 16:9 composition."
++    },
++    {
++      "file": "check.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-833f7cad-9c08-4613-a8bd-019218ec95ca.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. Low angle smartphone snapshot looking upward at a Russian installer aged 45 with a shaved head, long narrow face, thick brows and short brown beard, dark work sweatshirt. He stands on stepladder checking the flatness of a completed white matte stretch ceiling with a long aluminum spirit level held gently horizontally just under the ceiling near a simple modest chandelier. Both hands grip separate parts of the level realistically, level is visibly aligned with ceiling plane, no distortion or pressing into membrane. Serious focused profile looking at bubble vial. Ceiling new and finished, room walls still bare patchy plaster without wallpaper, daylight from side window. Imperfect candid composition, no readable scale or text on level."
++    },
++    {
++      "file": "hero.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-965a22f7-21c8-40e4-8a5c-1e213a35fee5.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Wide landscape 16:9. No people. Ordinary modest lived-in Russian apartment living room after renovation, photographed on a phone by a real estate agent from doorway at slightly imperfect angle. Flat white MATTE stretch ceiling with small recessed spotlights and restrained warm floating perimeter LED illumination in a thin shadow gap. Evening, warm practical room lighting, dark blue dusk through window. Modest beige sofa slightly rumpled, inexpensive wood-look laminate, simple curtains, radiator beneath window, small coffee table and plain television stand. Ceiling prominently visible, realistic ordinary room proportions and furnishings, not luxury or showroom, no elaborate styling. Mild smartphone noise in shadows and slightly blown light sources, no HDR or glossy render look, no lettering anywhere."
++    },
++    {
++      "file": "office.png",
++      "source": "/Users/test/.codex/generated_images/01a0ca1e-f350-7413-9b85-f75d315ec14e/exec-2b2679c1-5cec-4062-9ba0-400a341d9fb2.png",
++      "prompt": "Use case: photorealistic-natural. A single candid documentary smartphone photo taken by a construction foreman, ordinary Russian apartment/worksite, authentic imperfect framing, slight sensor grain, natural subdued colors, realistic ordinary objects and anatomy. Absolutely no glossy advertising aesthetic, studio light, cinematic grading, CGI smoothness, excessive bokeh. Men are believable Russian ceiling installers aged 35–55 with weathered faces, stubble, wrinkles and working hands, plain dark unbranded workwear. No smiles. No text, letters, numerals, signs, logos, watermarks anywhere; tools unbranded, boxes plain. Landscape 3:2. No people. A small utilitarian Russian stretch ceiling company's office combined with storage room, genuine modest rented premises. Scuffed ordinary desk with fan-shaped spread of PVC ceiling film sample swatches in white cream gray and muted colors, no labels. Rolls of ceiling material stored on shelving and in corner. A portable cylindrical gas forced-air heat gun on floor, two used folding stepladders leaning against wall, a worn office chair, plain boxes, extension cord. Simple fluorescent ceiling tube provides mundane slightly cool flat lighting, small window with weak daylight. Patchy painted walls, everyday clutter without staged decoration. Handheld phone snapshot with slight tilt, subtle noise, realistic fabric, metal and plastic. No labels, letters, logos, paperwork text or signage.",
++      "edit_prompt": "Remove all lettering, labels, logo marks and printed graphics from the packages and canisters on the windowsill, cardboard boxes, rolls, tools and ladder platforms. Make packaging plain unprinted materials. Preserve entire room, fan of samples, all objects, lighting, textures, camera composition and 3:2 framing."
++    }
++  ]
++}
+
+tokens used
+62 780
+Сгенерированы встроенным инструментом и сохранены в текущую папку все 9 PNG:
+
+- crew_heatgun.png
+- crew_profile.png
+- crew_spot.png
+- measurer.png
+- leader.png
+- team.png
+- check.png
+- hero.png
+- office.png
+
+Запросы генерации сохранены в `imagegen-prompts.json`.
