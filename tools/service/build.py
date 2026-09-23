@@ -220,12 +220,12 @@ def build(slug):
 <main id="top">
 <section class="hero">{pic(img, c["hero"]["image"], c["hero"]["alt"], "100vw", "hero-bg", True)}{f'<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{img[c["hero"]["image"]][0][0]}" aria-hidden="true"><source src="{c["hero"]["video"]}" type="video/mp4"></video>' if c["hero"].get("video") else ""}
 <div class="hero-copy"><p class="eyebrow">{e(c["hero"]["eyebrow"])}</p><h1>{c["hero"]["h1"]}</h1><p class="intro">{c["hero"]["intro"]}</p>
-<div class="actions"><a class="button primary" href="#calc">{e(c["hero"]["button"])} ↗</a>{f'<button class="text-button" type="button" data-start-quiz>{e(c["hero"]["quiz"])}</button>' if c["hero"].get("quiz") else ""}</div>{proofs}</div></section>
+<div class="actions"><a class="button primary" href="{c["hero"].get("href", "#request")}">{e(c["hero"]["button"])} ↗</a>{f'<button class="text-button" type="button" data-start-quiz>{e(c["hero"]["quiz"])}</button>' if c["hero"].get("quiz") else ""}</div>{proofs}</div></section>
 {main_html}
 </main>
 
 <footer><a class="brand{' brand--logo' if c.get('logo_only') else ''}" href="#top">{logo_tag}<span>{e(brand.upper())}<small>{e(c["region"])}</small></span></a>{foot}</footer>
-<div class="mobile-bar"><a href="tel:{tel(phone)}" data-goal="call">Позвонить</a><a href="#request" id="bar-chat">Заявка</a><a href="#calc">Цена ↗</a></div>
+<div class="mobile-bar"><a href="tel:{tel(phone)}" data-goal="call">Позвонить</a><a href="#request" id="bar-chat">Заявка</a><a href="#calc">Расчёт ↗</a></div>
 <dialog id="lead-dialog"><button class="close" type="button" data-close aria-label="Закрыть">×</button><p class="eyebrow" id="lead-state"></p><h2 id="lead-title"></h2><p id="lead-note"></p><pre id="lead-text"></pre></dialog>
 <dialog id="photo-dialog"><button class="close" type="button" data-close aria-label="Закрыть фото">×</button><img id="photo-large" alt=""><p id="photo-caption"></p></dialog>
 <script src="config.js?v={V}"></script><script src="app.js?v={V}" defer></script></body></html>
