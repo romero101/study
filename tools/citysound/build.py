@@ -12,7 +12,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 RAW = HERE / "raw/img"
-OUT = ROOT / "dist/citysound"
+import sys
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else "base"
+OUT = ROOT / ("dist/citysound" if VARIANT == "base" else f"dist/citysound-{VARIANT}")
 IMG = OUT / "img"
 
 PHONE = "+7 (930) 274-88-88"
@@ -136,6 +138,8 @@ QUIZ = [
 ]
 
 SRC = {}
+import time
+STAMP = str(int(time.time()))
 
 
 def build():
@@ -154,9 +158,13 @@ def build():
     shutil.copy2(HERE / "assets/logo.png", IMG / "logo.png")
     shutil.copy2(HERE / "assets/max.png", IMG / "max.png")
     shutil.copy2(ROOT / "dist/vodafon/send.php", OUT / "send.php")
-    (OUT / "style.css").write_text(CSS, encoding="utf-8")
+    if VARIANT == "base":
+        (OUT / "style.css").write_text(CSS, encoding="utf-8")
+    else:
+        import bold
+        (OUT / "style.css").write_text(bold.CSS_BOLD, encoding="utf-8")
     (OUT / "app.js").write_text(JS.replace("__QUIZ__", json.dumps(QUIZ, ensure_ascii=False)), encoding="utf-8")
-    (OUT / "index.html").write_text(html(), encoding="utf-8")
+    (OUT / "index.html").write_text(html() if VARIANT == "base" else bold.html_bold(sys.modules[__name__]), encoding="utf-8")
     (OUT / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
     size = sum(p.stat().st_size for p in OUT.rglob("*") if p.is_file()) // 1024
     print(f"{OUT}: {size} КБ, картинок {len(list(IMG.glob('*.webp')))}")
@@ -182,7 +190,7 @@ def html():
     return f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>СитиСаунд — техническое обеспечение мероприятий в Нижнем Новгороде с 1991 года</title>
 <meta name="description" content="Концепция новой главной страницы citysound.ru: прокат звука, света, сцен и светодиодных экранов, звукорежиссура и монтаж конструкций. Свои специалисты, собственная база, Martin Audio MLA и Alphastage-80.">
-<meta name="robots" content="noindex,nofollow"><link rel="icon" href="img/logo.png"><link rel="stylesheet" href="style.css"></head>
+<meta name="robots" content="noindex,nofollow"><link rel="icon" href="img/logo.png"><link rel="stylesheet" href="style.css?v={STAMP}"></head>
 <body>
 <div class="demo"><span>Концепция новой главной</span><span>Демонстрация · заявки получает студия «Форма сайта»</span></div>
 <header class="header"><a class="brand" href="#top"><img src="img/logo.png" alt="СитиСаунд" height="44"></a>
@@ -240,13 +248,13 @@ def html():
 <div class="mobile-bar"><a href="tel:{TEL}">Позвонить</a><a class="mb-max" href="{MAX}" target="_blank" rel="noopener">{ICO_MAX}MAX</a><a class="mb-tg" href="{TG}" target="_blank" rel="noopener">{ICO_TG}Telegram</a><a href="#request">Заявка</a></div>
 <dialog id="photo-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><img id="photo-large" alt=""></dialog>
 <dialog id="result-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><div id="result-body"></div></dialog>
-<script src="app.js" defer></script></body></html>'''
+<script src="app.js?v={STAMP}" defer></script></body></html>'''
 
 
 CSS = r"""
 :root{--bg:#0b0c10;--bg2:#12141a;--ink:#f3f3f1;--muted:#a3a7b1;--acc:#ff2d40;--acc-d:#d81f31;--line:#23262e;--r:14px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit}img{max-width:100%}picture{display:contents}h1,h2,h3{margin:0;letter-spacing:-.02em;line-height:1.1}h2{font-size:clamp(28px,3.6vw,44px)}h3{font-size:20px}
+a{color:inherit}img{max-width:100%}picture{display:contents}svg{max-width:1.5em;max-height:1.5em}h1,h2,h3{margin:0;letter-spacing:-.02em;line-height:1.1}h2{font-size:clamp(28px,3.6vw,44px)}h3{font-size:20px}
 p{margin:0 0 12px}.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--acc);font-weight:700;margin:0 0 10px}
 .button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:99px;border:2px solid transparent;font-weight:700;text-decoration:none;cursor:pointer;font-size:16px}
 .button.primary{background:var(--acc);color:#fff}.button.primary:hover{background:var(--acc-d)}.button.ghost{border-color:var(--line);background:transparent;color:var(--ink)}.button.small{min-height:42px;padding:0 18px;font-size:14px}
