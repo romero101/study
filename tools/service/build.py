@@ -62,14 +62,14 @@ def build(slug):
     (out / "img").mkdir(parents=True)
     src = HERE / "clients" / slug
     img = webp(src, out / "img")
-    logo = src / "logo.png"
+    logo = next((src / n for n in ("logo.svg", "logo.png") if (src / n).exists()), src / "logo.png")
     if logo.exists():
-        shutil.copy2(logo, out / "img/logo.png")
+        shutil.copy2(logo, out / "img" / logo.name)
     for v in src.glob("*.mp4"):                       # видео клиента (сжатое, для первого экрана)
         shutil.copy2(v, out / "img" / v.name)
     demo, phones, brand, calc = c["demo"], c["phones"], c["brand"], c["calc"]
     phone = phones[0]
-    logo_tag = '<img src="img/logo.png" alt="" class="logo-img">' if logo.exists() else f'<b class="mark">{e(c.get("mark", brand[:2].upper()))}</b>'
+    logo_tag = f'<img src="img/{logo.name}" alt="" class="logo-img">' if logo.exists() else f'<b class="mark">{e(c.get("mark", brand[:2].upper()))}</b>'
     hero_set = ", ".join(f"{n} {w}w" for n, w in img[c["hero"]["image"]])
 
     trust = "".join(f"<li><b>{e(b)}</b><span>{t}</span></li>" for b, t in c["trust"])
@@ -224,7 +224,7 @@ def build(slug):
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(c["title"])}</title><meta name="description" content="{e(c["description"])}">
 {'<meta name="robots" content="noindex,nofollow">' if demo else ""}<meta name="theme-color" content="{c["palette"]["ink"]}"><meta name="format-detection" content="telephone=no">
-{'<link rel="icon" href="img/logo.png">' if logo.exists() else ""}
+{f'<link rel="icon" href="img/{logo.name}">' if logo.exists() else ""}
 <link rel="preload" as="image" type="image/webp" imagesrcset="{hero_set}" imagesizes="100vw" fetchpriority="high">
 <link rel="stylesheet" href="style.css?v={V}"></head>
 <body>{demo_bar}
