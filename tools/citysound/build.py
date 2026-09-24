@@ -24,7 +24,7 @@ VK = "https://vk.com/citysound_nn"
 MAPS = "https://yandex.ru/maps/org/siti_saund/1786738235/"
 MAX = "https://max.ru/"  # у компании нет чата MAX — при запуске подставим их ссылку
 ICO_TG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.6 18.7 19.3c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.8-8c.4-.3-.1-.5-.6-.2L8.5 13.1 3.8 11.7c-1-.3-1-1 .2-1.5l18.3-7c.9-.3 1.6.2 1.6 1.4z"/></svg>'
-ICO_MAX = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm-4.2 6.5h1.6l2.6 4.3 2.6-4.3h1.6v7h-1.5v-4.4l-2.7 4.4-2.7-4.4v4.4H7.8z"/></svg>'
+ICO_MAX = '<img class="ico" src="img/max.png" alt="" width="20" height="20">'
 
 # ---------------------------------------------------------------- картинки
 def cand(prefix):
@@ -152,6 +152,7 @@ def build():
     SRC["founder"] = webp(HERE / "gen/founder.jpg", "founder", sizes=(640, 1024), q=80)
     shutil.copy2(HERE / "assets/hero.mp4", IMG / "hero.mp4")
     shutil.copy2(HERE / "assets/logo.png", IMG / "logo.png")
+    shutil.copy2(HERE / "assets/max.png", IMG / "max.png")
     shutil.copy2(ROOT / "dist/vodafon/send.php", OUT / "send.php")
     (OUT / "style.css").write_text(CSS, encoding="utf-8")
     (OUT / "app.js").write_text(JS.replace("__QUIZ__", json.dumps(QUIZ, ensure_ascii=False)), encoding="utf-8")
@@ -250,7 +251,7 @@ p{margin:0 0 12px}.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--acc);
 .button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:99px;border:2px solid transparent;font-weight:700;text-decoration:none;cursor:pointer;font-size:16px}
 .button.primary{background:var(--acc);color:#fff}.button.primary:hover{background:var(--acc-d)}.button.ghost{border-color:var(--line);background:transparent;color:var(--ink)}.button.small{min-height:42px;padding:0 18px;font-size:14px}
 .text-button{background:none;border:0;color:var(--ink);text-decoration:underline;text-underline-offset:4px;cursor:pointer;font-size:16px;padding:12px 4px}
-.msgrs{display:flex;flex-wrap:wrap;gap:10px;margin:-18px 0 34px}.msg{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:99px;font-weight:700;font-size:15px;text-decoration:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);backdrop-filter:blur(6px)}.msg svg{width:20px;height:20px}.msg-max{background:#5a4bff;border-color:#5a4bff;color:#fff}.msg-tg{background:#27a7e7;border-color:#27a7e7;color:#fff}.msg-vk{background:#0077ff;border-color:#0077ff;color:#fff}.lead-sec .msgrs{margin:4px 0 22px}
+.msgrs{display:flex;flex-wrap:wrap;gap:10px;margin:-18px 0 34px}.msg{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:99px;font-weight:700;font-size:15px;text-decoration:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);backdrop-filter:blur(6px)}.msg svg,.msg .ico{width:20px;height:20px;border-radius:5px}.msg-max{background:linear-gradient(135deg,#2f7bff,#8a3cff);border-color:transparent;color:#fff}.msg-tg{background:#27a7e7;border-color:#27a7e7;color:#fff}.msg-vk{background:#0077ff;border-color:#0077ff;color:#fff}.lead-sec .msgrs{margin:4px 0 22px}
 .demo{display:flex;justify-content:space-between;gap:10px;padding:7px 24px;background:#000;color:#bbb;font-size:13px}
 .header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:26px;padding:12px 24px;background:rgba(11,12,16,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .header nav{display:flex;gap:22px;margin-left:auto;font-size:15px}.header nav a{text-decoration:none;color:var(--muted)}.header nav a:hover{color:#fff}
@@ -305,7 +306,7 @@ body>footer{padding:40px 24px 110px;max-width:1240px;margin:0 auto;border-top:1p
 @media (max-width:760px){section{padding:56px 16px}.head{grid-template-columns:1fr;gap:10px;margin-bottom:22px}.hero{min-height:auto;padding:70px 16px 40px}.hero h1{font-size:clamp(34px,10vw,44px)}.proofs{grid-template-columns:1fr 1fr}.svcs,.methods,.newss{grid-template-columns:1fr}.pfs{grid-template-columns:1fr 1fr}.reviews{grid-template-columns:1fr}.founder{grid-template-columns:1fr}.founder img{max-width:320px;grid-column:1;grid-row:1}.founder>div{grid-column:1;grid-row:2}.quiz{padding:18px}.quiz-options{grid-template-columns:1fr}.turnkey{columns:1}
 .header{padding:10px 16px;gap:12px}.hphone small{display:none}.hphone a{font-size:15px}.header .button{display:none}.demo span:last-child{display:none}body>footer{grid-template-columns:1fr;padding-bottom:110px}
 .mobile-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;position:fixed;left:0;right:0;bottom:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(11,12,16,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:30}
-.mobile-bar a{display:flex;align-items:center;justify-content:center;gap:5px;min-height:48px;border-radius:12px;font-weight:700;font-size:13.5px;text-decoration:none;background:#1c1f27;padding:0 4px}.mobile-bar a svg{width:18px;height:18px;flex:0 0 auto}.mobile-bar .mb-max{background:#5a4bff}.mobile-bar .mb-tg{background:#27a7e7}.mobile-bar a:last-child{background:var(--acc)}}
+.mobile-bar a{display:flex;align-items:center;justify-content:center;gap:5px;min-height:48px;border-radius:12px;font-weight:700;font-size:13.5px;text-decoration:none;background:#1c1f27;padding:0 4px}.mobile-bar a svg,.mobile-bar a .ico{width:18px;height:18px;flex:0 0 auto;border-radius:4px}.mobile-bar .mb-max{background:linear-gradient(135deg,#2f7bff,#8a3cff)}.mobile-bar .mb-tg{background:#27a7e7}.mobile-bar a:last-child{background:var(--acc)}}
 """
 
 JS = r"""
