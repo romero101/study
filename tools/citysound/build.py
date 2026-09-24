@@ -5,7 +5,7 @@
 
     python3 tools/citysound/build.py   ->  dist/citysound/
 """
-import json, re, shutil, subprocess
+import hashlib, json, re, shutil, subprocess
 from html import escape as e
 from pathlib import Path
 
@@ -52,6 +52,10 @@ PHOTOS = {
 CLIENT_LOGOS = ["government-of-the-nizhny-novgorod-region", "gaz-group", "rosatom", "rzd-russian-railways", "lukoil", "gazprom", "tele2", "toyota", "bmw", "mazda", "peugeot", "liebherr", "world-class", "ctc", "agc-glass-unlimited", "the-centre-of-stas-namin"]
 
 
+def h8(p):
+    return hashlib.md5(Path(p).read_bytes()).hexdigest()[:8]
+
+
 def width(p):
     out = subprocess.run(["sips", "-g", "pixelWidth", str(p)], capture_output=True, text=True).stdout
     return int(re.search(r"pixelWidth: (\d+)", out).group(1))
@@ -60,7 +64,7 @@ def width(p):
 def webp(src, key, sizes=(640, 1280), q=76):
     w = width(src); items = []
     for label in sizes:
-        tw = min(label, w); name = f"{key}-{label}.webp"
+        tw = min(label, w); name = f"{key}-{label}-{h8(src)}.webp"
         subprocess.run(["cwebp", "-quiet", "-q", str(q), "-resize", str(tw), "0", str(src), "-o", str(IMG / name)], check=True)
         items.append((f"img/{name}", tw))
     return items
@@ -138,6 +142,7 @@ QUIZ = [
 ]
 
 SRC = {}
+LOGO = HERO = ""
 import time
 STAMP = str(int(time.time()))
 
@@ -154,9 +159,12 @@ def build():
         SRC["logo_" + name] = webp(cand("resources_1_") if False else cand_logo(name), "cl-" + name, sizes=(200,), q=80)
     SRC["hero"] = webp(HERE / "assets/hero_poster.jpg", "hero", sizes=(960, 1600), q=72)
     SRC["founder"] = webp(HERE / "gen/founder.jpg", "founder", sizes=(640, 1024), q=80)
-    shutil.copy2(HERE / "assets/hero.mp4", IMG / "hero.mp4")
-    shutil.copy2(HERE / "assets/logo.png", IMG / "logo.png")
-    shutil.copy2(HERE / "assets/max.png", IMG / "max.png")
+    global LOGO, HERO, ICO_MAX
+    LOGO = f"logo-{h8(HERE / 'assets/logo.png')}.png"; HERO = f"hero-{h8(HERE / 'assets/hero.mp4')}.mp4"; MAXI = f"max-{h8(HERE / 'assets/max.png')}.png"
+    shutil.copy2(HERE / "assets/hero.mp4", IMG / HERO)
+    shutil.copy2(HERE / "assets/logo.png", IMG / LOGO)
+    shutil.copy2(HERE / "assets/max.png", IMG / MAXI)
+    ICO_MAX = f'<img class="ico" src="img/{MAXI}" alt="" width="20" height="20">'
     shutil.copy2(ROOT / "dist/vodafon/send.php", OUT / "send.php")
     if VARIANT == "base":
         (OUT / "style.css").write_text(CSS, encoding="utf-8")
@@ -190,15 +198,15 @@ def html():
     return f'''<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>СитиСаунд — техническое обеспечение мероприятий в Нижнем Новгороде с 1991 года</title>
 <meta name="description" content="Концепция новой главной страницы citysound.ru: прокат звука, света, сцен и светодиодных экранов, звукорежиссура и монтаж конструкций. Свои специалисты, собственная база, Martin Audio MLA и Alphastage-80.">
-<meta name="robots" content="noindex,nofollow"><link rel="icon" href="img/logo.png"><link rel="stylesheet" href="style.css?v={STAMP}"></head>
+<meta name="robots" content="noindex,nofollow"><link rel="icon" href="img/{LOGO}"><link rel="stylesheet" href="style.css?v={STAMP}"></head>
 <body>
 <div class="demo"><span>Концепция новой главной</span><span>Демонстрация · заявки получает студия «Форма сайта»</span></div>
-<header class="header"><a class="brand" href="#top"><img src="img/logo.png" alt="СитиСаунд" height="44"></a>
+<header class="header"><a class="brand" href="#top"><img src="img/{LOGO}" alt="СитиСаунд" height="44"></a>
 <nav aria-label="Разделы"><a href="#services">Услуги</a><a href="#portfolio">Портфолио</a><a href="#about">О компании</a><a href="#reviews">Отзывы</a><a href="#founder">Основатель</a><a href="#contacts">Контакты</a></nav>
 <div class="hphone"><a href="tel:{TEL}">{PHONE}</a><small>ежедневно · Нижний Новгород</small></div><a class="button primary small" href="#request">Отправить заявку</a></header>
 
 <section class="hero" id="top">{pic("hero", "Сцена на фестивале — работа СитиСаунд", "100vw", "hero-bg", True)}
-<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{SRC['hero'][0][0]}" aria-hidden="true"><source src="img/hero.mp4" type="video/mp4"></video>
+<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{SRC['hero'][0][0]}" aria-hidden="true"><source src="img/{HERO}" type="video/mp4"></video>
 <div class="hero-in"><p class="eyebrow">НИЖНИЙ НОВГОРОД · ТЕХНИЧЕСКОЕ ОБЕСПЕЧЕНИЕ МЕРОПРИЯТИЙ С 1991 ГОДА</p>
 <h1>Звук, свет, сцена и экраны<br>для вашего мероприятия — <em>под ключ.</em></h1>
 <p class="lead">Чистый и разборчивый звук на всей площадке, грамотно направленный свет с нужными оттенками в нужное время — основа впечатления гостей. Чёткий регламент и отсутствие вдруг возникающих проблем — сохранённые нервы организаторов.</p>
@@ -244,7 +252,7 @@ def html():
 <button class="button primary" type="submit">Отправить заявку ↗</button><p class="error" id="form-error" role="alert"></p>
 <p class="consent">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p></form></section>
 
-<footer><div><img src="img/logo.png" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {PHONE} · {MAIL}</p></div><p class="foot-note">Руководство: Александр Косарев (СЕО), Андрей Бирюков (исполнительный директор). Демонстрация студии «Форма сайта»: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий. Кнопка MAX ведёт на max.ru — при запуске подставим чат компании. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a></p></footer>
+<footer><div><img src="img/{LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {PHONE} · {MAIL}</p></div><p class="foot-note">Руководство: Александр Косарев (СЕО), Андрей Бирюков (исполнительный директор). Демонстрация студии «Форма сайта»: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий. Кнопка MAX ведёт на max.ru — при запуске подставим чат компании. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a></p></footer>
 <div class="mobile-bar"><a href="tel:{TEL}">Позвонить</a><a class="mb-max" href="{MAX}" target="_blank" rel="noopener">{ICO_MAX}MAX</a><a class="mb-tg" href="{TG}" target="_blank" rel="noopener">{ICO_TG}Telegram</a><a href="#request">Заявка</a></div>
 <dialog id="photo-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><img id="photo-large" alt=""></dialog>
 <dialog id="result-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><div id="result-body"></div></dialog>

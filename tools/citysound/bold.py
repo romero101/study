@@ -20,18 +20,18 @@ def html_bold(B):
     head = ("<!doctype html><html lang=\"ru\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             "<title>СитиСаунд — звук, свет, сцена. Нижний Новгород, с 1991 года</title>"
             "<meta name=\"description\" content=\"Вариант 2 концепции главной citysound.ru: техническое обеспечение концертов, фестивалей, форумов и городских праздников.\">"
-            "<meta name=\"robots\" content=\"noindex,nofollow\"><link rel=\"icon\" href=\"img/logo.png\">"
+            "<meta name=\"robots\" content=\"noindex,nofollow\"><link rel=\"icon\" href=\"img/" + B.LOGO + "\">"
             "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>"
             "<link href=\"https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&display=swap\" rel=\"stylesheet\">"
             "<link rel=\"stylesheet\" href=\"style.css?v=" + B.STAMP + "\"></head><body>")
     body = f"""
 <div class="demo"><span>Концепция новой главной · вариант 2</span><span>Демонстрация · заявки получает студия «Форма сайта»</span></div>
-<header class="header"><a class="brand" href="#top"><img src="img/logo.png" alt="СитиСаунд" height="44"></a>
+<header class="header"><a class="brand" href="#top"><img src="img/{B.LOGO}" alt="СитиСаунд" height="44"></a>
 <nav aria-label="Разделы"><a href="#services">Услуги</a><a href="#portfolio">Работы</a><a href="#quiz">Подбор</a><a href="#reviews">Отзывы</a><a href="#request">Контакты</a></nav>
 <a class="hphone" href="tel:{B.TEL}">{B.PHONE}</a><a class="button primary small" href="#request">Заявка</a></header>
 
 <section class="hero" id="top">{hero_pic}
-<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{SRC['hero'][0][0]}" aria-hidden="true"><source src="img/hero.mp4" type="video/mp4"></video>
+<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="{SRC['hero'][0][0]}" aria-hidden="true"><source src="img/{B.HERO}" type="video/mp4"></video>
 <div class="hero-in"><h1><span>Звук.</span><span>Свет.</span><span>Сцена.</span><span class="acc">Под ключ.</span></h1>
 <p class="lead">Техническое обеспечение концертов, фестивалей, форумов и городских праздников. Нижний Новгород и соседние регионы — с 1991 года.</p>
 <div class="actions"><a class="button primary" href="#request">Отправить заявку ↗</a><button class="button ghost" type="button" data-start-quiz>Подобрать комплект</button></div>
@@ -72,7 +72,7 @@ def html_bold(B):
 <button class="button primary" type="submit">Отправить заявку ↗</button><p class="error" id="form-error" role="alert"></p>
 <p class="consent">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p></form></section>
 
-<footer><div><img src="img/logo.png" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {B.PHONE} · {B.MAIL}</p></div><p class="foot-note">Демонстрация студии «Форма сайта», вариант 2: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий, фото основателя — пример. Кнопка MAX ведёт на max.ru. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a> · <a href="https://formasaita.ru/demo/citysound/">Вариант 1</a></p></footer>
+<footer><div><img src="img/{B.LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {B.PHONE} · {B.MAIL}</p></div><p class="foot-note">Демонстрация студии «Форма сайта», вариант 2: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий, фото основателя — пример. Кнопка MAX ведёт на max.ru. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a> · <a href="https://formasaita.ru/demo/citysound/">Вариант 1</a></p></footer>
 <div class="mobile-bar"><a href="tel:{B.TEL}">Позвонить</a><a class="mb-max" href="{B.MAX}" target="_blank" rel="noopener">{B.ICO_MAX}MAX</a><a class="mb-tg" href="{B.TG}" target="_blank" rel="noopener">{B.ICO_TG}Telegram</a><a href="#request">Заявка</a></div>
 <dialog id="photo-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><img id="photo-large" alt=""></dialog>
 <dialog id="result-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><div id="result-body"></div></dialog>
