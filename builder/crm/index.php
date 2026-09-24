@@ -82,6 +82,7 @@ font-size:13px;cursor:pointer;color:#41586e}
 .speed td:nth-child(n+2),.speed th:nth-child(n+2){text-align:right;white-space:nowrap}
 .speed .bad{color:#b3261e;font-weight:700}.speed .ok{color:#1d7a3a;font-weight:700}
 .speed .x{color:#1d7a3a;font-weight:800}
+.speed th.sub{text-align:left!important;color:#2b3a4a;font-size:13px;padding-top:14px}
 .speed p{font-size:12.5px;color:#6a7686;margin:10px 0 0}
 
 /* ---------- скрипт звонка ---------- */
@@ -326,7 +327,7 @@ const DATA = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
 const CSRF = <?= json_encode(crm_csrf()) ?>;
 const SCRIPTS = <?= json_encode(require __DIR__ . '/scripts.php', JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="app.js" defer></script>
+<script src="app.js?v=<?= substr(md5_file(__DIR__ . "/app.js"), 0, 8) ?>" defer></script>
 <?php endif; ?>
 <script>
 document.querySelectorAll('[data-eye]').forEach(function (b) {
