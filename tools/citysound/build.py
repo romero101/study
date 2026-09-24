@@ -35,7 +35,7 @@ PHOTOS = {
     "svc_led": "resources_360_whatsapp-image-2022-08-22-at-17-35.30", "svc_complex": "resources_360_whatsapp-image-2022-08-22-at-17-35.31",
     "svc_engineer": "resources_353_m9vqnuikqg0", "svc_lightdesign": "resources_359_рисунок6", "svc_rig": "resources_377_ns3", "svc_system": "resources_360_whatsapp-image-2022-08-24",
     "about": "resources_357_whatsapp-image-2022-05-12-at-13-50.17",
-    "pf01": "resources_377_ns4", "pf02": "resources_371_r2raiyue8ze", "pf03": "resources_370_f8fba", "pf04": "resources_369_dktv2tma",
+    "pf01": "resources_377_ns4", "pf02": "resources_371_r2raiyue8ze", "pf03": "resources_370_f8fba", "pf04": "resources_349_whatsapp-image-2021-12-08-at-15-55-20-2",
     "pf05": "resources_361_whatsapp-image-2022-11-14-at-18-20.33", "pf06": "resources_362_osvblagovsobordiveevo6", "pf07": "resources_363_zhdlborpav",
     "pf08": "resources_360_whatsapp-image-2022-08-22-at-17-35.29", "pf09": "resources_359_рисунок1", "pf10": "resources_357_whatsapp-image-2022-05-12-at-13-51.51",
     "pf11": "resources_358_img-9701-1", "pf12": "resources_352_whatsapp-image-2021-12-09-at-16-24.52",
@@ -101,7 +101,7 @@ SERVICES = [
 ]
 PORTFOLIO = [
     ("pf01", "NEW STAR CAMP | Роза Хутор", "фестиваль · 2026"), ("pf02", "Ананда-2023", "фестиваль · 2023"), ("pf03", "«Комедiя-ФЕСТ»", "театральный фестиваль · 2023"),
-    ("pf04", "Про бизнес · Тинькофф", "деловое событие"), ("pf05", "День работника сельского хозяйства", "торжественная церемония · 2022"),
+    ("pf04", "Церемония Паралимпийского комитета «Возвращение в жизнь»", "торжественная церемония"), ("pf05", "День работника сельского хозяйства", "торжественная церемония · 2022"),
     ("pf06", "Первосвятительский визит Патриарха Кирилла", "Нижегородская митрополия"), ("pf07", "Финал «Мисс Нижний Новгород-2022»", "конкурс"),
     ("pf08", "Нижний Новгород 801", "городской праздник · 2022"), ("pf09", "Фестиваль песни России 2022", "фестиваль"),
     ("pf10", "77-летие Дня Победы, Дзержинск", "городской праздник · 2022"), ("pf11", "Лыжня России — 2022", "спортивное событие"), ("pf12", "Новогодние мероприятия, Дзержинск", "главная площадь"),
@@ -265,7 +265,7 @@ section{padding:80px 24px;max-width:1240px;margin:0 auto}section.tint{max-width:
 /* клиенты */
 .logos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,1fr);gap:12px}.logos li{background:#fff;border-radius:12px;padding:10px;display:flex;align-items:center;justify-content:center}.logos img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
 /* отзывы */
-.reviews{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}.reviews blockquote{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}.reviews p{margin:0;color:#e5e5e1}.reviews footer{margin-top:auto}.reviews b{display:block}.reviews small{color:var(--muted)}
+.reviews{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;align-items:start}.reviews blockquote{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}.reviews p{margin:0;color:#e5e5e1}.reviews footer{margin-top:auto}.reviews b{display:block}.reviews small{color:var(--muted)}
 .letters{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.letter{margin:0}.letter button{display:block;width:100%;padding:0;border:0;background:#fff;border-radius:10px;overflow:hidden;cursor:zoom-in}.letter img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;display:block}.letter figcaption{font-size:13px;color:var(--muted);margin-top:6px}
 /* новости */
 .newss{display:grid;grid-template-columns:1fr 1fr;gap:18px}.news{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}.news img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}.news div{padding:18px 20px 22px}.news small{color:var(--acc);font-weight:700;letter-spacing:.08em;font-size:12.5px}.news h3{margin:6px 0 10px}.news p{color:var(--muted);margin:0;font-size:15px}
