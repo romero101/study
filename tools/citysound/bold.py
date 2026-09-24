@@ -82,7 +82,7 @@ def html_bold(B):
 
 CSS_BOLD = r"""
 :root{--bg:#050505;--bg2:#0e0e10;--ink:#fff;--muted:#9a9a9a;--acc:#ff1e2d;--acc-d:#d5111f;--line:#222;--r:4px;--disp:"Unbounded",Inter,Arial,sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}html{scroll-behavior:smooth;overflow-x:hidden}body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit}img{max-width:100%}picture{display:contents}svg{max-width:1.5em;max-height:1.5em}h1,h2,h3{margin:0;font-family:var(--disp);letter-spacing:-.02em;line-height:1.02;text-transform:uppercase}h2{font-size:clamp(30px,4.4vw,60px);font-weight:900}h3{font-size:18px;text-transform:none;font-weight:700}
 p{margin:0 0 12px}.eyebrow{font-family:var(--disp);font-size:12px;letter-spacing:.2em;color:var(--acc);font-weight:700;margin:0 0 14px}
 .button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 28px;border-radius:var(--r);border:2px solid transparent;font-weight:800;text-decoration:none;cursor:pointer;font-size:15px;text-transform:uppercase;letter-spacing:.04em;font-family:var(--disp)}
