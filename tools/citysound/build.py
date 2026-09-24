@@ -158,7 +158,9 @@ def build():
     for name in CLIENT_LOGOS:
         SRC["logo_" + name] = webp(cand("resources_1_") if False else cand_logo(name), "cl-" + name, sizes=(200,), q=80)
     SRC["hero"] = webp(HERE / "assets/hero_poster.jpg", "hero", sizes=(960, 1600), q=72)
-    SRC["founder"] = webp(HERE / "gen/founder.jpg", "founder", sizes=(640, 1024), q=80)
+    SRC["founder"] = webp(HERE / "assets/founder.jpg", "founder", sizes=(640, 1024), q=80)
+    SRC["about_stage"] = webp(HERE / "assets/about_stage.jpg", "about-stage", sizes=(640, 1024), q=78)
+    SRC["about_base"] = webp(HERE / "assets/about_base.jpg", "about-base", sizes=(640, 1024), q=78)
     global LOGO, HERO, ICO_MAX
     LOGO = f"logo-{h8(HERE / 'assets/logo.png')}.png"; HERO = f"hero-{h8(HERE / 'assets/hero.mp4')}.mp4"; MAXI = f"max-{h8(HERE / 'assets/max.png')}.png"
     shutil.copy2(HERE / "assets/hero.mp4", IMG / HERO)
@@ -218,7 +220,7 @@ def html():
 
 <section id="about" class="tint"><div class="about"><div class="about-text"><p class="eyebrow">О КОМПАНИИ</p><h2>СитиСаунд с 1991 года.</h2>{about}
 <p>Обратившись к нам при организации концертов, фестивалей, корпоративных вечеринок и других событийных проектов, вы обязательно получите в нашем лице необходимую помощь и поддержку. Наши сотрудники возьмут на себя связь с артистами и согласование технического райдера вашего мероприятия. Также мы выполним под ключ:</p><ul class="turnkey">{turnkey}</ul></div>
-<div class="about-photo">{pic("about", "Сцена СитиСаунд на городском празднике", "(max-width:760px) 92vw, 40vw")}<figcaption>Городской праздник, Дзержинск, май 2022</figcaption></div></div>
+<div class="about-photo"><figure>{pic("about_stage", "Сцена перед концертом: линейный массив, свет и мониторинг СитиСаунд", "(max-width:760px) 92vw, 40vw")}<figcaption>Открытая сцена перед концертом: массив, свет, мониторинг</figcaption></figure><figure>{pic("about_base", "Собственный склад СитиСаунд: кофры с оборудованием", "(max-width:760px) 92vw, 40vw")}<figcaption>Собственная база: склад оборудования в кофрах, Нижний Новгород</figcaption></figure></div></div>
 <div class="head"><div><p class="eyebrow">МЕТОДЫ НАШЕЙ РАБОТЫ</p><h2>Мы избавляем организаторов от головной боли, а зрителям дарим приятные впечатления.</h2></div></div><div class="methods">{methods}</div></section>
 
 <section id="portfolio"><div class="head"><div><p class="eyebrow">ПОРТФОЛИО</p><h2>Сотни мероприятий. Вот недавние.</h2></div><p>Фото с наших объектов. Нажмите, чтобы увеличить. Больше — в <a href="https://citysound.ru/portfolio/" target="_blank" rel="noopener">портфолио</a> и в <a href="{TG}" target="_blank" rel="noopener">Telegram-канале</a>.</p></div><div class="pfs">{pf}</div></section>
@@ -232,10 +234,10 @@ def html():
 <section id="reviews" class="tint"><div class="head"><div><p class="eyebrow">ОТЗЫВЫ</p><h2>Благодарности от заказчиков.</h2></div><p>Выдержки из благодарственных писем — дословно. Нажмите на письмо, чтобы прочитать целиком.</p></div>
 <div class="reviews">{reviews}</div></section>
 
-<section id="founder"><div class="founder">{pic("founder", "Александр Косарев, генеральный директор СитиСаунд — фото-пример", "(max-width:760px) 80vw, 30vw")}<div><p class="eyebrow">ОСНОВАТЕЛЬ</p><h2>«Мы не сдаём колонки в аренду. Мы отвечаем за то, как прозвучит ваше мероприятие».</h2>
+<section id="founder"><div class="founder">{pic("founder", "Александр Косарев, генеральный директор СитиСаунд", "(max-width:760px) 80vw, 30vw")}<div><p class="eyebrow">ОСНОВАТЕЛЬ</p><h2>«Мы не сдаём колонки в аренду. Мы отвечаем за то, как прозвучит ваше мероприятие».</h2>
 <p>Александр Косарев руководит СитиСаунд с 1991 года. За это время компания обеспечила визиты Президента и Патриарха, 800-летие Нижнего Новгорода, «Песни России», сотни фестивалей и концертов — и по-прежнему сама выезжает на объекты.</p>
 <ul><li>Собственная база, транспорт и склад оборудования в своём здании</li><li>Martin Audio MLA и Alphastage-80 — уникальны в масштабе России</li><li>К нам можно приехать, увидеть оборудование и получить визуализацию проекта</li></ul>
-<p class="who"><b>Александр Косарев</b><small>генеральный директор ООО «Сити-Саунд» · на демо фото-пример, заменим на настоящее</small></p></div></div></section>
+<p class="who"><b>Александр Косарев</b><small>генеральный директор ООО «Сити-Саунд»</small></p></div></div></section>
 
 <section id="news"><div class="head"><div><p class="eyebrow">НОВОСТИ</p><h2>Где мы были в этом году.</h2></div><p><a href="{TG}" target="_blank" rel="noopener">Все новости — в Telegram-канале</a></p></div><div class="newss">{news}</div></section>
 
@@ -252,7 +254,7 @@ def html():
 <button class="button primary" type="submit">Отправить заявку ↗</button><p class="error" id="form-error" role="alert"></p>
 <p class="consent">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p></form></section>
 
-<footer><div><img src="img/{LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {PHONE} · {MAIL}</p></div><p class="foot-note">Руководство: Александр Косарев (СЕО), Андрей Бирюков (исполнительный директор). Демонстрация студии «Форма сайта»: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий. Кнопка MAX ведёт на max.ru — при запуске подставим чат компании. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a></p></footer>
+<footer><div><img src="img/{LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {PHONE} · {MAIL}</p></div><p class="foot-note">Руководство: Александр Косарев (СЕО), Андрей Бирюков (исполнительный директор). Демонстрация студии «Форма сайта»: тексты, фото, ролик и логотип — компании СитиСаунд. Кнопка MAX ведёт на max.ru — при запуске подставим чат компании. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a></p></footer>
 <div class="mobile-bar"><a href="tel:{TEL}">Позвонить</a><a class="mb-max" href="{MAX}" target="_blank" rel="noopener">{ICO_MAX}MAX</a><a class="mb-tg" href="{TG}" target="_blank" rel="noopener">{ICO_TG}Telegram</a><a href="#request">Заявка</a></div>
 <dialog id="photo-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><img id="photo-large" alt=""></dialog>
 <dialog id="result-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><div id="result-body"></div></dialog>
@@ -288,7 +290,7 @@ section{padding:80px 24px;max-width:1240px;margin:0 auto}section.tint{max-width:
 .svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.svc a{display:block;text-decoration:none;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;height:100%;transition:transform .2s}.svc a:hover{transform:translateY(-3px)}
 .svc img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}.svc div{padding:16px 18px 20px}.svc .tag{font-size:12.5px;letter-spacing:.12em;color:var(--acc);font-weight:700}.svc h3{margin:6px 0 8px}.svc p{color:var(--muted);font-size:15px;margin:0}
 /* о компании */
-.about{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:start;margin-bottom:60px}.about-text p{color:#d9d9d5;font-size:17px}.about-photo{position:sticky;top:90px}.about-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);display:block}.about-photo figcaption{color:var(--muted);font-size:13px;margin-top:8px}
+.about{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:start;margin-bottom:60px}.about-text p{color:#d9d9d5;font-size:17px}.about-photo{position:sticky;top:90px}.about-photo figure{margin:0 0 18px}.about-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:var(--r);display:block}.about-photo figure+figure img{aspect-ratio:4/3}.about-photo figcaption{color:var(--muted);font-size:13px;margin-top:8px}
 .turnkey{columns:2;gap:24px;padding-left:20px;color:#d9d9d5}.turnkey li{margin:4px 0}
 .methods{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.method{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px}.method h3{color:var(--acc);font-size:18px;margin-bottom:8px}.method p{color:#cfd0cc;font-size:15px;margin:0}
 /* портфолио */

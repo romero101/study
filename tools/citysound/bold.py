@@ -16,7 +16,7 @@ def html_bold(B):
     news = "".join(f'<article class="nw">{pic(k, t, "(max-width:760px) 92vw, 45vw")}<div><small>{e(d)}</small><h3>{e(t)}</h3><p>{e(x)}</p></div></article>' for k, t, d, x in B.NEWS)
     about = "".join(f"<p>{e(x)}</p>" for x in B.ABOUT[:4])
     hero_pic = pic("hero", "Сцена на фестивале — работа СитиСаунд", "100vw", "hero-bg", True)
-    founder_pic = pic("founder", "Александр Косарев — фото-пример", "(max-width:760px) 92vw, 40vw")
+    founder_pic = pic("founder", "Александр Косарев, генеральный директор СитиСаунд", "(max-width:760px) 92vw, 40vw")
     head = ("<!doctype html><html lang=\"ru\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             "<title>СитиСаунд — звук, свет, сцена. Нижний Новгород, с 1991 года</title>"
             "<meta name=\"description\" content=\"Вариант 2 концепции главной citysound.ru: техническое обеспечение концертов, фестивалей, форумов и городских праздников.\">"
@@ -52,7 +52,7 @@ def html_bold(B):
 
 <section id="method" class="red"><div class="head-b"><p class="eyebrow">04 — КАК РАБОТАЕМ</p><h2>Мы избавляем организаторов от головной боли.</h2></div><div class="mts">{methods}</div></section>
 
-<section id="founder"><div class="fnd">{founder_pic}<div><p class="eyebrow">05 — ОСНОВАТЕЛЬ</p><h2>«Мы отвечаем за то, как прозвучит ваше мероприятие».</h2>{about}<p class="who"><b>Александр Косарев</b><small>генеральный директор ООО «Сити-Саунд» · на демо фото-пример, заменим на настоящее</small></p></div></div></section>
+<section id="founder"><div class="fnd">{founder_pic}<div><p class="eyebrow">05 — ОСНОВАТЕЛЬ</p><h2>«Мы отвечаем за то, как прозвучит ваше мероприятие».</h2>{about}<p class="who"><b>Александр Косарев</b><small>генеральный директор ООО «Сити-Саунд»</small></p></div></div></section>
 
 <section id="clients" class="bleed"><div class="head-b"><p class="eyebrow">06 — КЛИЕНТЫ</p><h2>Те, у кого нет права на ошибку.</h2></div><ul class="logos">{logos}</ul></section>
 
@@ -72,7 +72,7 @@ def html_bold(B):
 <button class="button primary" type="submit">Отправить заявку ↗</button><p class="error" id="form-error" role="alert"></p>
 <p class="consent">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p></form></section>
 
-<footer><div><img src="img/{B.LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {B.PHONE} · {B.MAIL}</p></div><p class="foot-note">Демонстрация студии «Форма сайта», вариант 2: тексты, фото и логотип — компании СитиСаунд, ролик смонтирован из фотографий её мероприятий, фото основателя — пример. Кнопка MAX ведёт на max.ru. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a> · <a href="https://formasaita.ru/demo/citysound/">Вариант 1</a></p></footer>
+<footer><div><img src="img/{B.LOGO}" alt="" height="40"><p>ООО «Сити-Саунд» · Нижний Новгород, ул. Снежная, 44 · {B.PHONE} · {B.MAIL}</p></div><p class="foot-note">Демонстрация студии «Форма сайта», вариант 2: тексты, фото и логотип — компании СитиСаунд, ролик и фото — тоже компании. Кнопка MAX ведёт на max.ru. <a href="https://citysound.ru/" target="_blank" rel="noopener">Действующий сайт ↗</a> · <a href="https://formasaita.ru/demo/citysound/">Вариант 1</a></p></footer>
 <div class="mobile-bar"><a href="tel:{B.TEL}">Позвонить</a><a class="mb-max" href="{B.MAX}" target="_blank" rel="noopener">{B.ICO_MAX}MAX</a><a class="mb-tg" href="{B.TG}" target="_blank" rel="noopener">{B.ICO_TG}Telegram</a><a href="#request">Заявка</a></div>
 <dialog id="photo-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><img id="photo-large" alt=""></dialog>
 <dialog id="result-dialog"><button type="button" class="close" data-close aria-label="Закрыть">×</button><div id="result-body"></div></dialog>
