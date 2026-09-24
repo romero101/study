@@ -174,3 +174,79 @@ function crm_change_password($current, $new, $repeat) {
 
 function crm_csrf() { return $_SESSION['crm_csrf'] ?? ''; }
 function crm_csrf_ok($t) { return crm_csrf() && hash_equals(crm_csrf(), (string)$t); }
+
+/* ------------------------------------------------------------ бухгалтерия */
+/* Первичка лежит в data/docs.php: договоры, спецификации, счета, акты. Сканы подписанных
+   документов — вне веб-корня (../../../crm-files), чтобы nginx не отдал их по прямой ссылке. */
+function crm_docs()          { return crm_load('docs', ['docs' => []]); }
+function crm_docs_write($d)  { return crm_save('docs', $d); }
+function crm_doc_types()     { return ['contract' => 'Договор', 'spec' => 'Спецификация', 'invoice' => 'Счёт', 'act' => 'Акт']; }
+function crm_doc_statuses($type) {
+    return $type === 'invoice' ? ['Черновик', 'Выставлен', 'Оплачен', 'Отменён'] : ['Черновик', 'Отправлен', 'Подписан', 'Отменён'];
+}
+function crm_company() {
+    return array_merge([
+        'name' => 'Индивидуальный предприниматель Кочкин Роман Андреевич', 'short' => 'ИП Кочкин Р. А.',
+        'inn' => '526109316232', 'ogrn' => '318527500132392', 'address' => 'г. Нижний Новгород',
+        'email' => '', 'phone' => '+7 (929) 053-76-03', 'site' => 'formasaita.ru',
+        'bank' => '', 'bik' => '', 'ks' => '', 'rs' => '',
+        'signer' => 'Кочкин Роман Андреевич', 'signer_short' => 'Р. А. Кочкин', 'basis' => 'ОГРНИП 318527500132392',
+        'tax' => 'НДС не облагается (применяется упрощённая система налогообложения)',
+    ], crm_load('company', []));
+}
+function crm_company_fields() { return ['name', 'short', 'inn', 'ogrn', 'address', 'email', 'phone', 'site', 'bank', 'bik', 'ks', 'rs', 'signer', 'signer_short', 'basis', 'tax']; }
+function crm_party_fields()   { return ['name', 'short', 'inn', 'ogrn', 'kpp', 'address', 'email', 'phone', 'bank', 'bik', 'ks', 'rs', 'signer', 'signer_short', 'basis']; }
+function crm_doc_find(&$D, $id) {
+    foreach ($D['docs'] as $i => $d) if ($d['id'] === $id) return $i;
+    return -1;
+}
+/* Следующий номер: сквозной по типу документа в пределах года. */
+function crm_doc_next_number($D, $type, $date) {
+    $year = substr($date, -4); $max = 0;
+    foreach ($D['docs'] as $d) {
+        if ($d['type'] !== $type || substr($d['date'], -4) !== $year) continue;
+        $max = max($max, (int)preg_replace('/\D.*$/', '', (string)$d['n']));
+    }
+    return (string)($max + 1);
+}
+function crm_files_dir() {
+    $root = dirname(__DIR__, 3) . '/crm-files';
+    if (!is_dir($root)) @mkdir($root, 0700, true);
+    if (is_dir($root) && is_writable($root)) return $root;
+    $f = __DIR__ . '/data/files';                       // запасной вариант: имена файлов случайные
+    if (!is_dir($f)) { @mkdir($f, 0700, true); @file_put_contents($f . '/index.php', CRM_GUARD); }
+    return $f;
+}
+function crm_money($n) { return number_format((float)$n, 2, ',', ' '); }
+function crm_date_ru($d) {   // 24.09.2026 -> «24» сентября 2026 г.
+    $m = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+    if (!preg_match('/^(\d\d)\.(\d\d)\.(\d{4})$/', $d, $x)) return h($d);
+    return '«' . $x[1] . '» ' . $m[(int)$x[2] - 1] . ' ' . $x[3] . ' г.';
+}
+/* Сумма прописью: рубли и копейки. */
+function crm_words($n) {
+    $n = round((float)$n, 2); $rub = (int)floor($n); $kop = (int)round(($n - $rub) * 100);
+    $ones = [['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'],
+             ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять']];
+    $teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+    $tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+    $hund = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+    $units = [['рубль', 'рубля', 'рублей', 0], ['тысяча', 'тысячи', 'тысяч', 1], ['миллион', 'миллиона', 'миллионов', 0], ['миллиард', 'миллиарда', 'миллиардов', 0]];
+    $plural = function ($k, $f) { $k = $k % 100; if ($k > 10 && $k < 20) return $f[2]; $k %= 10; return $k == 1 ? $f[0] : ($k >= 2 && $k <= 4 ? $f[1] : $f[2]); };
+    if ($rub === 0) $out = 'ноль рублей';
+    else {
+        $out = ''; $i = 0; $r = $rub;
+        while ($r > 0 && $i < 4) {
+            $t = $r % 1000; $r = intdiv($r, 1000);
+            if ($t) {
+                $g = $units[$i][3];
+                $s = trim($hund[intdiv($t, 100)] . ' ' . ($t % 100 >= 10 && $t % 100 < 20 ? $teens[$t % 10] : trim($tens[intdiv($t % 100, 10)] . ' ' . $ones[$g][$t % 10])));
+                $out = $s . ' ' . $plural($t, $units[$i]) . ' ' . $out;
+            } elseif ($i === 0) $out = 'рублей ' . $out;
+            $i++;
+        }
+        $out = trim($out);
+    }
+    $out .= ' ' . str_pad((string)$kop, 2, '0', STR_PAD_LEFT) . ' ' . $plural($kop, ['копейка', 'копейки', 'копеек']);
+    return mb_strtoupper(mb_substr($out, 0, 1)) . mb_substr($out, 1);
+}

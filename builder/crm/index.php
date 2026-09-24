@@ -22,6 +22,8 @@ if (isset($_GET['changed'])) $ok = 'Пароль изменён';
 $locked = crm_logged_in() ? 0 : crm_locked_for();
 
 $data = crm_read();
+$docs = crm_docs()['docs'];
+$company = crm_company();
 ?><!doctype html>
 <html lang="ru">
 <head>
@@ -31,6 +33,7 @@ $data = crm_read();
 <title><?= h(CRM_TITLE) ?></title>
 <style>
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;font:400 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 color:#16202b;background:#eef2f6}
 h1,h2,h3{margin:0 0 .4em;line-height:1.2;letter-spacing:-.02em}
@@ -99,6 +102,54 @@ font-size:13px;cursor:pointer;color:#41586e}
 .brief ul{margin:6px 0 0;padding-left:18px}
 .note--brief .av{background:#e2f3e8;color:#1d7a3a}
 @media (max-width:640px){.brief dl{grid-template-columns:1fr;gap:2px}.brief dd{margin-bottom:8px}}
+
+/* ---------- бухгалтерия ---------- */
+.tabs{display:flex;gap:6px;margin-left:10px}
+.tabs button{background:transparent;border:0;color:#9aa8b6;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer;min-height:38px}
+.tabs button[aria-pressed=true]{background:#2a3a4c;color:#fff}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
+.kpi div{background:#fff;border:2px solid #e4ebf1;border-radius:12px;padding:12px 14px}
+.kpi i{display:block;font-style:normal;font-size:12.5px;color:#6a7686;margin-bottom:5px}
+.kpi b{font-size:22px;letter-spacing:-.02em}
+.kpi s{display:block;text-decoration:none;font-size:12.5px;color:#6a7686}
+.tools select{min-height:44px;padding:8px 12px;border:2px solid #d9e2ec;border-radius:10px;background:#fff;max-width:260px}
+.acc-new{display:flex;gap:6px;flex-wrap:wrap}
+table.acc{min-width:980px}
+table.acc td.what s{display:block;text-decoration:none;color:#8a96a3}
+table.acc td.act{white-space:nowrap}
+table.acc tbody tr{cursor:default}
+select.st{border:1px solid transparent;border-radius:99px;padding:4px 8px;font-size:12.5px;font-weight:700;background:#eef2f6;cursor:pointer;color:#41586e}
+.st-ok{background:#e3f4e8!important;color:#166534!important}.st-wait{background:#fff0d6!important;color:#8a5a00!important}.st-off{background:#f1f1f1!important;color:#8a96a3!important}
+.fg{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.fg .f{grid-column:span 3;margin:0}.fg .f--s{grid-column:span 1}.fg .f--w{grid-column:1/-1}
+.fg .f label,.dlg__b .f label{font-size:13px}
+.fg .f label small{font-weight:400;color:#6a7686}
+.party{font-size:14px;background:#f7fafc;border:1px solid #e4ebf1;border-radius:10px;padding:10px 12px}
+.warn3{color:#8a5a00}
+.lnk{background:none;border:0;color:#1c4d85;text-decoration:underline;cursor:pointer;padding:0 4px;font-size:13px;font-weight:400}
+h3.sub{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#6a7686;margin:18px 0 8px}
+table.items{min-width:0;width:100%}
+table.items th{position:static;font-size:11.5px;padding:6px 6px}
+table.items td{padding:4px 4px;border-bottom:0;vertical-align:middle}
+table.items textarea,table.items input{width:100%;min-height:38px;padding:7px 9px;border:1px solid #d9e2ec;border-radius:8px;background:#fff;font-size:14px;resize:none;overflow:hidden}
+table.items td:nth-child(2),table.items td:nth-child(3){width:70px}
+#dd-items td:nth-child(4){width:110px}#dd-items td.i-sum{width:100px;text-align:right;font-weight:700;font-size:14px}
+#dd-monthly td:nth-child(2){width:120px}#dd-monthly td:nth-child(3){width:180px}
+.i-del{background:none;border:0;color:#b3261e;font-size:20px;cursor:pointer;min-width:36px;min-height:36px}
+.tot{font-weight:800;text-align:right;margin:10px 0}
+.file{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eef2f6;font-size:14px}
+.file s{text-decoration:none;color:#8a96a3;font-size:12.5px;flex:1}
+.file button{background:none;border:0;color:#b3261e;font-size:20px;cursor:pointer;min-width:36px;min-height:36px}
+.up{cursor:pointer;margin-top:10px}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.dlist{display:grid;gap:6px}
+.drow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #e4ebf1;border-radius:10px;padding:8px 12px;font-size:14px}
+.drow s{text-decoration:none;color:#41586e;font-weight:700}
+.drow .btn{margin-left:auto}
+.docs{margin:18px 0 0;border:2px solid #e4ebf1;border-radius:14px;background:#f7fafc;padding:14px 18px}
+.docs h3{font-size:15px;margin:0 0 10px}
+.note--doc .av{background:#fff0d6;color:#8a5a00}
+@media (max-width:640px){.fg{grid-template-columns:1fr 1fr}.fg .f{grid-column:1/-1}.fg .f--s{grid-column:span 1}.tabs{margin-left:0;width:100%}.top .sp{margin-left:0}}
 
 /* ---------- скрипт звонка ---------- */
 .script{margin:18px 0;border:2px solid #d6e3f3;border-radius:14px;background:#f6faff}
@@ -258,6 +309,7 @@ cursor:pointer;min-height:34px}
 
 <div class="top"><div class="in">
   <b><?= h(CRM_TITLE) ?></b>
+  <nav class="tabs" aria-label="Разделы"><button type="button" data-v="funnel" aria-pressed="true">Воронка</button><button type="button" data-v="acc" aria-pressed="false">Бухгалтерия</button></nav>
   <span class="sp">
     <span><?= h($_SESSION['crm_name'] ?? '') ?></span>
     <a href="?password=1">Сменить пароль</a>
@@ -267,7 +319,7 @@ cursor:pointer;min-height:34px}
 </div></div>
 <?php if ($ok): ?><div class="warn warn--ok"><?= h($ok) ?></div><?php endif; ?>
 
-<div class="wrap">
+<div class="wrap" id="v-funnel">
   <div class="funnel" id="funnel"></div>
   <div class="tools">
     <input type="search" id="q" placeholder="Поиск: компания, город, контакт, комментарий" aria-label="Поиск">
@@ -282,6 +334,28 @@ cursor:pointer;min-height:34px}
       <tbody id="rows"></tbody>
     </table>
   </div><div class="empty" id="empty" hidden>Ничего не найдено</div></div>
+</div>
+
+<div class="wrap" id="v-acc" hidden>
+  <div class="kpi" id="acc-kpi"></div>
+  <div class="tools">
+    <select id="acc-lead" aria-label="Клиент"></select>
+    <input type="search" id="acc-q" placeholder="Поиск: номер, клиент, услуга" aria-label="Поиск по документам">
+    <span class="acc-new">
+      <button type="button" class="btn btn--sm" data-new="contract">+ Договор</button>
+      <button type="button" class="btn btn--sm" data-new="spec">+ Спецификация</button>
+      <button type="button" class="btn btn--sm" data-new="invoice">+ Счёт</button>
+      <button type="button" class="btn btn--sm" data-new="act">+ Акт</button>
+    </span>
+    <button type="button" class="btn btn--gh btn--sm" id="acc-company">Реквизиты студии</button>
+  </div>
+  <div class="tbl"><div class="tbl-scroll">
+    <table class="acc">
+      <thead><tr><th>Документ</th><th>Клиент</th><th>Содержание</th><th>Сумма</th><th>Статус</th><th>Скан</th><th></th></tr></thead>
+      <tbody id="acc-rows"></tbody>
+    </table>
+  </div><div class="empty" id="acc-empty" hidden>Документов пока нет. Начните с «+ Договор».</div></div>
+  <p class="mini" style="margin:12px 4px">Печатная форма — кнопка «Открыть», в браузере «Печать → Сохранить как PDF». Подписанный скан загружается в карточку документа («Изменить»). Удалять можно только черновики, остальное переводите в «Отменён». Номера идут по порядку в пределах года отдельно для договоров, спецификаций, счетов и актов.</p>
 </div>
 
 <dialog id="dlg"><div class="dlg">
@@ -322,6 +396,7 @@ cursor:pointer;min-height:34px}
     </div>
     <div class="speed" id="d-speed" hidden></div>
     <div class="brief" id="d-brief"></div>
+    <div class="docs" id="d-docs"></div>
     <details class="script" id="d-script-box">
       <summary><b>Скрипт звонка</b><span id="d-script-goal"></span></summary>
       <div id="d-script"></div>
@@ -338,13 +413,95 @@ cursor:pointer;min-height:34px}
   </div>
 </div></dialog>
 
+<dialog id="ddlg"><div class="dlg">
+  <div class="dlg__h"><div><h2 id="dd-title-h"></h2><div class="mini">Статус: <span id="dd-status"></span></div></div><button class="x" id="dd-x" aria-label="Закрыть">&times;</button></div>
+  <div class="dlg__b">
+    <div class="fg">
+      <div class="f"><label for="dd-lead">Клиент</label><select id="dd-lead"></select></div>
+      <div class="f f--s"><label for="dd-n">Номер</label><input id="dd-n"></div>
+      <div class="f f--s"><label for="dd-date">Дата</label><input id="dd-date" placeholder="ДД.ММ.ГГГГ"></div>
+      <div class="f" data-for="spec invoice act"><label for="dd-parent">К договору</label><select id="dd-parent"></select></div>
+      <div class="f f--w"><label>Реквизиты клиента <button type="button" class="lnk" id="dd-party-edit">изменить</button></label><div class="party" id="dd-party"></div></div>
+      <div class="f f--w" data-for="spec"><label for="dd-title">Предмет спецификации <small>(необязательно)</small></label><textarea id="dd-title" rows="2" placeholder="Например: сайт на домене клиента и реклама в Яндекс Директе"></textarea></div>
+      <div class="f f--w" data-for="invoice act"><label for="dd-basis">Основание</label><input id="dd-basis" placeholder="Договор № 1 от 24.09.2026, спецификация № 1"></div>
+      <div class="f" data-for="invoice act spec"><label for="dd-period">Период <small>(для спецификации — срок разовых услуг)</small></label><input id="dd-period" placeholder="октябрь 2026 · 10 рабочих дней с момента получения материалов"></div>
+      <div class="f f--s" data-for="invoice"><label for="dd-due">Оплатить до</label><input id="dd-due" placeholder="ДД.ММ.ГГГГ"></div>
+      <div class="f f--s" data-for="spec"><label for="dd-prepay">Предоплата, %</label><input id="dd-prepay" inputmode="numeric"></div>
+    </div>
+    <div data-for="spec invoice act">
+      <h3 class="sub">Услуги</h3>
+      <table class="items" id="dd-items"><thead><tr><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Цена, ₽</th><th>Сумма</th><th></th></tr></thead><tbody></tbody></table>
+      <button type="button" class="btn btn--gh btn--sm" id="dd-add">+ строка</button>
+    </div>
+    <div data-for="spec">
+      <h3 class="sub">Ежемесячные услуги</h3>
+      <table class="items" id="dd-monthly"><thead><tr><th>Наименование</th><th>В месяц, ₽</th><th>Начало</th><th></th></tr></thead><tbody></tbody></table>
+      <button type="button" class="btn btn--gh btn--sm" id="dd-madd">+ строка</button>
+    </div>
+    <p class="tot" id="dd-total"></p>
+    <div class="f" style="margin-top:14px"><label for="dd-note">Примечание <small>(в договоре — раздел «Особые условия», в остальных — абзац перед подписями)</small></label><textarea id="dd-note" rows="2"></textarea></div>
+    <div id="dd-files-box"><h3 class="sub">Сканы подписанного</h3><div id="dd-files"></div>
+      <label class="btn btn--gh btn--sm up"><span id="dd-file-lbl">Загрузить скан</span><input type="file" id="dd-file" accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx" hidden></label></div>
+  </div>
+  <div class="dlg__f acts"><button type="button" class="btn" id="dd-save">Сохранить</button><a class="btn btn--gh" id="dd-open" target="_blank" rel="noopener">Открыть печатную форму</a><button type="button" class="btn btn--gh" id="dd-del">Удалить черновик</button></div>
+</div></dialog>
+
+<dialog id="cdlg"><div class="dlg">
+  <div class="dlg__h"><div><h2>Реквизиты студии</h2><div class="mini">Печатаются в договорах, счетах и актах. Снимок реквизитов сохраняется в документ при его сохранении.</div></div><button class="x" id="cd-x" aria-label="Закрыть">&times;</button></div>
+  <div class="dlg__b"><div class="fg">
+    <div class="f f--w"><label>Полное наименование</label><input name="name"></div>
+    <div class="f"><label>Короткое</label><input name="short"></div>
+    <div class="f f--s"><label>ИНН</label><input name="inn"></div>
+    <div class="f f--s"><label>ОГРНИП / ОГРН</label><input name="ogrn"></div>
+    <div class="f f--w"><label>Адрес</label><input name="address"></div>
+    <div class="f"><label>Телефон</label><input name="phone"></div>
+    <div class="f"><label>E-mail</label><input name="email"></div>
+    <div class="f f--w"><label>Банк</label><input name="bank" placeholder="Название банка"></div>
+    <div class="f f--s"><label>БИК</label><input name="bik"></div>
+    <div class="f f--s"><label>Корр. счёт</label><input name="ks"></div>
+    <div class="f f--s"><label>Расчётный счёт</label><input name="rs"></div>
+    <div class="f"><label>Подписант (ФИО полностью)</label><input name="signer"></div>
+    <div class="f"><label>Подпись (И. О. Фамилия)</label><input name="signer_short"></div>
+    <div class="f f--w"><label>Действует на основании</label><input name="basis"></div>
+    <div class="f f--w"><label>Строка про НДС</label><input name="tax"></div>
+  </div></div>
+  <div class="dlg__f acts"><button type="button" class="btn" id="cd-save">Сохранить</button></div>
+</div></dialog>
+
+<dialog id="pdlg"><div class="dlg">
+  <div class="dlg__h"><div><h2>Реквизиты клиента</h2><div class="mini" id="pd-co"></div></div><button class="x" id="pd-x" aria-label="Закрыть">&times;</button></div>
+  <div class="dlg__b"><div class="fg">
+    <div class="f f--w"><label>Полное наименование <small>как в договоре: «Индивидуальный предприниматель Иванов Иван Иванович», «ООО «Ромашка»»</small></label><input name="name"></div>
+    <div class="f"><label>Короткое</label><input name="short" placeholder="ИП Иванов И. И."></div>
+    <div class="f f--s"><label>ИНН</label><input name="inn"></div>
+    <div class="f f--s"><label>КПП</label><input name="kpp"></div>
+    <div class="f f--s"><label>ОГРНИП / ОГРН</label><input name="ogrn"></div>
+    <div class="f f--w"><label>Адрес</label><input name="address"></div>
+    <div class="f"><label>Телефон</label><input name="phone"></div>
+    <div class="f"><label>E-mail</label><input name="email"></div>
+    <div class="f"><label>Подписант (ФИО полностью)</label><input name="signer"></div>
+    <div class="f"><label>Подпись (И. О. Фамилия)</label><input name="signer_short"></div>
+    <div class="f f--w"><label>Действует на основании</label><input name="basis" placeholder="ОГРНИП … / Устава"></div>
+    <div class="f f--w"><label>Банк</label><input name="bank"></div>
+    <div class="f f--s"><label>БИК</label><input name="bik"></div>
+    <div class="f f--s"><label>Корр. счёт</label><input name="ks"></div>
+    <div class="f f--s"><label>Расчётный счёт</label><input name="rs"></div>
+  </div></div>
+  <div class="dlg__f acts"><button type="button" class="btn" id="pd-save">Сохранить</button></div>
+</div></dialog>
+
 <script>
 const DATA = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
 const CSRF = <?= json_encode(crm_csrf()) ?>;
 const SCRIPTS = <?= json_encode(require __DIR__ . '/scripts.php', JSON_UNESCAPED_UNICODE) ?>;
 const QUESTIONS = <?= json_encode(require __DIR__ . '/questions.php', JSON_UNESCAPED_UNICODE) ?>;
+const DOCS = <?= json_encode($docs, JSON_UNESCAPED_UNICODE) ?>;
+const COMPANY = <?= json_encode($company, JSON_UNESCAPED_UNICODE) ?>;
+const DOCTYPES = <?= json_encode(crm_doc_types(), JSON_UNESCAPED_UNICODE) ?>;
+const DOCSTATUSES = <?= json_encode(['invoice' => crm_doc_statuses('invoice'), 'other' => crm_doc_statuses('act')], JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="app.js?v=<?= substr(md5_file(__DIR__ . "/app.js"), 0, 8) ?>" defer></script>
+<script src="acc.js?v=<?= substr(md5_file(__DIR__ . "/acc.js"), 0, 8) ?>" defer></script>
 <?php endif; ?>
 <script>
 document.querySelectorAll('[data-eye]').forEach(function (b) {

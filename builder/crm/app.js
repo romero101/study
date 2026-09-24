@@ -84,7 +84,7 @@ var dlg = document.getElementById("dlg");
 function drawLog(l) {
   var c = l.comments || [];
   document.getElementById("d-log").innerHTML = c.length ? c.slice().reverse().map(function (x) {
-    return '<div class="note' + (x.kind === "stage" ? " note--stage" : x.kind === "brief" ? " note--brief" : "") + '">' +
+    return '<div class="note' + (x.kind === "stage" ? " note--stage" : x.kind === "brief" ? " note--brief" : x.kind === "doc" ? " note--doc" : "") + '">' +
       '<div class="av">' + esc((x.who || "?").slice(0, 2).toUpperCase()) + "</div>" +
       '<div class="tx"><b>' + esc(x.who) + "</b><s>" + esc(x.at) + "</s>" +
       "<p>" + esc(x.text) + "</p></div></div>";
@@ -213,6 +213,7 @@ function open(id) {
   }).join("");
   drawSpeed(l);
   drawBrief(l);
+  if (window.drawDocs) drawDocs(l);
   drawScript(l);
   drawLog(l);
   document.getElementById("d-note").value = "";
