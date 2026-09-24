@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /admin/
 Disallow: /send.php
+Disallow: /demo/
+Disallow: /anketa/
 Allow: /
 
 Sitemap: https://formasaita.ru/sitemap.xml
