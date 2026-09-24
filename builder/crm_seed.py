@@ -11,7 +11,7 @@ OUT = os.path.join(ROOT, "builder", "crm", "seed", "leads.json")  # на сер�
 
 # Этапы воронки. Порядок = порядок колонок на доске.
 STAGES = ["Не связывались", "Дозвонился до ЛПР", "Отправил лендинг",
-          "Взял обратную связь", "Счёт выставлен", "Оплачено", "Отказ"]
+          "Взял обратную связь", "Счёт выставлен", "Оплачено", "В работе", "Отказ"]
 
 FIELDS = ["n", "company", "city", "was_url", "now_url", "was_problems",
           "now_done", "left_todo", "contacts", "pagespeed", "offer", "stage", "measure_src"]

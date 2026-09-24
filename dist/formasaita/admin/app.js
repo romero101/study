@@ -5,7 +5,7 @@ var STAGES = DATA.stages, LEADS = DATA.leads;
 var filter = null, query = "", current = null;
 
 /* цвет этапа: от «холодного» к «оплачено», отказ — красный */
-var COLORS = ["#8a96a3", "#3b82c4", "#2f6fb5", "#7c5cc4", "#c98a12", "#2f9e52", "#c02b1d"];
+var COLORS = ["#8a96a3", "#3b82c4", "#2f6fb5", "#7c5cc4", "#c98a12", "#2f9e52", "#0e8a8a", "#c02b1d"];
 function stageColor(s) { var i = STAGES.indexOf(s); return COLORS[i] || "#8a96a3"; }
 
 /* быстрые комментарии под нашу воронку — чтобы не печатать руками */
@@ -45,7 +45,9 @@ function visible() {
     if (!q) return true;
     var hay = [l.company, l.city, l.contacts, l.lpr, l.was_url, l.now_url,
       l.was_problems, l.now_done, l.left_todo]
-      .concat((l.comments || []).map(function (c) { return c.text; })).join(" ").toLowerCase();
+      .concat((l.comments || []).map(function (c) { return c.text; }))
+      .concat(l.brief && l.brief.answers ? Object.keys(l.brief.answers).map(function (k) { return l.brief.answers[k]; }) : [])
+      .join(" ").toLowerCase();
     return hay.indexOf(q) > -1;
   });
 }
@@ -82,7 +84,7 @@ var dlg = document.getElementById("dlg");
 function drawLog(l) {
   var c = l.comments || [];
   document.getElementById("d-log").innerHTML = c.length ? c.slice().reverse().map(function (x) {
-    return '<div class="note' + (x.kind === "stage" ? " note--stage" : "") + '">' +
+    return '<div class="note' + (x.kind === "stage" ? " note--stage" : x.kind === "brief" ? " note--brief" : "") + '">' +
       '<div class="av">' + esc((x.who || "?").slice(0, 2).toUpperCase()) + "</div>" +
       '<div class="tx"><b>' + esc(x.who) + "</b><s>" + esc(x.at) + "</s>" +
       "<p>" + esc(x.text) + "</p></div></div>";
@@ -125,6 +127,39 @@ function drawSpeed(l) {
     "перед звонком откройте сайт со своего телефона не по Wi-Fi." +
     (L ? " Время загрузки — настоящий Chrome на сервере в Москве с экраном телефона (замер " + esc(L.at) + "); строки «4G» — тот же Chrome, но канал принудительно сужен до 10 Мбит/с, как хороший мобильный интернет. «Первый экран» — когда виден главный блок, «полная загрузка» — событие load, «последний файл» — когда докачалось всё, включая счётчики и виджеты." : "") +
     " Секунды из прежних замеров Lighthouse не называть: они шли из-за рубежа.</p>";
+}
+
+/* ------------------------------------------------- анкета на запуск */
+function briefUrl(b) { return location.origin + "/anketa/?k=" + b.key; }
+function drawBrief(l) {
+  var box = document.getElementById("d-brief"), b = l.brief;
+  if (!b || !b.key) {
+    box.innerHTML = '<h3>Анкета на запуск</h3><p class="mini" style="margin:0 0 10px">Личная ссылка для клиента: доступы, куда падают заявки, цены, фото, реклама — ' +
+      QUESTIONS.reduce(function (a, s) { return a + s.q.length; }, 0) + ' вопроса. Ответы попадут в эту карточку.</p>' +
+      '<button type="button" class="btn btn--gh btn--sm" id="b-make">Создать ссылку</button>';
+    return;
+  }
+  var url = briefUrl(b);
+  var st = b.answers
+    ? "Заполнена " + esc(b.sent_at) + (b.updated_at && b.updated_at !== b.sent_at ? ", дополнена " + esc(b.updated_at) : "") + " · " + b.count + " из " + b.total + " ответов"
+    : "Клиент ещё не заполнил";
+  var html = '<h3>Анкета на запуск</h3><div class="b-link"><a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>" +
+    '<button type="button" class="btn btn--gh btn--sm" id="b-copy">Скопировать</button></div>' +
+    '<p class="mini">' + st + (b.name ? " · обращение в анкете: " + esc(b.name) : "") + "</p>";
+  if (b.answers) {
+    var missing = [];
+    QUESTIONS.forEach(function (s) {
+      var rows = s.q.filter(function (q) { return b.answers[q.k]; });
+      s.q.forEach(function (q) { if (!b.answers[q.k]) missing.push(q.label); });
+      if (!rows.length) return;
+      html += "<h4>" + esc(s.title) + "</h4><dl>" + rows.map(function (q) {
+        return "<dt>" + esc(q.label) + "</dt><dd>" + esc(b.answers[q.k]) + "</dd>";
+      }).join("") + "</dl>";
+    });
+    if (missing.length) html += "<details><summary>Без ответа: " + missing.length + "</summary><ul>" +
+      missing.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + "</ul></details>";
+  }
+  box.innerHTML = html;
 }
 
 /* ---------------------------------------------------------- скрипт звонка */
@@ -177,6 +212,7 @@ function open(id) {
     return "<button type=\"button\">" + esc(q) + "</button>";
   }).join("");
   drawSpeed(l);
+  drawBrief(l);
   drawScript(l);
   drawLog(l);
   document.getElementById("d-note").value = "";
@@ -259,6 +295,23 @@ document.getElementById("d-send").addEventListener("click", function () {
     n.value = ""; drawLog(current); drawRows(); flash();
   }).catch(function () { alert("Комментарий не сохранился, повторите."); })
     .then(function () { btn.disabled = false; });
+});
+
+document.getElementById("d-brief").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b || !current) return;
+  if (b.id === "b-make") {
+    var name = prompt("Как обращаться к клиенту в анкете (имя)? Можно пропустить.") || "";
+    b.disabled = true;
+    post({ action: "brief_link", id: current.id, name: name }).then(function (r) {
+      current.brief = r.brief; current.comments = r.comments || current.comments;
+      drawBrief(current); drawLog(current); drawRows(); flash();
+    }).catch(function () { b.disabled = false; alert("Не удалось создать ссылку, повторите."); });
+  } else if (b.id === "b-copy") {
+    var url = briefUrl(current.brief);
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () {
+      b.textContent = "Скопировано"; setTimeout(function () { b.textContent = "Скопировать"; }, 1500);
+    }, function () { prompt("Скопируйте ссылку", url); });
+  }
 });
 
 document.getElementById("add").addEventListener("click", function () {

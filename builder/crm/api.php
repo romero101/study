@@ -65,6 +65,23 @@ if ($action === 'stage') {
     ], $user, 'Сделка заведена');
     $out['lead'] = $lead;
 
+} elseif ($action === 'brief_link') {
+    /* Личная ссылка клиента на анкету запуска. Ключ создаётся один раз; повторный вызов возвращает тот же. */
+    $i = crm_find($data, $_POST['id'] ?? '');
+    if ($i < 0) { http_response_code(422); exit(json_encode(['error' => 'bad'])); }
+    $b = $data['leads'][$i]['brief'] ?? [];
+    if (empty($b['key'])) {
+        $b = array_merge($b, ['key' => bin2hex(random_bytes(10)), 'created' => crm_now(), 'by' => $user,
+                              'hints' => $b['hints'] ?? []]);
+        $data['leads'][$i]['comments'][] = ['at' => crm_now(), 'who' => $user, 'kind' => 'note',
+            'text' => 'Создана личная ссылка на анкету запуска — отправить клиенту'];
+        $data['leads'][$i]['updated'] = crm_now();
+    }
+    if (isset($_POST['name'])) $b['name'] = mb_substr(trim((string)$_POST['name']), 0, 80);
+    $data['leads'][$i]['brief'] = $b;
+    $out['brief'] = $b;
+    $out['comments'] = $data['leads'][$i]['comments'];
+
 } else {
     http_response_code(400); exit(json_encode(['error' => 'action']));
 }

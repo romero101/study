@@ -45,7 +45,7 @@ require __DIR__ . '/admin/lib.php';
 crm_migrate();
 $data = crm_read();
 if (!$data['stages']) $data['stages'] = ['Не связывались', 'Дозвонился до ЛПР', 'Отправил лендинг',
-    'Взял обратную связь', 'Счёт выставлен', 'Оплачено', 'Отказ'];
+    'Взял обратную связь', 'Счёт выставлен', 'Оплачено', 'В работе', 'Отказ'];
 crm_add_lead($data, [
     'company' => $company ?: ($name ?: 'Заявка с сайта'), 'was_url' => $site,
     'contacts' => trim("$name $phone"), 'source' => 'site',

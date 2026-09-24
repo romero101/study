@@ -85,6 +85,21 @@ font-size:13px;cursor:pointer;color:#41586e}
 .speed th.sub{text-align:left!important;color:#2b3a4a;font-size:13px;padding-top:14px}
 .speed p{font-size:12.5px;color:#6a7686;margin:10px 0 0}
 
+/* ---------- анкета на запуск ---------- */
+.brief{margin:18px 0 0;border:2px solid #e3dbf3;border-radius:14px;background:#faf8ff;padding:14px 18px}
+.brief h3{font-size:15px;margin:0 0 8px}
+.brief h4{margin:14px 0 6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:#6b4fb3}
+.brief dl{margin:0;display:grid;grid-template-columns:minmax(150px,1fr) 2fr;gap:6px 14px;font-size:14px}
+.brief dt{color:#6a7686}
+.brief dd{margin:0;white-space:pre-wrap;word-break:break-word}
+.b-link{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.b-link a{word-break:break-all;font-size:14px}
+.brief details{margin-top:10px;font-size:13.5px;color:#6a7686}
+.brief details summary{cursor:pointer}
+.brief ul{margin:6px 0 0;padding-left:18px}
+.note--brief .av{background:#e2f3e8;color:#1d7a3a}
+@media (max-width:640px){.brief dl{grid-template-columns:1fr;gap:2px}.brief dd{margin-bottom:8px}}
+
 /* ---------- скрипт звонка ---------- */
 .script{margin:18px 0;border:2px solid #d6e3f3;border-radius:14px;background:#f6faff}
 .script>summary{cursor:pointer;padding:14px 18px;list-style:none;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;min-height:48px}
@@ -306,6 +321,7 @@ cursor:pointer;min-height:34px}
       </div>
     </div>
     <div class="speed" id="d-speed" hidden></div>
+    <div class="brief" id="d-brief"></div>
     <details class="script" id="d-script-box">
       <summary><b>Скрипт звонка</b><span id="d-script-goal"></span></summary>
       <div id="d-script"></div>
@@ -326,6 +342,7 @@ cursor:pointer;min-height:34px}
 const DATA = <?= json_encode($data, JSON_UNESCAPED_UNICODE) ?>;
 const CSRF = <?= json_encode(crm_csrf()) ?>;
 const SCRIPTS = <?= json_encode(require __DIR__ . '/scripts.php', JSON_UNESCAPED_UNICODE) ?>;
+const QUESTIONS = <?= json_encode(require __DIR__ . '/questions.php', JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="app.js?v=<?= substr(md5_file(__DIR__ . "/app.js"), 0, 8) ?>" defer></script>
 <?php endif; ?>
