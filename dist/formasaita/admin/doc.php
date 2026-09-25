@@ -31,6 +31,7 @@ h1{font-size:16pt;text-align:center;margin:0 0 6pt;letter-spacing:.01em}
 h2{font-size:12pt;margin:12pt 0 4pt;text-align:center;page-break-after:avoid}
 p{margin:0 0 6pt;text-align:justify}
 p.sub{text-align:center;margin-bottom:10pt}
+p.app{text-align:right;font-size:11pt;margin:0 0 14pt}
 p.pt{text-indent:0}
 p.tot{text-align:right;margin-top:6pt}
 table{border-collapse:collapse;width:100%}
