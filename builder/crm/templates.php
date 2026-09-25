@@ -25,11 +25,20 @@ function tpl_req($p) {
     return implode('<br>', $rows);
 }
 function tpl_sign($C, $P, $withReq = true) {
-    $cell = function ($who, $p) use ($withReq) {
+    $cell = function ($who, $p, $fac = false) use ($withReq) {
+        $line = '_____________________ / ' . h($p['signer_short'] ?? '') . ' /';
+        if ($fac) $line = tpl_fac($line);
         return '<td><p class="who">' . $who . '</p>' . ($withReq ? '<p class="req">' . tpl_req($p) . '</p>' : '') .
-            '<p class="sig">_____________________ / ' . h($p['signer_short'] ?? '') . ' /</p><p class="mp">М.П.</p></td>';
+            '<p class="sig">' . $line . '</p><p class="mp">М.П.</p></td>';
     };
-    return '<table class="sign"><tr>' . $cell('Исполнитель', $C) . $cell('Заказчик', $P) . '</tr></table>';
+    return '<table class="sign"><tr>' . $cell('Исполнитель', $C, true) . $cell('Заказчик', $P) . '</tr></table>';
+}
+/* Факсимиле и печать поверх строки подписи Исполнителя, если файлы загружены в карточку компании. */
+function tpl_fac($line) {
+    $F = $GLOBALS['FAC'] ?? [];
+    if (empty($F['sign']) && empty($F['stamp'])) return $line;
+    return '<span class="sigbox">' . $line . (!empty($F['sign']) ? '<img class="sg" src="' . $F['sign'] . '" alt="">' : '') .
+           (!empty($F['stamp']) ? '<img class="st" src="' . $F['stamp'] . '" alt="">' : '') . '</span>';
 }
 function tpl_items($items, $unitCol = true) {
     $h = '<table class="grid"><thead><tr><th>№</th><th>Наименование услуги</th>' . ($unitCol ? '<th>Кол-во</th><th>Ед.</th>' : '') .
@@ -116,6 +125,7 @@ function tpl_contract($doc, $D) {
     $s['9. Заключительные положения'] = [
         'Споры разрешаются путём переговоров; срок ответа на претензию — 15 (пятнадцать) календарных дней. Неурегулированные споры передаются в Арбитражный суд по месту нахождения Исполнителя.',
         'Изменения и дополнения к Договору действительны, если совершены в письменной форме, в том числе путём обмена сканированными копиями подписанных документов.',
+        'Стороны признают факсимильное воспроизведение подписи Исполнителя на Договоре, приложениях, счетах и актах равнозначным собственноручной подписи (пункт 2 статьи 160 ГК РФ).',
         'Договор составлен в двух экземплярах, имеющих равную юридическую силу, по одному для каждой из Сторон.',
     ];
     $sec = 1;
@@ -185,7 +195,7 @@ function tpl_invoice($doc, $D) {
     $o .= $t . '<p class="tot">Итого: <b>' . crm_money($total) . ' ₽</b><br>' . h($C['tax']) . '.</p>' .
           '<p>Всего наименований ' . count($doc['items'] ?? []) . ', на сумму ' . crm_money($total) . ' ₽.<br><b>' . crm_words($total) . '</b></p>' .
           (!empty($doc['due']) ? '<p>Оплатить до ' . h($doc['due']) . '. В назначении платежа укажите: «Оплата по счёту № ' . h($doc['n']) . ' от ' . h($doc['date']) . '».</p>' : '<p>В назначении платежа укажите: «Оплата по счёту № ' . h($doc['n']) . ' от ' . h($doc['date']) . '».</p>') .
-          '<p class="sig1">Предприниматель _____________________ / ' . h($C['signer_short']) . ' /</p>';
+          '<p class="sig1">Предприниматель ' . tpl_fac('_____________________ / ' . h($C['signer_short']) . ' /') . '</p>';
     if (!empty($C['rs']) && !empty($C['bik']) && $total > 0) {
         /* QR для оплаты по ГОСТ Р 56042-2014 (ST00012 = UTF-8): банковские приложения читают его в разделе «Оплата по QR». */
         $qr = 'ST00012|Name=' . $C['name'] . '|PersonalAcc=' . $C['rs'] . '|BankName=' . $C['bank'] . '|BIC=' . $C['bik'] . '|CorrespAcc=' . $C['ks'] .

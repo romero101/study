@@ -217,6 +217,16 @@ function crm_files_dir() {
     if (!is_dir($f)) { @mkdir($f, 0700, true); @file_put_contents($f . '/index.php', CRM_GUARD); }
     return $f;
 }
+/* Факсимиле подписи и печать студии: crm-files/company-sign.png, company-stamp.png; в печатную форму встраиваются как data URI. */
+function crm_company_file($kind) {
+    foreach (['png', 'jpg', 'jpeg'] as $e) { $p = crm_files_dir() . '/company-' . $kind . '.' . $e; if (is_file($p)) return $p; }
+    return '';
+}
+function crm_company_datauri($kind) {
+    $p = crm_company_file($kind); if (!$p) return '';
+    $e = strtolower(pathinfo($p, PATHINFO_EXTENSION));
+    return 'data:image/' . ($e === 'jpg' ? 'jpeg' : $e) . ';base64,' . base64_encode(file_get_contents($p));
+}
 function crm_money($n) { return number_format((float)$n, 2, ',', ' '); }
 function crm_date_ru($d) {   // 24.09.2026 -> «24» сентября 2026 г.
     $m = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];

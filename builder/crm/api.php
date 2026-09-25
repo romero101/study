@@ -211,6 +211,23 @@ if ($action === 'stage') {
     if (!crm_docs_write($D)) { http_response_code(500); exit(json_encode(['error' => 'write'])); }
     exit(json_encode(['ok' => true, 'doc' => $D['docs'][$di], 'docs' => $D['docs']], JSON_UNESCAPED_UNICODE));
 
+} elseif ($action === 'company_file') {
+    $kind = ($_POST['kind'] ?? '') === 'stamp' ? 'stamp' : 'sign';
+    $f = $_FILES['file'] ?? null;
+    if (!$f || ($f['error'] ?? 1) !== UPLOAD_ERR_OK) { http_response_code(422); exit(json_encode(['error' => 'Файл не получен'])); }
+    if ($f['size'] > 3 * 1024 * 1024) { http_response_code(422); exit(json_encode(['error' => 'Файл больше 3 МБ'])); }
+    $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, ['png', 'jpg', 'jpeg'], true)) { http_response_code(422); exit(json_encode(['error' => 'Нужен PNG или JPG'])); }
+    if (!@getimagesize($f['tmp_name'])) { http_response_code(422); exit(json_encode(['error' => 'Это не картинка'])); }
+    $old = crm_company_file($kind); if ($old) @unlink($old);
+    if (!move_uploaded_file($f['tmp_name'], crm_files_dir() . '/company-' . $kind . '.' . $ext)) { http_response_code(500); exit(json_encode(['error' => 'Не удалось сохранить'])); }
+    exit(json_encode(['ok' => true, 'kind' => $kind, 'has' => true]));
+
+} elseif ($action === 'company_file_del') {
+    $kind = ($_POST['kind'] ?? '') === 'stamp' ? 'stamp' : 'sign';
+    $old = crm_company_file($kind); if ($old) @unlink($old);
+    exit(json_encode(['ok' => true, 'kind' => $kind, 'has' => false]));
+
 } elseif ($action === 'doc_month') {
     /* Счёт или акт за месяц по ежемесячным услугам спецификации. */
     $D = crm_docs(); $di = crm_doc_find($D, (string)($_POST['id'] ?? ''));

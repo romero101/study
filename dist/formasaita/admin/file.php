@@ -3,6 +3,12 @@
 require __DIR__ . '/lib.php';
 crm_boot();
 if (!crm_logged_in() || crm_must_change()) { http_response_code(401); exit('Нужен вход'); }
+if (!empty($_GET['c'])) {
+    $p = crm_company_file($_GET['c'] === 'stamp' ? 'stamp' : 'sign');
+    if (!$p) { http_response_code(404); exit('Нет файла'); }
+    header('Content-Type: image/' . (strtolower(pathinfo($p, PATHINFO_EXTENSION)) === 'png' ? 'png' : 'jpeg'));
+    header('Cache-Control: no-store'); readfile($p); exit;
+}
 $D = crm_docs();
 $i = crm_doc_find($D, (string)($_GET['d'] ?? ''));
 $k = (int)($_GET['i'] ?? -1);

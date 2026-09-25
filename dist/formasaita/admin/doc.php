@@ -9,6 +9,7 @@ $D = crm_docs();
 $i = crm_doc_find($D, (string)($_GET['id'] ?? ''));
 if ($i < 0) { http_response_code(404); exit('Документ не найден'); }
 $doc = $D['docs'][$i];
+$GLOBALS['FAC'] = ['sign' => crm_company_datauri('sign'), 'stamp' => crm_company_datauri('stamp')];
 $title = doc_title($doc);
 $lead = ''; foreach (crm_read()['leads'] as $l) if ($l['id'] === ($doc['lead_id'] ?? '')) $lead = $l['company'];
 ?><!doctype html>
@@ -55,6 +56,10 @@ table.sign td+td{padding:0 0 0 10pt}
 .sign .mp{color:#555;font-size:10pt}
 .sig1{margin-top:26pt}
 table.qr{margin-top:14pt;page-break-inside:avoid}
+.sigbox{position:relative;display:inline-block;min-width:60mm}
+.sigbox img.sg{position:absolute;left:7mm;bottom:-4mm;height:24mm;width:auto}
+.sigbox img.st{position:absolute;left:34mm;bottom:-16mm;height:34mm;width:auto;opacity:.95}
+.sig1 .sigbox img.st{left:70mm;bottom:-14mm}
 table.qr td{vertical-align:middle;padding:0}
 table.qr td.code{width:40mm}
 table.qr td.code svg{width:36mm;height:36mm;display:block}

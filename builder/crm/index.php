@@ -118,6 +118,9 @@ font-size:13px;cursor:pointer;color:#41586e}
 .cocard b{font-size:15px;color:#16202b}
 .cocard span{white-space:nowrap}
 .cocard .no{color:#b3261e;font-weight:700}
+.fac{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fac-pv{height:90px;border:1px dashed #c3d3e0;border-radius:10px;background:#fff;display:grid;place-items:center;margin-bottom:8px;color:#8a96a3;font-size:13px;overflow:hidden}
+.fac-pv img{max-height:84px;max-width:100%}
 table.acc{min-width:980px}
 table.acc td.what s{display:block;text-decoration:none;color:#8a96a3}
 table.acc td.act{white-space:nowrap}
@@ -471,6 +474,11 @@ cursor:pointer;min-height:34px}
     <div class="f"><label>Подпись (И. О. Фамилия)</label><input name="signer_short"></div>
     <div class="f f--w"><label>Действует на основании</label><input name="basis"></div>
     <div class="f f--w"><label>Строка про НДС</label><input name="tax"></div>
+  </div>
+  <h3 class="sub">Подпись и печать <small style="font-weight:400;text-transform:none;letter-spacing:0">— встают в документы автоматически. Нужны PNG с прозрачным фоном или фото на белом листе</small></h3>
+  <div class="fac">
+    <div><div class="fac-pv" id="fac-sign"></div><label class="btn btn--gh btn--sm up"><span>Загрузить подпись</span><input type="file" data-kind="sign" accept=".png,.jpg,.jpeg" hidden></label> <button type="button" class="lnk" data-facdel="sign">убрать</button></div>
+    <div><div class="fac-pv" id="fac-stamp"></div><label class="btn btn--gh btn--sm up"><span>Загрузить печать</span><input type="file" data-kind="stamp" accept=".png,.jpg,.jpeg" hidden></label> <button type="button" class="lnk" data-facdel="stamp">убрать</button></div>
   </div></div>
   <div class="dlg__f acts"><button type="button" class="btn" id="cd-save">Сохранить</button></div>
 </div></dialog>
@@ -505,6 +513,7 @@ const QUESTIONS = <?= json_encode(require __DIR__ . '/questions.php', JSON_UNESC
 const DOCS = <?= json_encode($docs, JSON_UNESCAPED_UNICODE) ?>;
 const COMPANY = <?= json_encode($company, JSON_UNESCAPED_UNICODE) ?>;
 const DOCTYPES = <?= json_encode(crm_doc_types(), JSON_UNESCAPED_UNICODE) ?>;
+const FAC = <?= json_encode(['sign' => (bool)crm_company_file('sign'), 'stamp' => (bool)crm_company_file('stamp')]) ?>;
 const DOCSTATUSES = <?= json_encode(['invoice' => crm_doc_statuses('invoice'), 'other' => crm_doc_statuses('act')], JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="app.js?v=<?= substr(md5_file(__DIR__ . "/app.js"), 0, 8) ?>" defer></script>

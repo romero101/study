@@ -204,10 +204,22 @@ function drawDocs(l) {
 
 /* ------------------------------------------------------------- реквизиты студии и клиента */
 var cdlg = document.getElementById("cdlg"), pdlg = document.getElementById("pdlg"), partyLead = null;
+function drawFac() {
+  ["sign", "stamp"].forEach(function (k) {
+    document.getElementById("fac-" + k).innerHTML = FAC[k] ? '<img src="file.php?c=' + k + "&t=" + Date.now() + '" alt="">' : (k === "sign" ? "подписи нет" : "печати нет");
+  });
+}
 function openCompany() {
   cdlg.querySelectorAll("[name]").forEach(function (i) { i.value = COMPANY[i.name] || ""; });
+  drawFac();
   cdlg.showModal();
 }
+cdlg.addEventListener("change", function (e) {
+  var inp = e.target.closest("input[type=file][data-kind]"); if (!inp || !inp.files[0]) return;
+  var fd = new FormData(); fd.append("action", "company_file"); fd.append("csrf", CSRF); fd.append("kind", inp.dataset.kind); fd.append("file", inp.files[0]);
+  fetch("api.php", { method: "POST", body: fd }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || r.status); return j; }); })
+    .then(function (r) { FAC[r.kind] = true; drawFac(); flash(); }).catch(function (err) { alert("Не загрузилось: " + err.message); }).then(function () { inp.value = ""; });
+});
 function openParty(l) {
   partyLead = l; var p = l.party || {};
   document.getElementById("pd-co").textContent = l.company;
@@ -286,7 +298,10 @@ cdlg.addEventListener("click", function (e) {
   if (e.target === cdlg) cdlg.close();
   var b = e.target.closest("button"); if (!b) return;
   if (b.id === "cd-x") cdlg.close();
-  else if (b.id === "cd-save") {
+  else if (b.dataset.facdel) {
+    if (!confirm("Убрать " + (b.dataset.facdel === "sign" ? "подпись" : "печать") + " из документов?")) return;
+    post({ action: "company_file_del", kind: b.dataset.facdel }).then(function (r) { FAC[r.kind] = false; drawFac(); flash(); });
+  } else if (b.id === "cd-save") {
     var body = { action: "company_save" }; cdlg.querySelectorAll("[name]").forEach(function (i) { body[i.name] = i.value; });
     post(body).then(function (r) { Object.keys(r.company).forEach(function (k) { COMPANY[k] = r.company[k]; }); cdlg.close(); drawCocard(); flash(); })
       .catch(function () { alert("Реквизиты не сохранились."); });
