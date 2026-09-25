@@ -59,7 +59,7 @@ function tpl_monthly($items) {
 function tpl_contract($doc, $D) {
     $C = $doc['company']; $P = $doc['party'];
     $cs = h($C['short'] ?: $C['name']); $ps = h($P['short'] ?: $P['name']);
-    $city = trim(preg_replace('/^(г\.\s*)?/u', '', explode(',', $C['address'])[0] ?? ''));
+    $city = preg_match('/(?:^|,)\s*г\.?\s*([^,]+)/u', $C['address'], $cm) ? trim($cm[1]) : trim(explode(',', $C['address'])[0]);
     $o = '<h1>Договор возмездного оказания услуг № ' . h($doc['n']) . '</h1>' .
          '<table class="hdr"><tr><td>г. ' . h($city ?: 'Нижний Новгород') . '</td><td class="r">' . crm_date_ru($doc['date']) . '</td></tr></table>' .
          '<p>' . h($C['name']) . ', действующий на основании ' . h($C['basis']) . ', именуемый в дальнейшем «Исполнитель», с одной стороны, и ' .
