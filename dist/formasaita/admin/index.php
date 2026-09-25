@@ -114,6 +114,10 @@ font-size:13px;cursor:pointer;color:#41586e}
 .kpi s{display:block;text-decoration:none;font-size:12.5px;color:#6a7686}
 .tools select{min-height:44px;padding:8px 12px;border:2px solid #d9e2ec;border-radius:10px;background:#fff;max-width:260px}
 .acc-new{display:flex;gap:6px;flex-wrap:wrap}
+.cocard{background:#fff;border:2px solid #e4ebf1;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:13.5px;color:#41586e}
+.cocard b{font-size:15px;color:#16202b}
+.cocard span{white-space:nowrap}
+.cocard .no{color:#b3261e;font-weight:700}
 table.acc{min-width:980px}
 table.acc td.what s{display:block;text-decoration:none;color:#8a96a3}
 table.acc td.act{white-space:nowrap}
@@ -347,8 +351,9 @@ cursor:pointer;min-height:34px}
       <button type="button" class="btn btn--sm" data-new="invoice">+ Счёт</button>
       <button type="button" class="btn btn--sm" data-new="act">+ Акт</button>
     </span>
-    <button type="button" class="btn btn--gh btn--sm" id="acc-company">Реквизиты студии</button>
+    <button type="button" class="btn btn--gh btn--sm" id="acc-company">Карточка компании</button>
   </div>
+  <div class="cocard" id="acc-cocard"></div>
   <div class="tbl"><div class="tbl-scroll">
     <table class="acc">
       <thead><tr><th>Документ</th><th>Клиент</th><th>Содержание</th><th>Сумма</th><th>Статус</th><th>Скан</th><th></th></tr></thead>
@@ -447,8 +452,10 @@ cursor:pointer;min-height:34px}
 </div></dialog>
 
 <dialog id="cdlg"><div class="dlg">
-  <div class="dlg__h"><div><h2>Реквизиты студии</h2><div class="mini">Печатаются в договорах, счетах и актах. Снимок реквизитов сохраняется в документ при его сохранении.</div></div><button class="x" id="cd-x" aria-label="Закрыть">&times;</button></div>
+  <div class="dlg__h"><div><h2>Карточка компании</h2><div class="mini">Печатаются в договорах, счетах и актах. Снимок реквизитов сохраняется в документ при его сохранении.</div></div><button class="x" id="cd-x" aria-label="Закрыть">&times;</button></div>
   <div class="dlg__b"><div class="fg">
+    <div class="f"><label>Бренд</label><input name="brand" placeholder="Форма сайта"></div>
+    <div class="f"><label>Сайт</label><input name="site"></div>
     <div class="f f--w"><label>Полное наименование</label><input name="name"></div>
     <div class="f"><label>Короткое</label><input name="short"></div>
     <div class="f f--s"><label>ИНН</label><input name="inn"></div>

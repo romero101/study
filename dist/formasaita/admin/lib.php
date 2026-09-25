@@ -186,7 +186,7 @@ function crm_doc_statuses($type) {
 }
 function crm_company() {
     return array_merge([
-        'name' => 'Индивидуальный предприниматель Кочкин Роман Андреевич', 'short' => 'ИП Кочкин Р. А.',
+        'brand' => 'Форма сайта', 'name' => 'Индивидуальный предприниматель Кочкин Роман Андреевич', 'short' => 'ИП Кочкин Р. А.',
         'inn' => '526109316232', 'ogrn' => '318527500132392', 'address' => 'г. Нижний Новгород',
         'email' => '', 'phone' => '+7 (929) 053-76-03', 'site' => 'formasaita.ru',
         'bank' => '', 'bik' => '', 'ks' => '', 'rs' => '',
@@ -194,7 +194,7 @@ function crm_company() {
         'tax' => 'НДС не облагается (применяется упрощённая система налогообложения)',
     ], crm_load('company', []));
 }
-function crm_company_fields() { return ['name', 'short', 'inn', 'ogrn', 'address', 'email', 'phone', 'site', 'bank', 'bik', 'ks', 'rs', 'signer', 'signer_short', 'basis', 'tax']; }
+function crm_company_fields() { return ['brand', 'name', 'short', 'inn', 'ogrn', 'address', 'email', 'phone', 'site', 'bank', 'bik', 'ks', 'rs', 'signer', 'signer_short', 'basis', 'tax']; }
 function crm_party_fields()   { return ['name', 'short', 'inn', 'ogrn', 'kpp', 'address', 'email', 'phone', 'bank', 'bik', 'ks', 'rs', 'signer', 'signer_short', 'basis']; }
 function crm_doc_find(&$D, $id) {
     foreach ($D['docs'] as $i => $d) if ($d['id'] === $id) return $i;

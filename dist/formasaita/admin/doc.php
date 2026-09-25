@@ -53,6 +53,11 @@ table.sign td+td{padding:0 0 0 10pt}
 .sign .sig{margin-top:22pt;white-space:nowrap}
 .sign .mp{color:#555;font-size:10pt}
 .sig1{margin-top:26pt}
+table.qr{margin-top:14pt;page-break-inside:avoid}
+table.qr td{vertical-align:middle;padding:0}
+table.qr td.code{width:40mm}
+table.qr td.code svg{width:36mm;height:36mm;display:block}
+table.qr td.txt{padding-left:6mm;font-size:10.5pt;line-height:1.4}
 @page{size:A4;margin:16mm 14mm}
 @media print{html{background:#fff}.bar{display:none}.page{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}}
 </style>
@@ -62,5 +67,14 @@ table.sign td+td{padding:0 0 0 10pt}
 <div class="bar"><a href="./#acc">← Бухгалтерия</a><button type="button" onclick="print()">Печать / сохранить PDF</button><span class="t"><?= h($title) ?><?= $lead ? ' · ' . h($lead) : '' ?> · <?= h($doc['status']) ?></span></div>
 <?php endif; ?>
 <div class="page"><?= doc_render($doc, $D) ?></div>
+<?php if ($doc['type'] === 'invoice'): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+document.querySelectorAll('[data-qr]').forEach(function (el) {
+  try { qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8']; var q = qrcode(0, 'M'); q.addData(el.dataset.qr, 'Byte'); q.make(); el.innerHTML = q.createSvgTag({ cellSize: 3, margin: 2, scalable: true }); }
+  catch (e) { el.textContent = 'QR не построился: ' + e.message; }
+});
+</script>
+<?php endif; ?>
 </body>
 </html>

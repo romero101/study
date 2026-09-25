@@ -41,7 +41,15 @@ function drawKpi() {
     '<div><i>Договоров подписано</i><b>' + signed + '</b><s>из ' + DOCS.filter(function (d) { return d.type === "contract"; }).length + '</s></div>' +
     '<div><i>Оплачено всего</i><b>' + fmt(paid) + ' ₽</b><s>по счетам</s></div>';
 }
+function drawCocard() {
+  var c = COMPANY;
+  document.getElementById("acc-cocard").innerHTML = "<b>" + esc(c.brand || "") + (c.brand ? " · " : "") + esc(c.name) + "</b>" +
+    "<span>ИНН " + esc(c.inn) + "</span><span>ОГРНИП " + esc(c.ogrn) + "</span>" +
+    (c.rs ? "<span>р/с …" + esc(String(c.rs).slice(-4)) + " · " + esc(c.bank) + "</span>" : '<span class="no">банк не заполнен — счёт печатается с прочерками</span>') +
+    "<span>" + esc(c.tax) + "</span>";
+}
 function drawAcc() {
+  drawCocard();
   var sel = document.getElementById("acc-lead");
   if (!sel.options.length) {
     sel.innerHTML = '<option value="">Все клиенты</option>' + LEADS.slice().sort(function (a, b) { return a.company.localeCompare(b.company, "ru"); })
@@ -280,7 +288,7 @@ cdlg.addEventListener("click", function (e) {
   if (b.id === "cd-x") cdlg.close();
   else if (b.id === "cd-save") {
     var body = { action: "company_save" }; cdlg.querySelectorAll("[name]").forEach(function (i) { body[i.name] = i.value; });
-    post(body).then(function (r) { Object.keys(r.company).forEach(function (k) { COMPANY[k] = r.company[k]; }); cdlg.close(); flash(); })
+    post(body).then(function (r) { Object.keys(r.company).forEach(function (k) { COMPANY[k] = r.company[k]; }); cdlg.close(); drawCocard(); flash(); })
       .catch(function () { alert("Реквизиты не сохранились."); });
   }
 });
