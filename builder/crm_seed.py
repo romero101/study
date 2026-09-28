@@ -10,7 +10,7 @@ XLS = os.path.join(ROOT, "builder", "data", "forma-saita-sales.xls")
 OUT = os.path.join(ROOT, "builder", "crm", "seed", "leads.json")  # на сервер не заливается: там данные живут в data/store.php
 
 # Этапы воронки. Порядок = порядок колонок на доске.
-STAGES = ["Не связывались", "Дозвонился до ЛПР", "Отправил лендинг",
+STAGES = ["Не связывались", "Не дошёл до ЛПР", "Дозвонился до ЛПР", "Отправил лендинг",
           "Взял обратную связь", "Счёт выставлен", "Оплачено", "В работе", "Отказ"]
 
 FIELDS = ["n", "company", "city", "was_url", "now_url", "was_problems",
