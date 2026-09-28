@@ -1,0 +1,57 @@
+{
+ "domain": "konturland.ru",
+ "url": "https://konturland.ru/",
+ "company": "Студия ландшафтного дизайна «Контур» (ООО «Контур»)",
+ "niche": "ландшафтный дизайн",
+ "city": "Санкт-Петербург",
+ "ad": {
+  "query": "ландшафтный дизайн под ключ цена",
+  "lr": 2,
+  "date": "2026-09-28",
+  "seen": "поиск Яндекса, рекламный блок, три объявления"
+ },
+ "weight": {
+  "load_mb": 29.4,
+  "idle_mb": 29.4,
+  "files": 64,
+  "video_mb": 25,
+  "method": "playwright 390 px 28.09.2026"
+ },
+ "demo_weight": {
+  "load_mb": 0.3,
+  "idle_mb": 2.0
+ },
+ "server_ru_s": [
+  0.05,
+  0.16,
+  0.1
+ ],
+ "roman_note": "28.09: первый экран прогрузился через 6 секунд, сайт устаревший",
+ "phone_audit": {
+  "priceOnFold": false,
+  "calc": false,
+  "messengers": 0,
+  "firstScreen": "слайдер и меню"
+ },
+ "prices": {
+  "lite": "от 150 000 ₽/сотка",
+  "standard": "от 350 000",
+  "optimal": "от 500 000",
+  "10 соток под ключ": "от 1 500 000"
+ },
+ "contacts": {
+  "phones": [
+   "+7 (812) 952-92-17",
+   "+7 (931) 360-33-85"
+  ],
+  "email": "konturland@mail.ru",
+  "office": "Ленинский пр., 140Е, оф. 209"
+ },
+ "lpr": {
+  "legal": "ООО «Контур»",
+  "person": "Валерий Хорошев, генеральный директор (сайт «О нас», отзывы на Картах)"
+ },
+ "reviews": "Яндекс Карты 4,8, 17 отзывов — https://yandex.ru/maps/org/kontur/129979505565/reviews/",
+ "demo": "https://formasaita.ru/demo/konturland/",
+ "crm": "добавлен 28.09.2026 с демо"
+}

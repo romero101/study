@@ -1,0 +1,45 @@
+{
+ "domain": "derevopark.com",
+ "url": "https://derevopark.com/",
+ "company": "Derevo Park (ДеревоПарк)",
+ "niche": "ландшафтный дизайн премиум",
+ "city": "Санкт-Петербург",
+ "ad": {
+  "query": "ландшафтный дизайн под ключ цена",
+  "lr": 2,
+  "date": "2026-09-28"
+ },
+ "weight": {
+  "load_mb": 40.2,
+  "idle_mb": 40.6,
+  "video_mb": 27.4,
+  "method": "playwright 390 px 28.09.2026"
+ },
+ "server_ru_s": [
+  0.73,
+  0.73,
+  0.74
+ ],
+ "hosting": "FirstVDS (derevopark.fvds.ru), 188.120.250.187",
+ "hosts": {
+  "derevopark.com": "75 файлов, 19,2 МБ (в т.ч. ролик 14 МБ 60fps)",
+  "static.calltouch.ru": "11,1 МБ (фоновое видео виджета 10,9 МБ)",
+  "google recaptcha + gstatic": "формы и шрифты"
+ },
+ "phone_audit": {
+  "h1": 1,
+  "prices": 0,
+  "forms": 5,
+  "wa": 0,
+  "tg": 3,
+  "max": 3
+ },
+ "contacts": {
+  "phones": [
+   "+7 (934) 477-16-78",
+   "+7 (934) 477-08-12"
+  ]
+ },
+ "roman_note": "28.09: красивый сайт, но видео не грузится, половина контента не грузится",
+ "crm": "добавлен 28.09.2026 без демо"
+}
