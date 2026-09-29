@@ -3,6 +3,7 @@ Disallow: /admin/
 Disallow: /send.php
 Disallow: /demo/
 Disallow: /anketa/
+Disallow: /tz/
 Allow: /
 
 Sitemap: https://formasaita.ru/sitemap.xml
