@@ -1,0 +1,23 @@
+---
+description: Formasaita — где исходники, git и хостинг
+alwaysApply: true
+---
+
+# Formasaita: источник правды
+
+- Локальный репозиторий: `/Users/test/formasaita/study`
+- GitHub: `https://github.com/romero101/study`, рабочая ветка `claude/small-business-website-sales-tzxhq1`
+- Собирать/править сайт студии в `builder/` → `dist/formasaita/`; демо клиентов — `dist/<slug>/`
+- На хостинге **нет git** — только выкладка файлов из `dist/`
+
+## Хостинг (после миграции 04.10.2026)
+
+- Живой сайт: `formasaita.ru` → SSH **luce** (`u3448144@31.31.197.32`, HostKeyAlias `server288.hosting.reg.ru`), путь `www/formasaita.ru/`
+- Старый `Host formasaita` / `u3380158@server280` **удалён** — не использовать
+- Ключ: `~/.ssh/luce_regru`
+- Выкладка: `rsync` содержимого `dist/formasaita/` на `luce:www/formasaita.ru/` (не затирать `admin/data/`)
+
+## Не путать
+
+- `/Users/test/formasaita/equity-consult` и `konstruktor` — соседние проекты, не исходники студийного сайта
+- Полный бэкап старого хоста: `~/Downloads/4hAB8AihPq_full_u3380158_u3380158_03.10.2026.tar.gz`
