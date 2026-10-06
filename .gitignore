@@ -17,3 +17,6 @@ dist/krysha-source/raw/
 dist/septic-src/
 tools/service/clients/*/raw/
 tools/citysound/raw/
+
+# oversized client source video (keep local only)
+tools/service/clients/gilson/video/*.MOV
